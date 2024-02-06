@@ -4,8 +4,20 @@ require __DIR__ . "/vendor/autoload.php";
 
 use Maestroerror\EloquentRegex\Builder;
 
-$builder = new Builder();
-$pattern = $builder->textAndNumbers(8)->get();
-echo $pattern;
+$string = "Revaz1621";
+$builder = new Builder($string);
+$check = $builder->textOrNumbers(8)->check();
+print_r($check);
+
 echo "\n";
-echo preg_match($pattern, "Revaz1621");
+
+
+$string = "Revaz1621 an 1sada a 5464565";
+$builder = (new Builder($string))->textOrNumbers(4);
+$get = $builder->get();
+print_r($get);
+
+echo "\n";
+
+$regex = $builder->toRegex();
+print_r($regex);

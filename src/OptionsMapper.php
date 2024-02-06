@@ -6,8 +6,16 @@ use Maestroerror\EloquentRegex\Options\LengthOption;
 
 
 class OptionsMapper {
-    public array $optionMethods = [];
-    public array $availableOptions = [];
+
+    public static array $optionMethods = [
+        "minLength" => [LengthOption::class, "minLength"],
+        // ... other mappings ...
+    ];
+
+    public static array $availableOptions = [
+        LengthOption::class,
+        // ... other options ...
+    ];
 
     public function __construct() {
         $this->optionMethods = [
@@ -19,14 +27,15 @@ class OptionsMapper {
         ];
     }
 
-    static function GetOptionMethodByName(string $optionName) {
-        $obj = new self;
-        return $obj->optionMethods[$optionName];
+    public static function GetOptionMethodByName(string $optionName): array {
+        if (!array_key_exists($optionName, self::$optionMethods)) {
+            throw new \InvalidArgumentException("Option method not found: $optionName");
+        }
+        return self::$optionMethods[$optionName];
     }
 
-    static function GetAvailableOptions() {
-        $obj = new self;
-        return $obj->availableOptions;
+    public static function GetAvailableOptions(): array {
+        return self::$availableOptions;
     }
 
 

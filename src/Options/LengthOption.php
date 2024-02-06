@@ -30,16 +30,16 @@ class LengthOption implements OptionContract {
 
     public function build(): string {
         if ($this->exactLength !== null) {
-            return ".{{$this->exactLength}}";
+            return "{{$this->exactLength}}";
         }
 
         $min = $this->minLength ?? '';
         $max = $this->maxLength ?? '';
 
         if ($min === '' && $max !== '') {
-            $pattern = ".{0,{$max}}";
+            $pattern = "{0,{$max}}";
         } else {
-            $pattern = ".{{$min},{$max}}";
+            $pattern = "{{$min},{$max}}";
         }
 
 

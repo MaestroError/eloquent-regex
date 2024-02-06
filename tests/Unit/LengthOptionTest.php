@@ -33,10 +33,10 @@ it('allows optional length', function () {
 it('generates correct regex pattern for length constraints', function () {
     $lengthOption = new LengthOption();
     $lengthOption->minLength(2)->maxLength(4);
-    expect($lengthOption->build())->toBe('.{2,4}');
+    expect($lengthOption->build())->toBe('{2,4}');
 
     $lengthOption->reset()->exactLength(3);
-    expect($lengthOption->build())->toBe('.{3}');
+    expect($lengthOption->build())->toBe('{3}');
 
     $lengthOption->reset()->optional();
     expect($lengthOption->build())->toBe('(?:.+)?'); // Optional any character, one or more times
@@ -46,7 +46,8 @@ it('generates correct regex pattern for length constraints', function () {
 it('matches strings according to minimum length', function () {
     $lengthOption = new LengthOption();
     $lengthOption->minLength(3);
-    $regex = "/^" . $lengthOption->build() . "$/";
+    $regex = "/^." . $lengthOption->build() . "$/";
+    echo $regex;
     expect(preg_match($regex, 'abc'))->toBe(1);
     expect(preg_match($regex, 'ab'))->toBe(0);
 });
@@ -54,7 +55,7 @@ it('matches strings according to minimum length', function () {
 it('matches strings according to maximum length', function () {
     $lengthOption = new LengthOption();
     $lengthOption->maxLength(3);
-    $regex = "/^" . $lengthOption->build() . "$/";
+    $regex = "/^." . $lengthOption->build() . "$/";
     expect(preg_match($regex, 'abc'))->toBe(1);
     expect(preg_match($regex, 'abcd'))->toBe(0);
 });
@@ -62,7 +63,7 @@ it('matches strings according to maximum length', function () {
 it('matches strings according to exact length', function () {
     $lengthOption = new LengthOption();
     $lengthOption->exactLength(3);
-    $regex = "/^" . $lengthOption->build() . "$/";
+    $regex = "/^." . $lengthOption->build() . "$/";
     expect(preg_match($regex, 'abc'))->toBe(1);
     expect(preg_match($regex, 'ab'))->toBe(0);
     expect(preg_match($regex, 'abcd'))->toBe(0);

@@ -5,7 +5,7 @@ namespace Maestroerror\EloquentRegex\Patterns;
 use Maestroerror\EloquentRegex\Contracts\PatternContract;
 use Maestroerror\EloquentRegex\Contracts\OptionContract;
 
-class TextAndNumbersPattern implements PatternContract {
+class TextOrNumbersPattern implements PatternContract {
     private array $options;
 
     public function __construct() {
@@ -14,7 +14,7 @@ class TextAndNumbersPattern implements PatternContract {
 
     public function build(): string {
         // Default pattern to match text and numbers
-        $pattern = '[a-zA-Z0-9]+';
+        $pattern = '[a-zA-Z0-9]';
 
         // Modify the pattern based on options if they exist
         foreach ($this->options as $option) {
