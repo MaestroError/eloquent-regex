@@ -15,19 +15,19 @@ class OptionsManager {
         $this->options = OptionsMapper::GetAvailableOptions();
     }
 
-    public function returnUsedOptions() {
+    public function getUsedOptions() {
         return $this->usedOptions;
     }
 
     
-    public function buildOptions(array $optionNamesAndValues) {
+    public function buildOptions(array $optionNamesAndValues): void {
         foreach ($optionNamesAndValues as $name => $value) {
             $option = OptionsMapper::GetOptionMethodByName($name);
             $this->processOption($option, $value);
         }
     }
 
-    private function processOption(array $option, mixed $value) {
+    private function processOption(array $option, mixed $value): void {
         if (isset($this->usedOptions[$option[0]])) {
             $this->usedOptions[$option[0]]->{$option[1]}($value);
         } else {
