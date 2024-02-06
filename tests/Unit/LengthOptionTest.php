@@ -39,7 +39,7 @@ it('generates correct regex pattern for length constraints', function () {
     expect($lengthOption->build())->toBe('.{3}');
 
     $lengthOption->reset()->optional();
-    expect($lengthOption->build())->toBe('(?:.{,})?'); // Optional any character, one or more times
+    expect($lengthOption->build())->toBe('(?:.+)?'); // Optional any character, one or more times
 });
 
 
@@ -71,6 +71,7 @@ it('matches strings according to exact length', function () {
 it('matches strings according to optional length', function () {
     $lengthOption = new LengthOption();
     $lengthOption->optional();
+    // $lengthOption->maxLength(3);
     $regex = "/^" . $lengthOption->build() . "$/";
     expect(preg_match($regex, ''))->toBe(1); // Empty string should match when optional
     expect(preg_match($regex, 'abc'))->toBe(1); // Non-empty string should also match
