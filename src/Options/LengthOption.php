@@ -43,7 +43,9 @@ class LengthOption implements OptionContract {
         }
 
 
-        if ($this->isOptional) {
+        if ($this->isOptional && $min === '' && $max === '') {
+            $pattern = "(?:.+)?";
+        } else if ($this->isOptional) {
             $pattern = "(?:$pattern)?";
         }
 

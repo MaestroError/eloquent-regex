@@ -36,7 +36,11 @@ class TextAndNumbersPattern implements PatternContract {
         return 'Pattern to match a combination of text and numbers.';
     }
 
-    public function setOptions(OptionContract $options) {
+    public function setOptions(array $options) {
+        $this->options = $options;
+    }
+
+    public function setOption(OptionContract $options) {
         $this->options[] = $options;
     }
 

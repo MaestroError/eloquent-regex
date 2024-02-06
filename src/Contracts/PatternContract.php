@@ -47,10 +47,18 @@ interface PatternContract {
     /**
      * Sets the options for this pattern.
      *
-     * @param OptionContract $options The options to be applied to this pattern.
+     * @param OptionContract $option The options to be applied to this pattern.
      * @return void
      */
-    public function setOptions(OptionContract $options);
+    public function setOption(OptionContract $option);
+
+    /**
+     * Sets the options for this pattern.
+     *
+     * @param array $options The options to be applied to this pattern.
+     * @return void
+     */
+    public function setOptions(array $options);
 
     /**
      * Validates a given input string against this pattern.
