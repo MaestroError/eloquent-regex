@@ -43,12 +43,6 @@ it('generates correct regex pattern for excluded characters', function () {
     expect($charOption->build())->toBe('(?!.*[xyz]).*');
 });
 
-it('generates regex with optional flag', function () {
-    $charOption = new CharacterOption();
-    $charOption->optional();
-    expect($charOption->build())->toBe('(?:.*)?'); // Any character, optional
-});
-
 it('matches strings with allowed characters only', function () {
     $charOption = new CharacterOption();
     $charOption->allow(['a', 'b', 'c']);

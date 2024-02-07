@@ -2,6 +2,7 @@
 
 namespace Maestroerror\EloquentRegex\Traits;
 
+/* @deprecated */
 trait IsOptionalTrait {
     protected $isOptional = false;
 

@@ -34,7 +34,6 @@ class Builder {
     }
 
     protected function processConfigArray(array $options) {
-        print_r($options);
         // Build options in options manager
         $this->manager->buildOptions($options);
         // Set used options to pattern

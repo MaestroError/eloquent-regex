@@ -3,12 +3,11 @@
 namespace Maestroerror\EloquentRegex\Options;
 
 use Maestroerror\EloquentRegex\Contracts\OptionContract;
-use Maestroerror\EloquentRegex\Traits\IsOptionalTrait;
 use Maestroerror\EloquentRegex\Traits\ValidateUsingRegexTrait;
 
 class CharacterOption implements OptionContract {
 
-    use IsOptionalTrait, ValidateUsingRegexTrait;
+    use ValidateUsingRegexTrait;
 
     private $allowedCharacters = [];
     private $excludedCharacters = [];
@@ -76,20 +75,7 @@ class CharacterOption implements OptionContract {
 
         $pattern .= $excludedPattern . $allowedPattern;
 
-        if ($this->isOptional) {
-            $pattern = "(?:$pattern)?";
-        }
-
         return $pattern;
-    }
-
-    public function reset() {
-        $this->allowedCharacters = [];
-        $this->excludedCharacters = [];
-        $this->minUppercase = 0;
-        $this->minLowercase = 0;
-        $this->isOptional = false;
-        return $this;
     }
 
     // Option methods
