@@ -63,7 +63,7 @@ class LengthOption implements OptionContract {
         return $this;
     }
 
-    // Additional methods
+    // Option methods
     public function minLength(int $length) {
         $this->minLength = $length;
         $this->exactLength = null; // Reset exact length if min or max length is set

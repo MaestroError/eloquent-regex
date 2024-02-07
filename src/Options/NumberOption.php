@@ -72,7 +72,7 @@ class NumberOption implements OptionContract {
         return $this;
     }
 
-    // Additional setters for min, max, and exact values
+    // Option methods
     public function setMinValue(int $minValue) {
         $this->minValue = $minValue;
         $this->exactValue = null; // Reset exact value if min or max value is set
@@ -89,14 +89,6 @@ class NumberOption implements OptionContract {
         $this->exactValue = $exactValue;
         $this->minValue = null;
         $this->maxValue = null;
-        return $this;
-    }
-
-    // Implementing the range method
-    public function range(int $min, int $max) {
-        $this->minValue = $min;
-        $this->maxValue = $max;
-        $this->exactValue = null; // Reset exact value when range is set
         return $this;
     }
 }

@@ -6,22 +6,29 @@ use Maestroerror\EloquentRegex\Builder;
 
 $input = "Revaz1621";
 $builder = new Builder($input);
-$check = $builder->textOrNumbers(8)->check(); // Exact same
+// Min 8 chars, min 1 uppercase
+$check = $builder->textOrNumbers(8, 0, 1)->check(); // Exact same
 print_r($check);
 
 echo "\n";
 
 $string = "asd Revaz1621 wawd";
 $builder = new Builder($string);
-$check = $builder->textOrNumbers(8)->checkString(); // Includes min 1
+// Min 8 chars, min 1 uppercase
+$check = $builder->textOrNumbers([
+    "minLength" => 8,
+    "minUppercase" => 1
+])->checkString(); // Includes min 1
 print_r($check);
 
 echo "\n";
 
 $string = "asd Revaz1621 Wawoline343 text here";
 $builder = new Builder($string);
-$count = $builder->textOrNumbers(8)->count(); // Returns number of matches
-print_r($count);
+$count = $builder->textOrNumbers(function($query) {
+    return $query->minLength(8)->minUppercase(1);
+})->count(); // Returns number of matches
+print_r("Count: " . $count);
 
 echo "\n";
 
@@ -33,6 +40,5 @@ print_r($get);
 
 echo "\n";
 
-// Deprecated for now
-// $regex = $builder->toRegex();
-// print_r($regex);
+$regex = $builder->toRegex();
+print_r($regex);

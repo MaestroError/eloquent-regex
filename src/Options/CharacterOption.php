@@ -92,7 +92,7 @@ class CharacterOption implements OptionContract {
         return $this;
     }
 
-    // Additional methods
+    // Option methods
     public function allow(array $characters) {
         $this->allowedCharacters = $characters;
         return $this;

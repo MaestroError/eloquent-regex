@@ -5,10 +5,11 @@ namespace Maestroerror\EloquentRegex;
 use Maestroerror\EloquentRegex\Patterns\TextOrNumbersPattern;
 use Maestroerror\EloquentRegex\Contracts\PatternContract;
 use Maestroerror\EloquentRegex\OptionsManager;
+use Maestroerror\EloquentRegex\OptionsBuilder;
 
 class Builder {
     protected string $str;
-    protected array $patterns = [];
+    protected PatternContract $pattern;
     protected OptionsManager $manager;
     protected string $regex = "";
 
@@ -17,66 +18,56 @@ class Builder {
         $this->manager = new OptionsManager();
     }
 
-    protected function processArguments() {
-
-    }
-
-    protected function processConfigArray() {
-
-    }
-
-    protected function processCallback() {
-
-    }
-
-    protected function build(): void {
-        $this->regex = "";
-        foreach ($this->patterns as $pattern) {
-            $this->regex .= $pattern->build();
+    protected function processArguments(array $args, array $values, callable $condition): void {
+        $options = [];
+        // Build options array based on condition
+        for ($i=0; $i < count($args); $i++) { 
+            if (isset($values[$i])) {
+                // Use the callable $condition to determine if the option should be set
+                if ($condition($values[$i])) {
+                    $options[$args[$i]] = $values[$i];
+                }
+            }
         }
-        $this->regex = "/" . $this->regex . "/";
+        
+        $this->processConfigArray($options);
+    }
+
+    protected function processConfigArray(array $options) {
+        print_r($options);
+        // Build options in options manager
+        $this->manager->buildOptions($options);
+        // Set used options to pattern
+        $this->pattern->setOptions($this->manager->getUsedOptions());
+    }
+
+    protected function processCallback(callable $callback) {
+        $optionsBuilder = new OptionsBuilder();
+        $optionsBuilder = $callback($optionsBuilder);
+        $this->processConfigArray($optionsBuilder->getOptions());
     }
 
     protected function validateAsInput(): bool {
-        if (!empty($this->patterns)) {
-            foreach ($this->patterns as $pattern) {
-                if (!$pattern->validateInput($this->str)) {
-                    return false;
-                }
-            }
-            return true;
+        if (!$this->pattern->validateInput($this->str)) {
+            return false;
         }
+        return true;
     }
 
     protected function validateAsString(): bool {
-        if (!empty($this->patterns)) {
-            foreach ($this->patterns as $pattern) {
-                if (!$pattern->validateMatches($this->str)) {
-                    return false;
-                }
-            }
-            return true;
+        if (!$this->pattern->validateMatches($this->str)) {
+            return false;
         }
+        return true;
     }
 
     protected function countMatches(): int {
-        $count = 0;
-        if (!empty($this->patterns)) {
-            foreach ($this->patterns as $pattern) {
-                $count += $pattern->countMatches($this->str);
-            }
-        }
+        $count = $this->pattern->countMatches($this->str);
         return $count;
     }
 
     protected function getAllMatches(): array {
-        $matches = [];
-        if (!empty($this->patterns)) {
-            foreach ($this->patterns as $pattern) {
-                $matches = array_merge($matches, $pattern->getMatches($this->str));
-            }
-        }
-        return array_values($matches); // Reset keys of the array
+        return $this->pattern->getMatches($this->str);
     }
     
     /* Public methods (API) */
@@ -97,23 +88,46 @@ class Builder {
         return $this->validateAsString();
     }
 
-    public function count(): string {
+    public function count(): int {
         return count($this->getAllMatches());
     }
 
-    // public function toRegex(): string {
-    //     $this->build();
-    //     return $this->regex;
-    // }
+    public function toRegex(): string {
+        return $this->pattern->getPattern();
+    }
 
     /* TextAndNumbersPattern implementation */
-    public function textOrNumbers(int|array|callable $minLength): self {
-        $pattern = new TextOrNumbersPattern();
-        $this->manager->buildOptions([
-            "minLength" => $minLength
-        ]);
-        $pattern->setOptions($this->manager->getUsedOptions());
-        $this->patterns[] = $pattern;
+    public function textOrNumbers(int|array|callable $minLength, int $maxLength = 0, int $minUppercase = 0, int $minLowercase = 0, int $minNumbers = 0, int $maxNumbers = 0): self {
+        // Set needed pattern
+        $this->pattern = new TextOrNumbersPattern();
+
+        // Handle options array scenario
+        if (is_array($minLength)) {
+            $this->processConfigArray($minLength);
+        }
+        // Handle argument scenario
+        else if (is_int($minLength)) {
+            $values = func_get_args();
+            $args = [
+                "minLength",
+                "maxLength",
+                "minUppercase",
+                "minLowercase",
+                "minNumbers",
+                "maxNumbers",
+            ];
+            $this->processArguments($args, $values, function($value) {
+                return $value > 0;
+            });
+        }
+        // Handle callback scenario
+        else if (is_callable($minLength)) {
+            $this->processCallback($minLength);
+        } 
+        else {
+            
+        }
+
         return $this;
     }
 
