@@ -13,7 +13,6 @@ class NumberOption implements OptionContract {
     private $minValue = null;
     private $maxValue = null;
     private $exactValue = null;
-    private $isOptional = false;
 
     public function validate(string $input): bool {
         $numericCount = preg_match_all('/\d/', $input);
@@ -73,17 +72,8 @@ class NumberOption implements OptionContract {
         return $this;
     }
 
-    public function optional() {
-        $this->isOptional = true;
-        return $this;
-    }
-
     public function description(): string {
         return "Number option with min value: {$this->minValue}, max value: {$this->maxValue}, exact value: {$this->exactValue}";
-    }
-
-    public function addToPattern(string $pattern): string {
-        return $pattern . $this->build();
     }
 
     // Additional setters for min, max, and exact values
