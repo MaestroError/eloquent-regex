@@ -89,10 +89,10 @@ it('requires minimum number of lowercase characters and excludes some', function
     $charOption->minLowercase(2);
     $charOption->exclude(['x', 'y', 'z']);
     $regex = "/^" . $charOption->build() . "$/";
-    expect(preg_match($regex, 'abC'))->toBe(1);
-    expect(preg_match($regex, 'abc'))->toBe(1);
-    expect(preg_match($regex, 'abz'))->toBe(0);
-    expect(preg_match($regex, 'aBC'))->toBe(0);
+    expect($charOption->validateUsingRegex('abC'))->toBe(true);
+    expect($charOption->validateUsingRegex('abc'))->toBe(true);
+    expect($charOption->validateUsingRegex('abz'))->toBe(false);
+    expect($charOption->validateUsingRegex('aBC'))->toBe(false);
 });
 
 
@@ -101,12 +101,11 @@ it('requires minimum number of lowercase, allows some characters and excludes so
     $charOption->allow(['a', 'b', 'c', "Z"]);
     $charOption->exclude(['x', 'y', 'z']);
     $charOption->minLowercase(2);
-    $regex = "/^" . $charOption->build() . "$/";
-    echo $regex;
-    expect(preg_match($regex, 'abc'))->toBe(1);
-    expect(preg_match($regex, 'aZ'))->toBe(0);
-    expect(preg_match($regex, 'aaaaaaZ'))->toBe(1);
-    expect(preg_match($regex, 'hgf'))->toBe(0);
-    expect(preg_match($regex, 'xyz'))->toBe(0); 
+
+    expect($charOption->validateUsingRegex('abc'))->toBe(true);
+    expect($charOption->validateUsingRegex('aZ'))->toBe(false);
+    expect($charOption->validateUsingRegex('aaaaaaZ'))->toBe(true);
+    expect($charOption->validateUsingRegex('hgf'))->toBe(false);
+    expect($charOption->validateUsingRegex('xyz'))->toBe(false);
 });
 

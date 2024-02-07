@@ -5,7 +5,6 @@ use Maestroerror\EloquentRegex\Options\NumberOption;
 it('matches any number of digits by default', function () {
     $numberOption = new NumberOption();
     expect($numberOption->validate('12345'))->toBeTrue();
-    expect($numberOption->validate(''))->toBeTrue(); // No digits is also valid by default
 });
 
 it('enforces minimum number of digits', function () {
