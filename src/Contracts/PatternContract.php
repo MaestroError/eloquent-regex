@@ -28,15 +28,6 @@ interface PatternContract {
     public function reset();
 
     /**
-     * Provides a textual description of this pattern.
-     *
-     * Can be used for documentation or debugging purposes.
-     *
-     * @return string A textual description of the pattern.
-     */
-    public function description(): string;
-
-    /**
      * Sets the options for this pattern.
      *
      * @param OptionContract $option The options to be applied to this pattern.
