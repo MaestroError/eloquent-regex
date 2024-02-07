@@ -43,18 +43,36 @@ class CharacterOption implements OptionContract {
     public function build(): string {
         // Building the pattern based on allowed and excluded characters
         $pattern = '';
-        if (!empty($this->allowedCharacters)) {
-            $pattern .= '[' . implode('', array_map('preg_quote', $this->allowedCharacters)) . ']';
-        } else {
-            $pattern .= '.';
+
+        // Lookahead for minimum uppercase
+        if ($this->minUppercase > 0) {
+            $pattern .= '(?=(?:.*[A-Z]){' . $this->minUppercase . ',})';
         }
 
-        if (!empty($this->excludedCharacters)) {
-            $pattern .= '[^' . implode('', array_map('preg_quote', $this->excludedCharacters)) . ']';
+        // Lookahead for minimum lowercase
+        if ($this->minLowercase > 0) {
+            $pattern .= '(?=(?:.*[a-z]){' . $this->minLowercase . ',})';
         }
+
+        // Handle allowed characters
+        if (!empty($this->allowedCharacters)) {
+            $allowedPattern = '[' . implode('', array_map('preg_quote', $this->allowedCharacters)) . ']+';
+        } else {
+            // $allowedPattern = '.*'; // If no allowed characters are specified, allow anything.
+            $allowedPattern = '.*'; // If no allowed characters are specified, allow anything.
+        }
+
+        // Handle excluded characters
+        if (!empty($this->excludedCharacters)) {
+            $excludedPattern = '(?!.*[' . implode('', array_map('preg_quote', $this->excludedCharacters)) . '])';
+        } else {
+            $excludedPattern = ''; // If no excluded characters, no restriction.
+        }
+
+        $pattern .= $excludedPattern . $allowedPattern;
 
         if ($this->isOptional) {
-            $pattern .= '?';
+            $pattern = "(?:$pattern)?";
         }
 
         return $pattern;

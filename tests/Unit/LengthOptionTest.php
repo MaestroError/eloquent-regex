@@ -47,7 +47,7 @@ it('matches strings according to minimum length', function () {
     $lengthOption = new LengthOption();
     $lengthOption->minLength(3);
     $regex = "/^." . $lengthOption->build() . "$/";
-    echo $regex;
+    // echo $regex;
     expect(preg_match($regex, 'abc'))->toBe(1);
     expect(preg_match($regex, 'ab'))->toBe(0);
 });
