@@ -3,13 +3,17 @@
 namespace Maestroerror\EloquentRegex\Options;
 
 use Maestroerror\EloquentRegex\Contracts\OptionContract;
+use Maestroerror\EloquentRegex\Traits\AddToPatternTrait;
+use Maestroerror\EloquentRegex\Traits\IsOptionalTrait;
 
 class CharacterOption implements OptionContract {
+
+    use AddToPatternTrait, IsOptionalTrait;
+
     private $allowedCharacters = [];
     private $excludedCharacters = [];
     private $minUppercase = 0;
     private $minLowercase = 0;
-    private $isOptional = false;
 
     public function validate(string $input): bool {
         $uppercaseCount = preg_match_all('/[A-Z]/', $input);
@@ -65,19 +69,10 @@ class CharacterOption implements OptionContract {
         return $this;
     }
 
-    public function optional() {
-        $this->isOptional = true;
-        return $this;
-    }
-
     public function description(): string {
         return "Character option allowing: " . implode(', ', $this->allowedCharacters) .
                "; excluding: " . implode(', ', $this->excludedCharacters) .
                "; min uppercase: $this->minUppercase; min lowercase: $this->minLowercase";
-    }
-
-    public function addToPattern(string $pattern): string {
-        return $pattern . $this->build();
     }
 
     // Additional methods

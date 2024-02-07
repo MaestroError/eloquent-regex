@@ -4,8 +4,12 @@ namespace Maestroerror\EloquentRegex\Patterns;
 
 use Maestroerror\EloquentRegex\Contracts\PatternContract;
 use Maestroerror\EloquentRegex\Contracts\OptionContract;
+use Maestroerror\EloquentRegex\Traits\AddToPatternTrait;
 
 class TextOrNumbersPattern implements PatternContract {
+
+    use AddToPatternTrait;
+
     private array $options;
 
     public function __construct() {
@@ -22,10 +26,6 @@ class TextOrNumbersPattern implements PatternContract {
         }
 
         return $pattern;
-    }
-
-    public function addToPattern(string $existingPattern): string {
-        return $existingPattern . $this->build();
     }
 
     public function reset() {
