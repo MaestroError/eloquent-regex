@@ -16,15 +16,7 @@ interface PatternContract {
      *
      * @return string The constructed regex pattern segment.
      */
-    public function build(): string;
-
-    /**
-     * Adds the built pattern segment to an existing regex pattern.
-     *
-     * @param string $existingPattern The existing regex pattern to which this pattern segment will be added.
-     * @return string The updated regex pattern including this pattern segment.
-     */
-    public function addToPattern(string $pattern): string;
+    public function getPattern(): string;
 
     /**
      * Resets the pattern to its initial state.
@@ -61,10 +53,26 @@ interface PatternContract {
     public function setOptions(array $options);
 
     /**
-     * Validates a given input string against this pattern.
+     * Validates a given input string against this pattern as exact match.
      *
      * @param string $input The input string to validate.
      * @return bool True if the input is valid according to this pattern, false otherwise.
      */
     public function validateInput(string $input): bool;
+
+    /**
+     * Validates a given input string against this pattern as it includes min 1 match.
+     *
+     * @param string $input The input string to validate.
+     * @return bool True if the input is valid according to this pattern, false otherwise.
+     */
+    public function validateMatches(string $input): bool;
+
+    /**
+     * Returns all matches found by this pattern.
+     *
+     * @param string $input The input string to validate.
+     * @return array all matches found in input.
+     */
+    public function getMatches(string $input): array;
 }

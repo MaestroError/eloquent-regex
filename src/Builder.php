@@ -36,6 +36,48 @@ class Builder {
         }
         $this->regex = "/" . $this->regex . "/";
     }
+
+    protected function validateAsInput(): bool {
+        if (!empty($this->patterns)) {
+            foreach ($this->patterns as $pattern) {
+                if (!$pattern->validateInput($this->str)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+
+    protected function validateAsString(): bool {
+        if (!empty($this->patterns)) {
+            foreach ($this->patterns as $pattern) {
+                if (!$pattern->validateMatches($this->str)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+
+    protected function countMatches(): int {
+        $count = 0;
+        if (!empty($this->patterns)) {
+            foreach ($this->patterns as $pattern) {
+                $count += $pattern->countMatches($this->str);
+            }
+        }
+        return $count;
+    }
+
+    protected function getAllMatches(): array {
+        $matches = [];
+        if (!empty($this->patterns)) {
+            foreach ($this->patterns as $pattern) {
+                $matches = array_merge($matches, $pattern->getMatches($this->str));
+            }
+        }
+        return array_values($matches); // Reset keys of the array
+    }
     
     /* Public methods (API) */
 
@@ -44,22 +86,25 @@ class Builder {
     }
 
     public function get(): array {
-        $this->build();
-        $matches = [];
-        preg_match_all($this->regex, $this->str, $matches);
-
-        return $matches[0];
+        return $this->getAllMatches();
     }
 
     public function check(): string {
-        $this->build();
-        return preg_match($this->regex, $this->str) === 1;
+        return $this->validateAsInput();
     }
 
-    public function toRegex(): string {
-        $this->build();
-        return $this->regex;
+    public function checkString(): string {
+        return $this->validateAsString();
     }
+
+    public function count(): string {
+        return count($this->getAllMatches());
+    }
+
+    // public function toRegex(): string {
+    //     $this->build();
+    //     return $this->regex;
+    // }
 
     /* TextAndNumbersPattern implementation */
     public function textOrNumbers(int|array|callable $minLength): self {

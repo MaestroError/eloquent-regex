@@ -4,16 +4,19 @@ namespace Maestroerror\EloquentRegex\Patterns;
 
 use Maestroerror\EloquentRegex\Contracts\PatternContract;
 use Maestroerror\EloquentRegex\Contracts\OptionContract;
-use Maestroerror\EloquentRegex\Traits\AddToPatternTrait;
 
 class TextOrNumbersPattern implements PatternContract {
 
-    use AddToPatternTrait;
-
     private array $options;
+    private string $pattern = "[a-zA-Z0-9]";
 
     public function __construct() {
         $this->options = [];
+    }
+
+    public function getPattern(): string {
+        $pattern = $this->pattern;
+        return $pattern;
     }
 
     public function build(): string {
@@ -24,9 +27,9 @@ class TextOrNumbersPattern implements PatternContract {
         foreach ($this->options as $option) {
             $pattern .= $option->build();
         }
-
         return $pattern;
     }
+
 
     public function reset() {
         $this->options = [];
@@ -44,14 +47,62 @@ class TextOrNumbersPattern implements PatternContract {
         $this->options[] = $options;
     }
 
-    public function validateInput(string $input): bool {
+    private function validateOptions(string $input): bool {
         foreach ($this->options as $option) {
             if (!$option->validate($input)) {
                 return false;
             }
         }
+        return true;
+    }
 
-        // Default validation if no specific options are set
-        return preg_match("/^" . $this->build() . "$/", $input) === 1;
+    private function filterByOptions(array $allMatches): array {
+        $filteredMatches = array_filter($allMatches, function($match) {
+            if(!$this->validateOptions($match)) {
+                return false;
+            }
+            return true;
+        });
+        return array_values($filteredMatches);
+    }
+
+    public function validateInput(string $input): bool {
+        // Validate against the main pattern
+        $mainPattern = "/^{$this->pattern}+$/";
+
+        if (!preg_match($mainPattern, $input)) {
+            return false;
+        }
+
+        if(!$this->validateOptions($input)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function validateMatches(string $input): bool {
+        // Validate against the main pattern
+        $mainPattern = "/{$this->pattern}+/";
+
+        if (preg_match_all($mainPattern, $input, $matches) == 0) {
+            return false;
+        }
+
+        $allMatches = $matches[0];
+
+        $filteredMatches = $this->filterByOptions($allMatches);
+
+        return count($filteredMatches) > 0;
+    }
+
+    public function getMatches(string $input): array {
+        $mainPattern = "/{$this->pattern}+/";
+        preg_match_all($mainPattern, $input, $matches);
+        $allMatches = $matches[0];
+
+        // Filter matches based on each option
+        $filteredMatches = $this->filterByOptions($allMatches);
+        return $filteredMatches;
     }
 }

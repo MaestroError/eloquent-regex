@@ -4,10 +4,24 @@ require __DIR__ . "/vendor/autoload.php";
 
 use Maestroerror\EloquentRegex\Builder;
 
-$string = "Passs1234";
-$builder = new Builder($string);
-$check = $builder->textOrNumbers(8)->check();
+$input = "Passs1234";
+$builder = new Builder($input);
+$check = $builder->textOrNumbers(8)->check(); // Exact same
 print_r($check);
+
+echo "\n";
+
+$string = "asd Passs1234 wawd";
+$builder = new Builder($string);
+$check = $builder->textOrNumbers(8)->checkString(); // Includes min 1
+print_r($check);
+
+echo "\n";
+
+$string = "asd Passs1234 Wawoline343 text here";
+$builder = new Builder($string);
+$count = $builder->textOrNumbers(8)->count(); // Returns number of matches
+print_r($count);
 
 echo "\n";
 
@@ -19,5 +33,6 @@ print_r($get);
 
 echo "\n";
 
-$regex = $builder->toRegex();
-print_r($regex);
+// Deprecated for now
+// $regex = $builder->toRegex();
+// print_r($regex);

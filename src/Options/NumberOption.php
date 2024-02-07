@@ -3,18 +3,18 @@
 namespace Maestroerror\EloquentRegex\Options;
 
 use Maestroerror\EloquentRegex\Contracts\OptionContract;
-use Maestroerror\EloquentRegex\Traits\AddToPatternTrait;
 use Maestroerror\EloquentRegex\Traits\IsOptionalTrait;
 
 class NumberOption implements OptionContract {
 
-    use AddToPatternTrait, IsOptionalTrait;
+    use IsOptionalTrait;
 
     private $minValue = null;
     private $maxValue = null;
     private $exactValue = null;
 
     public function validate(string $input): bool {
+
         $numericCount = preg_match_all('/\d/', $input);
 
         if ($this->exactValue !== null && $numericCount !== $this->exactValue) {
@@ -70,10 +70,6 @@ class NumberOption implements OptionContract {
         $this->exactValue = null;
         $this->isOptional = false;
         return $this;
-    }
-
-    public function description(): string {
-        return "Number option with min value: {$this->minValue}, max value: {$this->maxValue}, exact value: {$this->exactValue}";
     }
 
     // Additional setters for min, max, and exact values

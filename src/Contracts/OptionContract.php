@@ -16,7 +16,7 @@ interface OptionContract {
      * @param string $input The input string to validate.
      * @return bool True if the input is valid, false otherwise.
      */
-    public function validate(string $input);
+    public function validate(string $input): bool;
 
     /**
      * Builds and returns the regex pattern for this option.
@@ -44,21 +44,4 @@ interface OptionContract {
      * @return self For fluent interface.
      */
     public function optional();
-
-    /**
-     * Provides a description of this option.
-     *
-     * This method can be used for generating documentation or debugging.
-     *
-     * @return string A textual description of the option.
-     */
-    public function description(): string;
-
-    /**
-     * Adds this option's pattern to the given regex pattern.
-     *
-     * @param string $pattern The existing regex pattern to append to.
-     * @return string The updated regex pattern including this option.
-     */
-    public function addToPattern(string $pattern): string;
 }
