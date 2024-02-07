@@ -3,11 +3,8 @@
 namespace Maestroerror\EloquentRegex\Options;
 
 use Maestroerror\EloquentRegex\Contracts\OptionContract;
-use Maestroerror\EloquentRegex\Traits\IsOptionalTrait;
 
 class NumberOption implements OptionContract {
-
-    use IsOptionalTrait;
 
     private $minValue = null;
     private $maxValue = null;
@@ -54,22 +51,8 @@ class NumberOption implements OptionContract {
         if ($min === '' && $max !== '') {
             $pattern = "\\d{0,{$max}}";  // Use {0, max} instead of {, max}
         }
-        
-    
-        if ($this->isOptional) {
-            $pattern = "(?:$pattern)?";
-        }
     
         return $pattern;
-    }
-    
-
-    public function reset() {
-        $this->minValue = null;
-        $this->maxValue = null;
-        $this->exactValue = null;
-        $this->isOptional = false;
-        return $this;
     }
 
     // Option methods

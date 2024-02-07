@@ -28,12 +28,6 @@ it('enforces exact number of digits', function () {
     expect($numberOption->validate('1234'))->toBeFalse(); // 4 digits, exact is 3
 });
 
-it('allows optional numbers', function () {
-    $numberOption = new NumberOption();
-    $numberOption->optional();
-    expect($numberOption->validate(''))->toBeTrue(); // No digits is valid when optional
-});
-
 
 it('generates correct regex pattern for default behavior', function () {
     $numberOption = new NumberOption();
@@ -56,12 +50,6 @@ it('generates correct regex pattern for exact number of digits', function () {
     $numberOption = new NumberOption();
     $numberOption->setExactValue(3);
     expect($numberOption->build())->toBe('\d{3}');
-});
-
-it('generates correct regex pattern for optional numbers', function () {
-    $numberOption = new NumberOption();
-    $numberOption->optional();
-    expect($numberOption->build())->toBe('(?:\d+)?');
 });
 
 it('matches numbers according to the default regex pattern', function () {
@@ -95,10 +83,3 @@ it('matches numbers according to the exact number of digits', function () {
     expect(preg_match($regex, '1234'))->toBe(0);
 });
 
-it('matches numbers according to the optional setting', function () {
-    $numberOption = new NumberOption();
-    $numberOption->optional();
-    $regex = "/^" . $numberOption->build() . "$/";
-    expect(preg_match($regex, ''))->toBe(1);
-    expect(preg_match($regex, '123'))->toBe(1);
-});

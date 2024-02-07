@@ -24,24 +24,4 @@ interface OptionContract {
      * @return string The constructed regex pattern segment.
      */
     public function build(): string;
-
-    /**
-     * Resets the option to its initial state.
-     *
-     * This method is useful for reusing the option object for building
-     * new patterns.
-     *
-     * @return self For fluent interface.
-     */
-    public function reset();
-
-    /**
-     * Marks this option as optional in the regex pattern.
-     *
-     * When marked as optional, the pattern segment defined by this option
-     * is not required for a successful match.
-     *
-     * @return self For fluent interface.
-     */
-    public function optional();
 }
