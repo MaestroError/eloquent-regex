@@ -3,12 +3,16 @@
 namespace Maestroerror\EloquentRegex\Options;
 
 use Maestroerror\EloquentRegex\Contracts\OptionContract;
+use Maestroerror\EloquentRegex\Traits\AddToPatternTrait;
+use Maestroerror\EloquentRegex\Traits\IsOptionalTrait;
 
 class LengthOption implements OptionContract {
+
+    use AddToPatternTrait, IsOptionalTrait;
+
     private $minLength = null;
     private $maxLength = null;
     private $exactLength = null;
-    private $isOptional = false;
 
     public function validate(string $input): bool {
         $length = strlen($input);
@@ -60,18 +64,10 @@ class LengthOption implements OptionContract {
         return $this;
     }
 
-    public function optional() {
-        $this->isOptional = true;
-        return $this;
-    }
-
     public function description(): string {
         return "Length option with min length: {$this->minLength}, max length: {$this->maxLength}, exact length: {$this->exactLength}";
     }
 
-    public function addToPattern(string $pattern): string {
-        return $pattern . $this->build();
-    }
 
     // Additional methods
     public function minLength(int $length) {

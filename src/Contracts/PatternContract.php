@@ -24,7 +24,7 @@ interface PatternContract {
      * @param string $existingPattern The existing regex pattern to which this pattern segment will be added.
      * @return string The updated regex pattern including this pattern segment.
      */
-    public function addToPattern(string $existingPattern): string;
+    public function addToPattern(string $pattern): string;
 
     /**
      * Resets the pattern to its initial state.

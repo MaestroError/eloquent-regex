@@ -3,8 +3,13 @@
 namespace Maestroerror\EloquentRegex\Options;
 
 use Maestroerror\EloquentRegex\Contracts\OptionContract;
+use Maestroerror\EloquentRegex\Traits\AddToPatternTrait;
+use Maestroerror\EloquentRegex\Traits\IsOptionalTrait;
 
 class NumberOption implements OptionContract {
+
+    use AddToPatternTrait, IsOptionalTrait;
+
     private $minValue = null;
     private $maxValue = null;
     private $exactValue = null;
