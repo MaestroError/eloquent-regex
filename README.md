@@ -5,3 +5,7 @@ Eloquent Regex brings the simplicity and elegance of Laravel's Eloquent ORM to r
 #### Adding new options
 
 All available option classes and option names are hardcoded in `src\OptionsMapper.php`. Refer to it, if you want add new or disable existing one.
+
+##### To Do
+
+- Implement other debugging tool instead of toRegex() method
