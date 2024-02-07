@@ -34,14 +34,6 @@ it('allows optional numbers', function () {
     expect($numberOption->validate(''))->toBeTrue(); // No digits is valid when optional
 });
 
-it('correctly handles number ranges', function () {
-    $numberOption = new NumberOption();
-    $numberOption->range(2, 4);
-    expect($numberOption->validate('12'))->toBeTrue();
-    expect($numberOption->validate('1234'))->toBeTrue();
-    expect($numberOption->validate('1'))->toBeFalse(); // Less than min
-    expect($numberOption->validate('12345'))->toBeFalse(); // More than max
-});
 
 it('generates correct regex pattern for default behavior', function () {
     $numberOption = new NumberOption();
@@ -70,12 +62,6 @@ it('generates correct regex pattern for optional numbers', function () {
     $numberOption = new NumberOption();
     $numberOption->optional();
     expect($numberOption->build())->toBe('(?:\d+)?');
-});
-
-it('generates correct regex pattern for number ranges', function () {
-    $numberOption = new NumberOption();
-    $numberOption->range(2, 4);
-    expect($numberOption->build())->toBe('\d{2,4}');
 });
 
 it('matches numbers according to the default regex pattern', function () {
@@ -115,14 +101,4 @@ it('matches numbers according to the optional setting', function () {
     $regex = "/^" . $numberOption->build() . "$/";
     expect(preg_match($regex, ''))->toBe(1);
     expect(preg_match($regex, '123'))->toBe(1);
-});
-
-it('matches numbers according to the specified range', function () {
-    $numberOption = new NumberOption();
-    $numberOption->range(2, 4);
-    $regex = "/^" . $numberOption->build() . "$/";
-    expect(preg_match($regex, '12'))->toBe(1);
-    expect(preg_match($regex, '1234'))->toBe(1);
-    expect(preg_match($regex, '1'))->toBe(0);
-    expect(preg_match($regex, '12345'))->toBe(0);
 });

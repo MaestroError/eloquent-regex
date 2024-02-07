@@ -6,6 +6,9 @@ Eloquent Regex brings the simplicity and elegance of Laravel's Eloquent ORM to r
 
 All available option classes and option names are hardcoded in `src\OptionsMapper.php`. Refer to it, if you want add new or disable existing one.
 
+Think about options as an extra assertions you add to the pattern. To keep it simple, all options (so the option methods too) should have only 1 argument.
+
 ##### To Do
 
-- Implement other debugging tool instead of toRegex() method
+- Review all comments
+- Write BuilderPattern
