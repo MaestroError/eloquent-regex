@@ -21,25 +21,14 @@ Examples: `->dot("zeroOrMore")` `->exact("hello worls", false, "1+")`
 ##### To Do
 
 - Review all comments
-- Write BuilderPattern
+- Write BuilderPattern +
+- Add Dockblocs and comments for new methods
+- Add facade for Laravel
+- Wrap Builder in class for static start
+- Write documentation
 - Implement string resolver pattern to use strings like "text(2)-digits()" (or "text:2-digits", or "text|2-digits") as pattern
-
-3. Quantifiers
-
-   zeroOrMore(): Matches zero or more of the preceding element.
-   oneOrMore(): Matches one or more of the preceding element.
-   optional(): Matches zero or one of the preceding element.
-
-4. Special Characters and Escaping
-
-   dot(): Matches any character except newline.
-   escapeSpecialChars($string): Escapes special characters in the provided string.
-
-5. Anchors and Boundaries
-
-   start(): Asserts the start of a line or string.
-   end(): Asserts the end of a line or string.
-   wordBoundary(): Matches a word boundary.
+- Make options controllable from config or provider (?)
+- Make pattern controllable from config or provider (?)
 
 6. Groups and Alternation
 
@@ -61,3 +50,9 @@ Implementation Considerations
     Flexibility: Ensure your methods can handle various inputs and scenarios.
     Escaping: Provide automatic escaping for special characters where appropriate.
     Documentation: Document each method clearly for ease of use.
+
+Visible Characters (visibleChars()): Matches any visible character (non-space, non-control characters).
+
+Invisible Characters (invisibleChars()): Opposite of visibleChars(), matches spaces and control characters.
+
+Named Groups (namedGroup($name, callable $callback)): Allows creating named capturing groups.
