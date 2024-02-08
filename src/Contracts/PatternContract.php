@@ -66,4 +66,22 @@ interface PatternContract {
      * @return array all matches found in input.
      */
     public function getMatches(string $input): array;
+
+    /**
+     * Generates the regex pattern for input validation.
+     *
+     * This pattern is used to check if the entire input string exactly matches the constructed pattern.
+     *
+     * @return string The regex pattern for validating the entire input.
+     */
+    public function getInputValidationPattern(): string;
+
+    /**
+     * Generates the regex pattern for finding matches within the input.
+     *
+     * This pattern is used to search for occurrences of the pattern within the input string.
+     *
+     * @return string The regex pattern for finding matches within the input.
+     */
+    public function getMatchesValidationPattern(): string;
 }

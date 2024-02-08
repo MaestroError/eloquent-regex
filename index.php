@@ -7,7 +7,7 @@ use Maestroerror\EloquentRegex\Builder;
 $input = "Revaz1621";
 $builder = new Builder($input);
 // Min 8 chars, min 1 uppercase
-$check = $builder->textOrNumbers(8, 0, 1)->check(); // Exact same
+$check = $builder->textOrNumbers(8, 0, 1)->check(); // Exact same (entire input from start ^ to end $)
 print_r($check);
 
 echo "\n";
@@ -45,3 +45,11 @@ print_r($regex);
 
 // $string = "Revaz1621 an 1sada a 5464565";
 // $builder = (new Builder($string))->textOrNumbers("string")->check();
+
+$SR = new Builder("RI-214");
+$check = $SR->start()->textUppercase(2)->dash()->anyNumbers()->end()->check();
+
+$SR = new Builder("RI-214");
+$check = $SR->pattern(function (BuilderPattern $builder) {
+    return $builder->textUppercase(2)->dash()->anyNumbers();
+})->check();
