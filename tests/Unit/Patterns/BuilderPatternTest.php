@@ -91,7 +91,7 @@ test('combination of methods generates correct regex pattern and matches correct
 });
 
 test('exact method generates correct regex pattern and matches correctly', function () {
-    $builder = new \Maestroerror\EloquentRegex\Patterns\BuilderPattern();
+    $builder = new BuilderPattern();
     $builder->exact('Hello World');
     $pattern = "/^" . $builder->getPattern() . "$/";
 
@@ -102,7 +102,7 @@ test('exact method generates correct regex pattern and matches correctly', funct
 });
 
 test('character method generates correct regex pattern and matches correctly', function () {
-    $builder = new \Maestroerror\EloquentRegex\Patterns\BuilderPattern();
+    $builder = new BuilderPattern();
     $builder->character('+');
     $pattern = "/^" . $builder->getPattern() . "$/";
 
@@ -112,7 +112,7 @@ test('character method generates correct regex pattern and matches correctly', f
 });
 
 test('combination of exact, character, text, and digits methods generates correct regex pattern and matches correctly', function () {
-    $builder = new \Maestroerror\EloquentRegex\Patterns\BuilderPattern();
+    $builder = new BuilderPattern();
     $builder->text(2)->exact("123")->character('A', false)->digits(2);
     $pattern = "/^" . $builder->getPattern() . "$/";
 
@@ -123,7 +123,7 @@ test('combination of exact, character, text, and digits methods generates correc
 });
 
 test('exact method with case-insensitive option matches correctly', function () {
-    $builder = new \Maestroerror\EloquentRegex\Patterns\BuilderPattern();
+    $builder = new BuilderPattern();
     $builder->exact('Hello', false); // False for case-insensitive
     $pattern = "/^" . $builder->getPattern() . "$/";
 
@@ -135,7 +135,7 @@ test('exact method with case-insensitive option matches correctly', function () 
 });
 
 test('character method with case-insensitive option matches correctly', function () {
-    $builder = new \Maestroerror\EloquentRegex\Patterns\BuilderPattern();
+    $builder = new BuilderPattern();
     $builder->character('X', false); // False for case-insensitive
     $pattern = "/^" . $builder->getPattern() . "$/";
 
@@ -146,7 +146,7 @@ test('character method with case-insensitive option matches correctly', function
 });
 
 test('dot method matches correctly', function () {
-    $builder = new \Maestroerror\EloquentRegex\Patterns\BuilderPattern();
+    $builder = new BuilderPattern();
     $builder->dot();
     
     // Test for validateInput (exact match)
@@ -160,7 +160,7 @@ test('dot method matches correctly', function () {
 });
 
 test('wordBoundary method adds a word boundary correctly', function () {
-    $builder = new \Maestroerror\EloquentRegex\Patterns\BuilderPattern();
+    $builder = new BuilderPattern();
     $builder->exact('test')->wordBoundary();
 
     expect($builder->validateInput('test'))->toBeTrue();
@@ -169,10 +169,227 @@ test('wordBoundary method adds a word boundary correctly', function () {
 });
 
 test('asWord method wraps pattern with word boundaries', function () {
-    $builder = new \Maestroerror\EloquentRegex\Patterns\BuilderPattern();
+    $builder = new BuilderPattern();
     $builder->exact('test')->asWord();
 
     expect($builder->validateInput('test'))->toBeTrue();
     expect($builder->validateMatches('a test b'))->toBeTrue(); // 'test' is a whole word within the string
     expect($builder->validateMatches('atestb'))->toBeFalse(); // No word boundaries around 'test'
+});
+
+test('Combination of special character methods generates correct regex pattern and matches correctly', function () {
+    $builder = new \Maestroerror\EloquentRegex\Patterns\BuilderPattern();
+    $builder->textUppercase(2)->dash()->backslash()
+        ->forwardSlash()->underscore()->pipe()->ampersand()->asterisk()->plus()
+        ->questionMark()->atSign()->exclamationMark()->period()->comma()->semicolon()
+        ->colon()->openSquareBracket()->closeSquareBracket()->openCurlyBrace()
+        ->closeCurlyBrace()->openParenthesis()->closeParenthesis()->openAngleBracket()
+        ->closeAngleBracket()->equalSign()->tilde()->hyphen()->minus()->doubleQuote();
+
+    $regex = $builder->getInputValidationPattern();
+
+    // Test the pattern against a specific string
+    $testString = 'AB-\/_|&*+?@!.,;:[]{}()<>=~--"';
+    expect(preg_match($regex, $testString))->toBe(1);
+});
+
+
+test('Special characters with textUppercase generate correct regex and match appropriately', function () {
+    $builder = new BuilderPattern();
+    $builder->textUppercase(2)->dash()->underscore()->ampersand();
+
+    $expectedPattern = '/[A-Z]{2}\-_&/';
+    $regex = $builder->getMatchesValidationPattern();
+
+    expect($regex)->toBe($expectedPattern);
+    expect(preg_match($regex, 'AB-_&'))->toBe(1);
+    expect(preg_match($regex, 'ab-_&'))->toBe(0); // Lowercase should not match
+    expect(preg_match($regex, 'AB-_'))->toBe(0); // Missing ampersand
+});
+
+test('Paired special characters generate correct regex and match appropriately', function () {
+    $builder = new BuilderPattern();
+    $builder->openSquareBracket()->exact('test')->closeSquareBracket();
+
+    $expectedPattern = '/\\[test\\]/';
+    $regex = $builder->getMatchesValidationPattern();
+
+    expect($regex)->toBe($expectedPattern);
+    expect(preg_match($regex, '[test]'))->toBe(1);
+    expect(preg_match($regex, 'test'))->toBe(0); // Should not match without brackets
+    expect(preg_match($regex, '[test'))->toBe(0); // Missing closing bracket
+});
+
+test('Escaped characters with quantifiers generate correct regex and match appropriately', function () {
+    $builder = new BuilderPattern();
+    $builder->doubleQuote()->exact('quoted', true, '*')->doubleQuote();
+
+    $expectedPattern = '/"quoted*"/';
+    $regex = $builder->getMatchesValidationPattern();
+
+    expect($regex)->toBe($expectedPattern);
+    expect(preg_match($regex, '"quoted"'))->toBe(1);
+    expect(preg_match($regex, '"quote"'))->toBe(1); // Should match as * allows for zero or more
+    expect(preg_match($regex, 'quoted'))->toBe(0); // Should not match without quotes
+});
+
+test('singleQuote, tab, newLine, and carriageReturn methods generate correct regex pattern and match correctly', function () {
+    $builder = new BuilderPattern();
+    $builder->singleQuote()->tab()->newLine()->carriageReturn();
+
+    $regex = $builder->getInputValidationPattern();
+
+    // Test the pattern against a specific string
+    // Using double quotes here to allow escape sequences to be interpreted
+    $testString = "'\t\n\r";
+    expect(preg_match($regex, $testString))->toBe(1);
+});
+
+test('lowercaseTextRange with exact \t generates correct regex pattern and match correctly', function () {
+    $builder = new BuilderPattern();
+    $builder->lowercaseTextRange(0, 5)->exact("\t")->digits(5);
+
+    $regex = $builder->getInputValidationPattern();
+
+    // Test the pattern against a specific string
+    // Using double quotes here to allow escape sequences to be interpreted
+    $testString = "abc\t12345";
+    expect(preg_match($regex, $testString))->toBe(1);
+    expect(preg_match($regex, "abc\t135"))->toBe(0);
+});
+
+test('Special character methods generate correct regex pattern and match correctly', function () {
+    $builder = new BuilderPattern();
+    $builder->percent()->dollar()->hash()->backtick()->caret()->unicode(0x1F600)->unicode(0x1F600); // Unicode for grinning face emoji
+
+    $regex = $builder->getInputValidationPattern(); // Add 'u' modifier for Unicode support
+
+    // Test the pattern against a specific string
+    $testString = '%$#`^😀😀'; // The last character is the grinning face emoji
+    expect(preg_match($regex, $testString))->toBe(1);
+});
+
+test('verticalTab method matches vertical tab character correctly', function () {
+    $builder = new BuilderPattern();
+    $builder->verticalTab();
+
+    $regex = $builder->getInputValidationPattern();
+
+    // Test the pattern against a string containing a vertical tab character
+    expect(preg_match($regex, "\v"))->toBe(1); // Vertical tab should match
+    expect(preg_match($regex, " "))->toBe(0);  // Regular space should not match
+    expect(preg_match($regex, "\t"))->toBe(0); // Horizontal tab should not match
+});
+
+test('formFeed method matches form feed character correctly', function () {
+    $builder = new BuilderPattern();
+    $builder->formFeed();
+
+    $regex = $builder->getInputValidationPattern();
+
+    // Test the pattern against a string containing a form feed character
+    expect(preg_match($regex, "\f"))->toBe(1); // Form feed should match
+    expect(preg_match($regex, "\n"))->toBe(0); // New line should not match
+    expect(preg_match($regex, "\r"))->toBe(0); // Carriage return should not match
+});
+
+test('nonWhitespace method matches non-whitespace characters', function () {
+    $builder = new BuilderPattern();
+    $builder->nonWhitespace(3); // Matches exactly 3 non-whitespace characters
+    $regex = $builder->getInputValidationPattern();
+    expect(preg_match($regex, 'ABC'))->toBe(1);
+    expect(preg_match($regex, 'A B'))->toBe(0); // Contains whitespace
+    expect(preg_match($regex, 'AB'))->toBe(0); // Less than 3 characters
+});
+
+test('wordChar method matches word characters', function () {
+    $builder = new BuilderPattern();
+    $builder->wordChar(2); // Matches exactly 2 word characters
+    $regex = $builder->getInputValidationPattern();
+    expect(preg_match($regex, 'Ab'))->toBe(1);
+    expect(preg_match($regex, 'A1'))->toBe(1);
+    expect(preg_match($regex, 'A_'))->toBe(1);
+    expect(preg_match($regex, 'A '))->toBe(0); // Contains a non-word character
+});
+
+test('nonWordChar method matches non-word characters', function () {
+    $builder = new BuilderPattern();
+    $builder->nonWordChar(2); // Matches exactly 2 non-word characters
+    $regex = $builder->getInputValidationPattern();
+    expect(preg_match($regex, '--'))->toBe(1);
+    expect(preg_match($regex, '!@'))->toBe(1);
+    expect(preg_match($regex, 'A@'))->toBe(0); // Contains a word character
+});
+
+test('numbers method matches numbers correctly', function () {
+    $builder = new BuilderPattern();
+    $builder->numbers(3); // Matches exactly 3 digits
+    $regex = $builder->getInputValidationPattern();
+    expect(preg_match($regex, '123'))->toBe(1);
+    expect(preg_match($regex, '12A'))->toBe(0); // Contains a non-digit
+    expect(preg_match($regex, '12'))->toBe(0); // Less than 3 digits
+});
+
+test('anyNumbers method matches any number of digits correctly', function () {
+    $builder = new BuilderPattern();
+    $builder->anyNumbers(); // Matches any number of digits
+    $regex = $builder->getInputValidationPattern();
+    expect(preg_match($regex, '12345'))->toBe(1);
+    expect(preg_match($regex, 'ABC'))->toBe(0); // Contains no digits
+    expect(preg_match($regex, 'ABC23'))->toBe(0); // Contains no digits
+});
+
+test('digit and nonDigits methods match single digit and non-digit characters correctly', function () {
+    $builder = new BuilderPattern();
+    $builder->digit(); // Matches a single digit
+    $regex = $builder->getInputValidationPattern();
+    expect(preg_match($regex, '1'))->toBe(1);
+    expect(preg_match($regex, 'A'))->toBe(0); // Non-digit character
+
+    $builder = new BuilderPattern();
+    $builder->nonDigits(); // Matches a single non-digit character
+    $regex = $builder->getInputValidationPattern();
+    expect(preg_match($regex, 'A'))->toBe(1);
+    expect(preg_match($regex, '1'))->toBe(0); // Digit character
+});
+
+// Testing the range functionalities of digits and non-digits
+test('numbersRange and nonDigitRange methods match ranges correctly', function () {
+    $builder = new BuilderPattern();
+    $builder->numbersRange(2, 4); // Matches 2 to 4 digits
+    $regex = $builder->getInputValidationPattern();
+    expect(preg_match($regex, '12'))->toBe(1);
+    expect(preg_match($regex, '1234'))->toBe(1);
+    expect(preg_match($regex, '12345'))->toBe(0); // More than 4 digits
+    expect(preg_match($regex, 'A123'))->toBe(0); // Contains a non-digit
+
+    $builder = new BuilderPattern();
+    $builder->nonDigitsRange(1, 3); // Matches 1 to 3 non-digits
+    $regex = $builder->getInputValidationPattern();
+    echo $regex;
+    expect(preg_match($regex, 'A'))->toBe(1);
+    expect(preg_match($regex, 'ABC'))->toBe(1);
+    expect(preg_match($regex, 'ABCD'))->toBe(0); // More than 3 non-digits
+});
+
+test('visibleChars method matches visible characters correctly', function () {
+    $builder = new \Maestroerror\EloquentRegex\Patterns\BuilderPattern();
+    $builder->visibleChars(3); // Matches exactly 3 visible characters
+    $regex = $builder->getInputValidationPattern();
+
+    expect(preg_match($regex, 'abc'))->toBe(1);
+    expect(preg_match($regex, 'a b'))->toBe(0); // Contains a space
+    expect(preg_match($regex, 'ab'))->toBe(0); // Less than 3 characters
+    expect(preg_match($regex, 'abcd'))->toBe(0); // More than 3 characters
+});
+
+test('invisibleChars method matches invisible characters correctly', function () {
+    $builder = new \Maestroerror\EloquentRegex\Patterns\BuilderPattern();
+    $builder->invisibleChars(2); // Matches exactly 2 invisible characters
+    $regex = $builder->getInputValidationPattern();
+
+    expect(preg_match($regex, '  '))->toBe(1);
+    expect(preg_match($regex, ' a'))->toBe(0); // Contains a visible character
+    expect(preg_match($regex, ' '))->toBe(0); // Only one invisible character
+    expect(preg_match($regex, '   '))->toBe(0); // More than 2 invisible characters
 });

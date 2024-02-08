@@ -7,6 +7,7 @@ use Maestroerror\EloquentRegex\Contracts\BuilderContract;
 use Maestroerror\EloquentRegex\Traits\BuilderPatternTraits\CharacterClassesTrait;
 use Maestroerror\EloquentRegex\Traits\BuilderPatternTraits\SpecificCharsTrait;
 use Maestroerror\EloquentRegex\Traits\BuilderPatternTraits\AnchorsTrait;
+use Maestroerror\EloquentRegex\Builder;
 
 
 class BuilderPattern extends BasePattern {
@@ -15,9 +16,10 @@ class BuilderPattern extends BasePattern {
 
     protected array $options = [];
     protected string $pattern = "";
+    protected string $expressionFlags = "";
     protected BuilderContract $builder; // Reference to the main Builder object
 
-    public function __construct(BuilderContract $builder) {
+    public function __construct(BuilderContract $builder = new Builder()) {
         $this->builder = $builder;
     }
 
@@ -26,11 +28,11 @@ class BuilderPattern extends BasePattern {
     }
 
     public function getInputValidationPattern(): string {
-        return "/^{$this->pattern}$/";
+        return "/^{$this->pattern}$/" . $this->expressionFlags;
     }
 
     public function getMatchesValidationPattern(): string {
-        return "/{$this->pattern}/";
+        return "/{$this->pattern}/" . $this->expressionFlags;
     }
 
     private function applyQuantifier($pattern, $quantifier) {
@@ -60,6 +62,12 @@ class BuilderPattern extends BasePattern {
         }
     
         return "+";  // Default case, one or more times
+    }
+
+    private function addExpressionFlag(string $flag): void {
+        if (strpos($this->expressionFlags, $flag) === false) {
+            $this->expressionFlags .= $flag;
+        }
     }
     
 }

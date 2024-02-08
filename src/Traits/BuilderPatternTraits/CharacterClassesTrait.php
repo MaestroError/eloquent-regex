@@ -80,9 +80,43 @@ trait CharacterClassesTrait {
         $this->handleDigits(null, $minLength, $maxLength);
         return $this;
     }
+
+    public function numbers($length = null): self {
+        $this->handleDigits($length);
+        return $this;
+    }
+    
+    public function numbersRange($minLength = 0, $maxLength = 0): self {
+        $this->handleDigits(null, $minLength, $maxLength);
+        return $this;
+    }
+    
+    public function anyNumbers(): self {
+        $this->handleDigits();
+        return $this;
+    }
+    
+    public function digit(): self {
+        return $this->digits(1);  // Reuse the existing digits method
+    }
     
     private function handleDigits($length = null, $minLength = 0, $maxLength = 0) {
         $this->pattern .= "\\d";  // Matches digits
+        $this->pattern .= $this->getLengthOption($length, $minLength, $maxLength);
+    }
+
+    public function nonDigits($length = null): self {
+        $this->handleNonDigits($length);
+        return $this;
+    }
+
+    public function nonDigitsRange($minLength = 0, $maxLength = 0): self {
+        $this->handleNonDigits(null, $minLength, $maxLength);
+        return $this;
+    }
+    
+    private function handleNonDigits($length = null, $minLength = 0, $maxLength = 0) {
+        $this->pattern .= "\\D";  // Matches digits
         $this->pattern .= $this->getLengthOption($length, $minLength, $maxLength);
     }
     
@@ -127,6 +161,51 @@ trait CharacterClassesTrait {
         $this->pattern .= $this->getLengthOption($length, $minLength, $maxLength);
     }
 
+    public function nonWhitespace($length = null): self {
+        $this->handleNonWhitespace($length);
+        return $this;
+    }
+
+    public function nonWhitespaceRange($minLength = 0, $maxLength = 0): self {
+        $this->handleNonWhitespace(null, $minLength, $maxLength);
+        return $this;
+    }
+    
+    private function handleNonWhitespace($length = null, $minLength = 0, $maxLength = 0) {
+        $this->pattern .= "\\S";  // Matches whitespace characters
+        $this->pattern .= $this->getLengthOption($length, $minLength, $maxLength);
+    }
+
+    public function wordChar($length = null): self {
+        $this->handleWordChar($length);
+        return $this;
+    }
+
+    public function wordCharRange($minLength = 0, $maxLength = 0): self {
+        $this->handleWordChar(null, $minLength, $maxLength);
+        return $this;
+    }
+    
+    private function handleWordChar($length = null, $minLength = 0, $maxLength = 0) {
+        $this->pattern .= "\\w";  // Matches word characters
+        $this->pattern .= $this->getLengthOption($length, $minLength, $maxLength);
+    }
+
+    public function nonWordChar($length = null): self {
+        $this->handleNonWordChar($length);
+        return $this;
+    }
+
+    public function nonWordCharRange($minLength = 0, $maxLength = 0): self {
+        $this->handleNonWordChar(null, $minLength, $maxLength);
+        return $this;
+    }
+    
+    private function handleNonWordChar($length = null, $minLength = 0, $maxLength = 0) {
+        $this->pattern .= "\\W";  // Matches non-word characters
+        $this->pattern .= $this->getLengthOption($length, $minLength, $maxLength);
+    }
+
     public function anyChar($length = null): self {
         $this->handleAnyChar($length);
         return $this;
@@ -139,6 +218,36 @@ trait CharacterClassesTrait {
     
     private function handleAnyChar($length = null, $minLength = 0, $maxLength = 0) {
         $this->pattern .= ".";  // Matches any character (except newline)
+        $this->pattern .= $this->getLengthOption($length, $minLength, $maxLength);
+    }
+
+    public function visibleChars($length = null): self {
+        $this->handleVisibleChars($length);
+        return $this;
+    }
+
+    public function visibleCharsRange($minLength = 0, $maxLength = 0): self {
+        $this->handleVisibleChars(null, $minLength, $maxLength);
+        return $this;
+    }
+
+    private function handleVisibleChars($length = null, $minLength = 0, $maxLength = 0) {
+        $this->pattern .= "\\S";  // Matches any non-whitespace character (visible characters)
+        $this->pattern .= $this->getLengthOption($length, $minLength, $maxLength);
+    }
+
+    public function invisibleChars($length = null): self {
+        $this->handleInvisibleChars($length);
+        return $this;
+    }
+
+    public function invisibleCharsRange($minLength = 0, $maxLength = 0): self {
+        $this->handleInvisibleChars(null, $minLength, $maxLength);
+        return $this;
+    }
+
+    private function handleInvisibleChars($length = null, $minLength = 0, $maxLength = 0) {
+        $this->pattern .= "\\s";  // Matches any whitespace character (invisible characters)
         $this->pattern .= $this->getLengthOption($length, $minLength, $maxLength);
     }
 
