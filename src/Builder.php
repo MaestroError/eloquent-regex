@@ -6,15 +6,16 @@ use Maestroerror\EloquentRegex\Contracts\PatternContract;
 use Maestroerror\EloquentRegex\OptionsManager;
 use Maestroerror\EloquentRegex\OptionsBuilder;
 use Maestroerror\EloquentRegex\Traits\Patterns\TextOrNumbersTrait;
+use Maestroerror\EloquentRegex\Traits\Patterns\BuilderPatternTrait;
+use Maestroerror\EloquentRegex\Contracts\BuilderContract;
 
-class Builder {
+class Builder implements BuilderContract {
 
-    use TextOrNumbersTrait;
+    use TextOrNumbersTrait, BuilderPatternTrait;
 
     protected string $str;
     protected PatternContract $pattern;
     protected OptionsManager $manager;
-    protected string $regex = "";
 
     public function __construct(string $str = "") {
         $this->str = $str;
@@ -63,11 +64,6 @@ class Builder {
         return true;
     }
 
-    protected function countMatches(): int {
-        $count = $this->pattern->countMatches($this->str);
-        return $count;
-    }
-
     protected function getAllMatches(): array {
         return $this->pattern->getMatches($this->str);
     }
@@ -107,12 +103,12 @@ class Builder {
         }
         return $this->validateAsString();
     }
-    
+
     public function count(): int {
         if (!$this->patternIsSet()) {
             throw new \LogicException("Pattern must be set before counting matches.");
         }
-        return $this->countMatches();
+        return count($this->getAllMatches());
     }
     
     public function toRegex(): string {
@@ -122,7 +118,7 @@ class Builder {
         return $this->pattern->getPattern();
     }
 
-    public function setOptions(array|callable $config) {
+    public function setOptions(array|callable $config): void {
         // Check if the pattern is set
         if (!$this->patternIsSet()) {
             throw new \LogicException("Pattern must be set before setting options.");
