@@ -50,6 +50,6 @@ $SR = new Builder("RI-214");
 $check = $SR->start()->textUppercase(2)->dash()->anyNumbers()->end()->check();
 
 $SR = new Builder("RI-214");
-$check = $SR->pattern(function (BuilderPattern $builder) {
+$check = $SR->pattern(function ($builder) {
     return $builder->textUppercase(2)->dash()->anyNumbers();
 })->check();

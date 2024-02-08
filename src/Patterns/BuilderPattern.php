@@ -3,6 +3,7 @@
 namespace Maestroerror\EloquentRegex\Patterns;
 
 use Maestroerror\EloquentRegex\Patterns\BasePattern;
+use Maestroerror\EloquentRegex\Contracts\BuilderContract;
 use Maestroerror\EloquentRegex\Traits\BuilderPatternTraits\CharacterClassesTrait;
 use Maestroerror\EloquentRegex\Traits\BuilderPatternTraits\SpecificCharsTrait;
 use Maestroerror\EloquentRegex\Traits\BuilderPatternTraits\AnchorsTrait;
@@ -14,6 +15,15 @@ class BuilderPattern extends BasePattern {
 
     protected array $options = [];
     protected string $pattern = "";
+    protected BuilderContract $builder; // Reference to the main Builder object
+
+    public function __construct(BuilderContract $builder) {
+        $this->builder = $builder;
+    }
+
+    public function end(): BuilderContract {
+        return $this->builder; // Return the Builder object
+    }
 
     public function getInputValidationPattern(): string {
         return "/^{$this->pattern}$/";
@@ -22,7 +32,6 @@ class BuilderPattern extends BasePattern {
     public function getMatchesValidationPattern(): string {
         return "/{$this->pattern}/";
     }
-
 
     private function applyQuantifier($pattern, $quantifier) {
         switch ($quantifier) {
