@@ -42,3 +42,6 @@ echo "\n";
 
 $regex = $builder->toRegex();
 print_r($regex);
+
+// $string = "Passs1234 an 1sada a 5464565";
+// $builder = (new Builder($string))->textOrNumbers("string")->check();

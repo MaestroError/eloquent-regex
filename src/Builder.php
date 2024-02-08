@@ -2,12 +2,15 @@
 
 namespace Maestroerror\EloquentRegex;
 
-use Maestroerror\EloquentRegex\Patterns\TextOrNumbersPattern;
 use Maestroerror\EloquentRegex\Contracts\PatternContract;
 use Maestroerror\EloquentRegex\OptionsManager;
 use Maestroerror\EloquentRegex\OptionsBuilder;
+use Maestroerror\EloquentRegex\Traits\Patterns\TextOrNumbersTrait;
 
 class Builder {
+
+    use TextOrNumbersTrait;
+
     protected string $str;
     protected PatternContract $pattern;
     protected OptionsManager $manager;
@@ -68,66 +71,70 @@ class Builder {
     protected function getAllMatches(): array {
         return $this->pattern->getMatches($this->str);
     }
+
+    /**
+     * Checks if a pattern is set.
+     *
+     * @return bool Returns true if a pattern is set, false otherwise.
+     */
+    protected function patternIsSet(): bool {
+        return isset($this->pattern) && !empty($this->pattern);
+    }
     
     /* Public methods (API) */
 
-    public function setTargetString(string $str): void {
+    public function setString(string $str): void {
         $this->str = $str;
     }
 
     public function get(): array {
+        if (!$this->patternIsSet()) {
+            throw new \LogicException("Pattern must be set before getting matches.");
+        }
         return $this->getAllMatches();
     }
-
-    public function check(): string {
+    
+    public function check(): bool {
+        if (!$this->patternIsSet()) {
+            throw new \LogicException("Pattern must be set before performing check.");
+        }
         return $this->validateAsInput();
     }
-
-    public function checkString(): string {
+    
+    public function checkString(): bool {
+        if (!$this->patternIsSet()) {
+            throw new \LogicException("Pattern must be set before performing string check.");
+        }
         return $this->validateAsString();
     }
-
+    
     public function count(): int {
-        return count($this->getAllMatches());
+        if (!$this->patternIsSet()) {
+            throw new \LogicException("Pattern must be set before counting matches.");
+        }
+        return $this->countMatches();
     }
-
+    
     public function toRegex(): string {
+        if (!$this->patternIsSet()) {
+            throw new \LogicException("Pattern must be set before converting to regex.");
+        }
         return $this->pattern->getPattern();
     }
 
-    /* TextAndNumbersPattern implementation */
-    public function textOrNumbers(int|array|callable $minLength, int $maxLength = 0, int $minUppercase = 0, int $minLowercase = 0, int $minNumbers = 0, int $maxNumbers = 0): self {
-        // Set needed pattern
-        $this->pattern = new TextOrNumbersPattern();
-
-        // Handle options array scenario
-        if (is_array($minLength)) {
-            $this->processConfigArray($minLength);
+    public function setOptions(array|callable $config) {
+        // Check if the pattern is set
+        if (!$this->patternIsSet()) {
+            throw new \LogicException("Pattern must be set before setting options.");
         }
-        // Handle argument scenario
-        else if (is_int($minLength)) {
-            $values = func_get_args();
-            $args = [
-                "minLength",
-                "maxLength",
-                "minUppercase",
-                "minLowercase",
-                "minNumbers",
-                "maxNumbers",
-            ];
-            $this->processArguments($args, $values, function($value) {
-                return $value > 0;
-            });
+        // Handle options array scenario
+        if (is_array($config)) {
+            $this->processConfigArray($config);
         }
         // Handle callback scenario
-        else if (is_callable($minLength)) {
-            $this->processCallback($minLength);
+        else if (is_callable($config)) {
+            $this->processCallback($config);
         } 
-        else {
-            
-        }
-
-        return $this;
     }
 
 }
