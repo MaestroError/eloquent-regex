@@ -3,24 +3,43 @@
 namespace Maestroerror\EloquentRegex\Patterns;
 
 use Maestroerror\EloquentRegex\Patterns\BasePattern;
+use Maestroerror\EloquentRegex\Traits\BuilderPatternTraits\CharacterClassesTrait;
+use Maestroerror\EloquentRegex\Traits\BuilderPatternTraits\SpecificCharsTrait;
+use Maestroerror\EloquentRegex\Traits\BuilderPatternTraits\AnchorsTrait;
+
 
 class BuilderPattern extends BasePattern {
+
+    use CharacterClassesTrait, SpecificCharsTrait, AnchorsTrait;
+
     protected array $options = [];
     protected string $pattern = "";
 
-    public function lowercaseText($length = null) {
-        $this->pattern .= "[a-z]";
-        $this->pattern .= "{$length}";
+    public function getInputValidationPattern(): string {
+        return "/^{$this->pattern}$/";
     }
 
-    public function textLowercase($length = null) {
-        $this->pattern .= "[a-z]";
-        $this->pattern .= $this->getLengthOption($length);
+    public function getMatchesValidationPattern(): string {
+        return "/{$this->pattern}/";
     }
 
-    public function getLengthOption($length = null, $minLength = 0, $maxLength = 0) {
+
+    private function applyQuantifier($pattern, $quantifier) {
+        switch ($quantifier) {
+            case 'zeroOrMore' || '0>' || '0+':
+                return $pattern . '*';
+            case 'oneOrMore' || '1>' || '1+':
+                return $pattern . '+';
+            case 'optional' || '?' || '|':
+                return $pattern . '?';
+            default:
+                return $pattern;
+        }
+    }
+
+    private function getLengthOption($length = null, $minLength = 0, $maxLength = 0): string {
         if (is_int($length) && $length >= 0) {
-            return "{$length}";
+            return "{" . $length . "}";
         }
     
         if ($minLength > 0 && $maxLength > 0) {

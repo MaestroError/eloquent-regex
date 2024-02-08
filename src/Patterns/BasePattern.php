@@ -65,8 +65,8 @@ class BasePattern implements PatternContract {
      */
     public function validateInput(string $input): bool {
         // Validate against the main pattern
-        $mainPattern = "/^{$this->pattern}+$/";
-
+        $mainPattern = $this->getInputValidationPattern();
+        
         // First, check if the entire input matches the main pattern
         if (!preg_match($mainPattern, $input)) {
             return false;
@@ -84,7 +84,7 @@ class BasePattern implements PatternContract {
      */
     public function validateMatches(string $input): bool {
         // Validate against the main pattern
-        $mainPattern = "/{$this->pattern}+/";
+        $mainPattern = $this->getMatchesValidationPattern();
 
         // Find all matches for the main pattern in the input
         if (preg_match_all($mainPattern, $input, $matches) == 0) {
@@ -105,7 +105,7 @@ class BasePattern implements PatternContract {
      * @return array An array of matches.
      */
     public function getMatches(string $input): array {
-        $mainPattern = "/{$this->pattern}+/";
+        $mainPattern = $this->getMatchesValidationPattern();
         preg_match_all($mainPattern, $input, $matches);
 
         // Filter matches based on each option
@@ -132,11 +132,21 @@ class BasePattern implements PatternContract {
      * @return bool True if the input string passes all options' validation, false otherwise.
      */
     protected function validateOptions(string $input): bool {
-        foreach ($this->options as $option) {
-            if (!$option->validate($input)) {
-                return false;
+        if (!empty($this->options)) {
+            foreach ($this->options as $option) {
+                if (!$option->validate($input)) {
+                    return false;
+                }
             }
         }
         return true;
+    }
+    
+    public function getInputValidationPattern(): string {
+        return "/^{$this->pattern}$/";
+    }
+
+    public function getMatchesValidationPattern(): string {
+        return "/{$this->pattern}/";
     }
 }
