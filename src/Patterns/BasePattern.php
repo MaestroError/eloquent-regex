@@ -33,13 +33,6 @@ class BasePattern implements PatternContract {
     }
 
     /**
-     * Resets the pattern to its initial state.
-     */
-    public function reset() {
-        $this->options = [];
-    }
-
-    /**
      * Sets the options for this pattern.
      *
      * @param array $options Array of options to be applied to the pattern.
@@ -58,13 +51,13 @@ class BasePattern implements PatternContract {
     }
 
     /**
-     * Validates an input string against the pattern and its options.
+     * Validates an input string against the pattern and its options as exact match.
      *
      * @param string $input The input string to validate.
      * @return bool True if the input string validates against the pattern and options, false otherwise.
      */
     public function validateInput(string $input): bool {
-        // Validate against the main pattern
+        // Get the main pattern
         $mainPattern = $this->getInputValidationPattern();
         
         // First, check if the entire input matches the main pattern
@@ -83,7 +76,7 @@ class BasePattern implements PatternContract {
      * @return bool True if there are any matches for the pattern in the input, after applying options.
      */
     public function validateMatches(string $input): bool {
-        // Validate against the main pattern
+        // Get the main pattern for matches
         $mainPattern = $this->getMatchesValidationPattern();
 
         // Find all matches for the main pattern in the input
@@ -142,10 +135,20 @@ class BasePattern implements PatternContract {
         return true;
     }
     
+    /**
+     * Default implementation of generating regex patterns for input validation
+     *
+     * @return string The regex pattern for validating the entire input.
+     */
     public function getInputValidationPattern(): string {
         return "/^{$this->pattern}$/";
     }
 
+    /**
+     * Default implementation of generating regex patterns for matches validation
+     *
+     * @return string The regex pattern for finding matches within the input.
+     */
     public function getMatchesValidationPattern(): string {
         return "/{$this->pattern}/";
     }

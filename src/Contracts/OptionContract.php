@@ -11,7 +11,8 @@ namespace Maestroerror\EloquentRegex\Contracts;
  */
 interface OptionContract {
     /**
-     * Validates the given input against the option's criteria.
+     * Validates the given input against the option's criteria
+     * Using PHP statements and/or built Regex pattern.
      *
      * @param string $input The input string to validate.
      * @return bool True if the input is valid, false otherwise.

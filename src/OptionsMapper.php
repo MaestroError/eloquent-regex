@@ -9,7 +9,7 @@ use Maestroerror\EloquentRegex\Options\CharacterOption;
 /**
  * Class OptionsMapper
  *
- * Maps string identifiers to specific option class methods.
+ * Maps string identifiers (Used as methods for OptionsBuilder) to specific option class methods.
  * This class is responsible for providing a bridge between string-based option names
  * and their corresponding concrete implementation in various option classes.
  */
@@ -33,14 +33,6 @@ class OptionsMapper {
     ];
 
     /**
-     * @var array List of available option classes.
-     */
-    public static array $availableOptions = [
-        LengthOption::class,
-        // ... other options ...
-    ];
-
-    /**
      * Retrieves the option method (class and method pair) by its name.
      *
      * @param string $optionName The name of the option method.
@@ -52,14 +44,5 @@ class OptionsMapper {
             throw new \InvalidArgumentException("Option method not found: $optionName");
         }
         return self::$optionMethods[$optionName];
-    }
-
-    /**
-     * Returns a list of available option classes.
-     *
-     * @return array An array of available option classes.
-     */
-    public static function GetAvailableOptions(): array {
-        return self::$availableOptions;
     }
 }

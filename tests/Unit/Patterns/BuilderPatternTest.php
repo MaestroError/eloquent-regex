@@ -366,7 +366,6 @@ test('numbersRange and nonDigitRange methods match ranges correctly', function (
     $builder = new BuilderPattern();
     $builder->nonDigitsRange(1, 3); // Matches 1 to 3 non-digits
     $regex = $builder->getInputValidationPattern();
-    echo $regex;
     expect(preg_match($regex, 'A'))->toBe(1);
     expect(preg_match($regex, 'ABC'))->toBe(1);
     expect(preg_match($regex, 'ABCD'))->toBe(0); // More than 3 non-digits

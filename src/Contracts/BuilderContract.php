@@ -56,7 +56,7 @@ interface BuilderContract {
     /**
      * Sets options for the pattern based on an array or a callback function.
      *
-     * @param array|callable $config An array of options or a callback function to configure options.
+     * @param array|callable $config An array of options (optionName => value (arg)) or a callback function to configure options.
      * @return void
      */
     public function setOptions(array|callable $config): void;
