@@ -20,39 +20,20 @@ Examples: `->dot("zeroOrMore")` `->exact("hello worls", false, "1+")`
 
 ##### To Do
 
-- Review all comments
-- Write BuilderPattern +
+- Review all comments +
+- Add commonly used patterns
 - Add Dockblocs and comments for new methods
 - Add facade for Laravel
 - Wrap Builder in class for static start
 - Write documentation
+- Extend BuilderPattern, try to add methods:
+  - group(callable $callback): Creates a grouped subpattern.
+  - nonCapturingGroup(callable $callback): Creates a non-capturing group.
+  - orPattern(): Alternation, allowing for multiple possibilities.
+  - lookAhead(callable $callback): Positive lookahead assertion.
+  - lookBehind(callable $callback): Positive lookbehind assertion.
+  - negativeLookAhead(callable $callback): Negative lookahead assertion.
+  - negativeLookBehind(callable $callback): Negative lookbehind assertion.
 - Implement string resolver pattern to use strings like "text(2)-digits()" (or "text:2-digits", or "text|2-digits") as pattern
 - Make options controllable from config or provider (?)
 - Make pattern controllable from config or provider (?)
-
-6. Groups and Alternation
-
-   group(callable $callback): Creates a grouped subpattern.
-   nonCapturingGroup(callable $callback): Creates a non-capturing group.
-   orPattern(): Alternation, allowing for multiple possibilities.
-
-7. Lookarounds (Advanced)
-
-   lookAhead(callable $callback): Positive lookahead assertion.
-   lookBehind(callable $callback): Positive lookbehind assertion.
-   negativeLookAhead(callable $callback): Negative lookahead assertion.
-   negativeLookBehind(callable $callback): Negative lookbehind assertion.
-
-Implementation Considerations
-
-    Method Chaining: Design methods to return $this to allow chaining.
-    Error Handling: Incorporate error handling, especially for methods like exact, which can create risky patterns.
-    Flexibility: Ensure your methods can handle various inputs and scenarios.
-    Escaping: Provide automatic escaping for special characters where appropriate.
-    Documentation: Document each method clearly for ease of use.
-
-Visible Characters (visibleChars()): Matches any visible character (non-space, non-control characters).
-
-Invisible Characters (invisibleChars()): Opposite of visibleChars(), matches spaces and control characters.
-
-Named Groups (namedGroup($name, callable $callback)): Allows creating named capturing groups.

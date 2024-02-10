@@ -12,20 +12,11 @@ namespace Maestroerror\EloquentRegex\Contracts;
 interface PatternContract {
 
     /**
-     * Builds and returns the regex pattern segment for this pattern.
+     * Builds and returns the regex pattern segment for this pattern. (Without options)
      *
      * @return string The constructed regex pattern segment.
      */
     public function getPattern(): string;
-
-    /**
-     * Resets the pattern to its initial state.
-     *
-     * Useful for reusing the pattern object for building new patterns.
-     *
-     * @return void
-     */
-    public function reset();
 
     /**
      * Sets the options for this pattern.
@@ -38,7 +29,7 @@ interface PatternContract {
     /**
      * Sets the options for this pattern.
      *
-     * @param array $options The options to be applied to this pattern.
+     * @param array $options The options [OptionContract] to be applied to this pattern.
      * @return void
      */
     public function setOptions(array $options);

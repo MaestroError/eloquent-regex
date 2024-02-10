@@ -14,23 +14,9 @@ use Maestroerror\EloquentRegex\OptionsMapper;
 class OptionsManager {
 
     /**
-     * @var array Holds instances of all available option classes.
-     */
-    private array $options = [];
-
-    /**
      * @var array Holds instances of options that have been used.
      */
     private array $usedOptions = [];
-
-    /**
-     * Constructor.
-     * Initializes the options array with available option classes.
-     */
-    public function __construct() {
-        // Fill with available option classes
-        $this->options = OptionsMapper::GetAvailableOptions();
-    }
 
     /**
      * Returns an array of options that have been used.
@@ -64,10 +50,10 @@ class OptionsManager {
      */
     private function processOption(array $option, mixed $value): void {
         if (isset($this->usedOptions[$option[0]])) {
-            // If the option instance already exists, update it with the new value.
+            // If the option instance already exists, update it with the new method and value.
             $this->usedOptions[$option[0]]->{$option[1]}($value);
         } else {
-            // If the option instance does not exist, create it and set the value.
+            // If the option instance does not exist, create it, call the method and set the value (arg).
             $this->usedOptions[$option[0]] = (new $option[0])->{$option[1]}($value);
         }
     }
