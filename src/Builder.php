@@ -3,23 +3,29 @@
 namespace Maestroerror\EloquentRegex;
 
 use Maestroerror\EloquentRegex\Contracts\PatternContract;
+use Maestroerror\EloquentRegex\Contracts\BuilderContract;
 use Maestroerror\EloquentRegex\OptionsManager;
 use Maestroerror\EloquentRegex\OptionsBuilder;
-use Maestroerror\EloquentRegex\Traits\Patterns\TextOrNumbersTrait;
-use Maestroerror\EloquentRegex\Traits\Patterns\BuilderPatternTrait;
-use Maestroerror\EloquentRegex\Contracts\BuilderContract;
+use Maestroerror\EloquentRegex\Traits\BuilderPatternTraits\BuilderPatternMethods;
+use Maestroerror\EloquentRegex\Patterns\TextOrNumbersPattern;
 
 class Builder implements BuilderContract {
 
-    use TextOrNumbersTrait, BuilderPatternTrait;
+    use BuilderPatternMethods;
 
     protected string $str;
     protected PatternContract $pattern;
     protected OptionsManager $manager;
 
+    public array $patterns = 
+    [
+        TextOrNumbersPattern::class
+    ];
+
     public function __construct(string $str = "") {
         $this->str = $str;
         $this->manager = new OptionsManager();
+        // @todo add patterns via config
     }
 
     protected function processArguments(array $args, array $values, callable $condition): void {
@@ -131,6 +137,29 @@ class Builder implements BuilderContract {
         else if (is_callable($config)) {
             $this->processCallback($config);
         } 
+    }
+
+    
+    public function __call(
+        $name,
+        $args
+    ): self {
+        // @todo No patterns exception
+
+
+        foreach ($this->patterns as $pattern) {
+            if ($pattern::$name == $name) {
+                // Set needed pattern
+                $this->pattern = new $pattern();
+
+                $options = $pattern::execute(...$args);
+                $this->processConfigArray($options);
+
+                return $this;
+            }
+        }
+
+        // @todo pattern not found exception
     }
 
 }
