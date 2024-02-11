@@ -21,6 +21,7 @@ Examples: `->dot("zeroOrMore")` `->exact("hello worls", false, "1+")`
 ##### To Do
 
 - Review all comments +
+- Make patterns dynamic +
 - Add commonly used patterns
 - Add Dockblocs and comments for new methods
 - Add facade for Laravel
@@ -34,6 +35,7 @@ Examples: `->dot("zeroOrMore")` `->exact("hello worls", false, "1+")`
   - lookBehind(callable $callback): Positive lookbehind assertion.
   - negativeLookAhead(callable $callback): Negative lookahead assertion.
   - negativeLookBehind(callable $callback): Negative lookbehind assertion.
+  - Raw regex methods for advanced users.
 - Implement string resolver pattern to use strings like "text(2)-digits()" (or "text:2-digits", or "text|2-digits") as pattern
 - Make options controllable from config or provider (?)
 - Make pattern controllable from config or provider (?)

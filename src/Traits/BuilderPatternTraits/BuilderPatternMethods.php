@@ -1,10 +1,15 @@
 <?php
 
-namespace Maestroerror\EloquentRegex\Traits\Patterns;
+namespace Maestroerror\EloquentRegex\Traits\BuilderPatternTraits;
 
 use Maestroerror\EloquentRegex\Patterns\BuilderPattern;
 
-trait BuilderPatternTrait {
+/**
+ * trait BuilderPatternMethods
+ * 
+ * Used in Maestroerror\EloquentRegex\Builder class to enhance it with BuilderPattern specific methods
+ */
+trait BuilderPatternMethods {
 
     public function start(): BuilderPattern {
         $this->pattern = new BuilderPattern($this);

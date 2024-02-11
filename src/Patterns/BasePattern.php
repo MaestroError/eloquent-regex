@@ -4,6 +4,7 @@ namespace Maestroerror\EloquentRegex\Patterns;
 
 use Maestroerror\EloquentRegex\Contracts\PatternContract;
 use Maestroerror\EloquentRegex\Contracts\OptionContract;
+use Maestroerror\EloquentRegex\OptionsBuilder;
 
 /**
  * Class BasePattern
@@ -22,6 +23,10 @@ class BasePattern implements PatternContract {
      * @var string The base regex pattern.
      */
     protected string $pattern = "[a-z]";
+
+    public static string $name = "";
+
+    public static array $args = [];
 
     /**
      * Retrieves the current regex pattern.
@@ -49,6 +54,7 @@ class BasePattern implements PatternContract {
     public function setOption(OptionContract $option) {
         $this->options[] = $option;
     }
+
 
     /**
      * Validates an input string against the pattern and its options as exact match.
@@ -151,5 +157,26 @@ class BasePattern implements PatternContract {
      */
     public function getMatchesValidationPattern(): string {
         return "/{$this->pattern}/";
+    }
+    
+    public static function processArguments(array $args, array $values, callable $condition): array {
+        $options = [];
+        // Build options array based on condition
+        for ($i=0; $i < count($args); $i++) { 
+            if (isset($values[$i])) {
+                // Use the callable $condition to determine if the option should be set
+                if ($condition($values[$i])) {
+                    $options[$args[$i]] = $values[$i];
+                }
+            }
+        }
+        
+        return $options;
+    }
+
+    public static function processCallback(callable $callback): array {
+        $optionsBuilder = new OptionsBuilder();
+        $optionsBuilder = $callback($optionsBuilder);
+        return $optionsBuilder->getOptions();
     }
 }

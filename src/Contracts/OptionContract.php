@@ -21,6 +21,7 @@ interface OptionContract {
 
     /**
      * Builds and returns the regex pattern for this option.
+     * If option doesn't need regex, can return empty string.
      *
      * @return string The constructed regex pattern segment.
      */
