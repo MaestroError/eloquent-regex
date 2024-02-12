@@ -138,14 +138,34 @@ class Builder implements BuilderContract {
             $this->processCallback($config);
         } 
     }
-
+    
+    public function registerPattern(PatternContract $pattern): self {
+        $this->patterns[] = $pattern;
+        return $this;
+    }
+    
+    public function registerPatterns(array $patterns): self {
+        foreach ($patterns as $pattern) {
+            if (is_subclass_of($pattern, PatternContract::class)) {
+                $this->registerPattern(new $pattern());
+            } else {
+                throw new \InvalidArgumentException("Class " . get_class($pattern) . " must implement PatternContract");
+            }
+        }
+        return $this;
+    }
+    
+    public function getPatterns(): array {
+        return $this->patterns;
+    }
     
     public function __call(
         $name,
         $args
     ): self {
-        // @todo No patterns exception
-
+        if (empty($this->patterns)) {
+            throw new \LogicException("No patterns are registered in Builder.");
+        }
 
         foreach ($this->patterns as $pattern) {
             if ($pattern::$name == $name) {
@@ -159,7 +179,7 @@ class Builder implements BuilderContract {
             }
         }
 
-        // @todo pattern not found exception
+        throw new \LogicException("Pattern with name $name not found.");
     }
 
 }
