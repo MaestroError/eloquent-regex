@@ -5,6 +5,7 @@ namespace Maestroerror\EloquentRegex\Patterns;
 use Maestroerror\EloquentRegex\Contracts\PatternContract;
 use Maestroerror\EloquentRegex\Contracts\OptionContract;
 use Maestroerror\EloquentRegex\OptionsBuilder;
+use Maestroerror\EloquentRegex\Traits\Pattern;
 
 /**
  * Class BasePattern
@@ -13,6 +14,8 @@ use Maestroerror\EloquentRegex\OptionsBuilder;
  * common to various types of regex patterns.
  */
 class BasePattern implements PatternContract {
+
+    use Pattern;
 
     /**
      * @var array List of options applied to the pattern.
@@ -159,7 +162,7 @@ class BasePattern implements PatternContract {
         return "/{$this->pattern}/";
     }
     
-    public static function processArguments(array $args, array $values, callable $condition): array {
+    protected static function processArguments(array $args, array $values, callable $condition): array {
         $options = [];
         // Build options array based on condition
         for ($i=0; $i < count($args); $i++) { 
@@ -174,7 +177,7 @@ class BasePattern implements PatternContract {
         return $options;
     }
 
-    public static function processCallback(callable $callback): array {
+    protected static function processCallback(callable $callback): array {
         $optionsBuilder = new OptionsBuilder();
         $optionsBuilder = $callback($optionsBuilder);
         return $optionsBuilder->getOptions();

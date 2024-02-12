@@ -75,4 +75,20 @@ interface PatternContract {
      * @return string The regex pattern for finding matches within the input.
      */
     public function getMatchesValidationPattern(): string;
+
+    /**
+     * Executes the pattern with the provided arguments.
+     *
+     * This method is responsible for processing the arguments provided to the pattern
+     * and configuring it accordingly. It can handle an array of options, a set of
+     * individual arguments, or a callback function for more complex configurations.
+     *
+     * @param mixed $firstArgument The first argument which could be an array of options,
+     *                             an integer, a string, or a callback function.
+     * @param mixed ...$args Additional arguments if the first argument is not an array or callback.
+     * @return array Returns an array of configuration options processed by the method.
+     * @throws \InvalidArgumentException If the first argument does not meet the expected types.
+     */
+    public static function execute(mixed $firstArgument = 1, ...$args): array;
+
 }
