@@ -60,4 +60,40 @@ interface BuilderContract {
      * @return void
      */
     public function setOptions(array|callable $config): void;
+
+    /**
+     * Registers a single pattern in the Builder.
+     *
+     * @param PatternContract $pattern The pattern instance to be registered.
+     * @return self Returns the Builder instance for fluent interface.
+     */
+    public function registerPattern(PatternContract $pattern): self;
+
+    /**
+     * Registers multiple patterns in the Builder.
+     *
+     * @param array $patterns An array of pattern instances to be registered.
+     * @return self Returns the Builder instance for fluent interface.
+     */
+    public function registerPatterns(array $patterns): self;
+
+    /**
+     * Retrieves all registered patterns in the Builder.
+     *
+     * @return array An array of registered pattern instances.
+     */
+    public function getPatterns(): array;
+
+    /**
+     * Magic method to handle dynamic method calls.
+     *
+     * This method is triggered when invoking inaccessible or non-existing methods.
+     * It is used to dynamically handle pattern-specific method calls.
+     *
+     * @param string $name The name of the method being called.
+     * @param array $args An array of arguments passed to the method.
+     * @return self Returns the Builder instance for fluent interface.
+     */
+    public function __call($name, $args): self;
+
 }
