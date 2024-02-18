@@ -31,6 +31,8 @@ class BasePattern implements PatternContract {
 
     public static array $args = [];
 
+    public static array $defaultOptions = [];
+
     /**
      * Retrieves the current regex pattern.
      *
@@ -106,10 +108,13 @@ class BasePattern implements PatternContract {
      * @param string $input The input string to search for matches.
      * @return array An array of matches.
      */
-    public function getMatches(string $input): array {
+    public function getMatches(string $input): ?array {
         $mainPattern = $this->getMatchesValidationPattern();
         preg_match_all($mainPattern, $input, $matches);
 
+        if (!$matches[0]) {
+            return null;
+        }
         // Filter matches based on each option
         return $this->filterByOptions($matches[0]);
     }
@@ -162,13 +167,13 @@ class BasePattern implements PatternContract {
         return "/{$this->pattern}/";
     }
     
-    protected static function processArguments(array $args, array $values, callable $condition): array {
+    protected static function processArguments(array $args, array $values): array {
         $options = [];
         // Build options array based on condition
         for ($i=0; $i < count($args); $i++) { 
             if (isset($values[$i])) {
-                // Use the callable $condition to determine if the option should be set
-                if ($condition($values[$i])) {
+                // If value is true (so not "", 0, null)
+                if ($values[$i]) {
                     $options[$args[$i]] = $values[$i];
                 }
             }

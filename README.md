@@ -22,11 +22,19 @@ Examples: `->dot("zeroOrMore")` `->exact("hello worls", false, "1+")`
 
 - Review all comments +
 - Make patterns dynamic +
-- Add commonly used patterns
+- Add commonly used patterns & tests +
+- Default arguments and allow to use any other option +
+- Add FilePath and DirectoryPath patterns for different OS
+- Add Test for BuilderPattern
 - Add Dockblocs and comments for new methods
+- Add needed options for new patterns:
+  - specialCharacters (min, max)
+  - onlyLowercase, onlyUppercase
+- Consider to register Patterns like options using key (name) => value (class) pairs (check performance)
+
 - Add facade for Laravel
 - Wrap Builder in class for static start
-- Write documentation
+- Write documentation (add credit for https://regexr.com/)
 - Extend BuilderPattern, try to add methods:
   - group(callable $callback): Creates a grouped subpattern.
   - nonCapturingGroup(callable $callback): Creates a non-capturing group.
@@ -36,6 +44,9 @@ Examples: `->dot("zeroOrMore")` `->exact("hello worls", false, "1+")`
   - negativeLookAhead(callable $callback): Negative lookahead assertion.
   - negativeLookBehind(callable $callback): Negative lookbehind assertion.
   - Raw regex methods for advanced users.
+  - BuilderPattern should be able to reproduce patterns used in HSA
 - Implement string resolver pattern to use strings like "text(2)-digits()" (or "text:2-digits", or "text|2-digits") as pattern
+- Implement recursive pattern creation (Using "RI-321" string to create pattern matching this string)
+- Consider to add Postal Code Pattern
 - Make options controllable from config or provider (?)
 - Make pattern controllable from config or provider (?)

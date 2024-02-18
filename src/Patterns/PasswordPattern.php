@@ -6,28 +6,23 @@ use Maestroerror\EloquentRegex\Patterns\BasePattern;
 use Maestroerror\EloquentRegex\Traits\Pattern;
 
 
-class TextOrNumbersPattern extends BasePattern {
+class PasswordPattern extends BasePattern {
 
     use Pattern;
 
-    protected string $pattern = "[a-zA-Z0-9]";
+    // Suspicous pattern, better to use for validation
+    protected string $pattern = "[a-zA-Z0-9!@#$%^&*(),.?\":{}|<>]";
     
-    public static string $name = "textOrNumbers";
+    public static string $name = "password";
 
     public static array $args = [
-        "minLength", // First argument
-        "maxLength", // Second argument
-        "minUppercase", // Third argument and etc.
-        "minLowercase",
+        "minLength",
+        "minUppercase",
         "minNumbers",
-        "maxNumbers",
+        // @todo min special characters
     ];
 
-    public static array $defaultOptions = [
-        // "maxLength" => 2
-    ];
-
-
+    
     public function getInputValidationPattern(): string {
         return "/^{$this->pattern}+$/";
     }

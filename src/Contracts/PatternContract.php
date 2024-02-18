@@ -56,7 +56,7 @@ interface PatternContract {
      * @param string $input The input string to validate.
      * @return array all matches found in input.
      */
-    public function getMatches(string $input): array;
+    public function getMatches(string $input): ?array;
 
     /**
      * Generates the regex pattern for input validation.
