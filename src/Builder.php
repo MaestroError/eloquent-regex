@@ -8,6 +8,20 @@ use Maestroerror\EloquentRegex\OptionsManager;
 use Maestroerror\EloquentRegex\OptionsBuilder;
 use Maestroerror\EloquentRegex\Traits\BuilderPatternTraits\BuilderPatternMethods;
 use Maestroerror\EloquentRegex\Patterns\TextOrNumbersPattern;
+use Maestroerror\EloquentRegex\Patterns\EmailPattern;
+use Maestroerror\EloquentRegex\Patterns\UrlPattern;
+use Maestroerror\EloquentRegex\Patterns\DomainNamePattern;
+use Maestroerror\EloquentRegex\Patterns\DatePattern;
+use Maestroerror\EloquentRegex\Patterns\TimePattern;
+use Maestroerror\EloquentRegex\Patterns\IPAddressPattern;
+use Maestroerror\EloquentRegex\Patterns\IPv6AddressPattern;
+use Maestroerror\EloquentRegex\Patterns\CreditCardNumberPattern;
+use Maestroerror\EloquentRegex\Patterns\PhonePattern;
+use Maestroerror\EloquentRegex\Patterns\UsernamePattern;
+use Maestroerror\EloquentRegex\Patterns\PasswordPattern;
+use Maestroerror\EloquentRegex\Patterns\HtmlTagPattern;
+use Maestroerror\EloquentRegex\Patterns\CurrencyPattern;
+use Maestroerror\EloquentRegex\Patterns\FilePathPattern;
 
 class Builder implements BuilderContract {
 
@@ -19,28 +33,27 @@ class Builder implements BuilderContract {
 
     public array $patterns = 
     [
-        TextOrNumbersPattern::class
+        TextOrNumbersPattern::class,
+        EmailPattern::class,
+        UrlPattern::class,
+        DomainNamePattern::class,
+        DatePattern::class,
+        TimePattern::class,
+        IPAddressPattern::class,
+        IPv6AddressPattern::class,
+        CreditCardNumberPattern::class,
+        PhonePattern::class,
+        UsernamePattern::class,
+        PasswordPattern::class,
+        HtmlTagPattern::class,
+        CurrencyPattern::class,
+        FilePathPattern::class,
     ];
 
     public function __construct(string $str = "") {
         $this->str = $str;
         $this->manager = new OptionsManager();
         // @todo add patterns via config
-    }
-
-    protected function processArguments(array $args, array $values, callable $condition): void {
-        $options = [];
-        // Build options array based on condition
-        for ($i=0; $i < count($args); $i++) { 
-            if (isset($values[$i])) {
-                // Use the callable $condition to determine if the option should be set
-                if ($condition($values[$i])) {
-                    $options[$args[$i]] = $values[$i];
-                }
-            }
-        }
-        
-        $this->processConfigArray($options);
     }
 
     protected function processConfigArray(array $options) {
@@ -70,7 +83,7 @@ class Builder implements BuilderContract {
         return true;
     }
 
-    protected function getAllMatches(): array {
+    protected function getAllMatches(): ?array {
         return $this->pattern->getMatches($this->str);
     }
 
@@ -89,7 +102,7 @@ class Builder implements BuilderContract {
         $this->str = $str;
     }
 
-    public function get(): array {
+    public function get(): ?array {
         if (!$this->patternIsSet()) {
             throw new \LogicException("Pattern must be set before getting matches.");
         }
@@ -114,7 +127,8 @@ class Builder implements BuilderContract {
         if (!$this->patternIsSet()) {
             throw new \LogicException("Pattern must be set before counting matches.");
         }
-        return count($this->getAllMatches());
+        $matches = $this->getAllMatches();
+        return $matches ? count($matches) : 0;
     }
     
     public function toRegex(): string {
@@ -124,11 +138,13 @@ class Builder implements BuilderContract {
         return $this->pattern->getPattern();
     }
 
+    // In cases when pattern doesn't allow setting the options (like BuilderPattern)
     public function setOptions(array|callable $config): void {
         // Check if the pattern is set
         if (!$this->patternIsSet()) {
             throw new \LogicException("Pattern must be set before setting options.");
         }
+
         // Handle options array scenario
         if (is_array($config)) {
             $this->processConfigArray($config);

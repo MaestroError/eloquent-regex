@@ -12,6 +12,7 @@ use Maestroerror\EloquentRegex\Builder;
 
 class BuilderPattern extends BasePattern {
 
+    // BuilderPattern doesn't need the execute method (src\Traits\Pattern.php)
     use CharacterClassesTrait, SpecificCharsTrait, AnchorsTrait;
 
     protected array $options = [];

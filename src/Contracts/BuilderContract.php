@@ -23,7 +23,7 @@ interface BuilderContract {
      *
      * @return array An array of all matches found.
      */
-    public function get(): array;
+    public function get(): ?array;
 
     /**
      * Checks if the entire target string exactly matches the set pattern.

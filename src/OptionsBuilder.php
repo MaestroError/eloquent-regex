@@ -11,6 +11,8 @@ namespace Maestroerror\EloquentRegex;
  */
 class OptionsBuilder {
 
+    protected OptionsManager $manager;
+
     /**
      * @var array An associative array to store option values keyed by their names.
      */
