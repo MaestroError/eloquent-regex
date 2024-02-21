@@ -7,6 +7,8 @@ use Maestroerror\EloquentRegex\Options\NumberOption;
 use Maestroerror\EloquentRegex\Options\CharacterOption;
 use Maestroerror\EloquentRegex\Options\IPv6Option;
 use Maestroerror\EloquentRegex\Options\CharOption;
+use Maestroerror\EloquentRegex\Options\FileOption;
+use Maestroerror\EloquentRegex\Options\FileExistsOption;
 
 /**
  * Class OptionsMapper
@@ -38,6 +40,9 @@ class OptionsMapper {
         "maxSpecialChars" => [CharOption::class, "maxSpecialCharacters"],
         "onlyLowercase" => [CharOption::class, "onlyLowercase"],
         "onlyUppercase" => [CharOption::class, "onlyUppercase"],
+        "isFile" => [FileOption::class, "isFile"],
+        "isDirectory" => [FileOption::class, "isDirectory"],
+        "fileExists" => [FileExistsOption::class, "fileExists"],
     ];
 
     /**
