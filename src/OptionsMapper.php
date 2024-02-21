@@ -25,6 +25,8 @@ class OptionsMapper {
         "length" => [LengthOption::class, "exactLength"],
         "minNumbers" => [NumberOption::class, "setMinValue"],
         "maxNumbers" => [NumberOption::class, "setMaxValue"],
+        "minDigits" => [NumberOption::class, "setMinValue"],
+        "maxDigits" => [NumberOption::class, "setMaxValue"],
         "numberAmount" => [NumberOption::class, "setExactValue"],
         "allowChars" => [CharacterOption::class, "allow"],
         "excludeChars" => [CharacterOption::class, "exclude"],
