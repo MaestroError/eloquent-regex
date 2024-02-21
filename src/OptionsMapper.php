@@ -31,7 +31,6 @@ class OptionsMapper {
         "minUppercase" => [CharacterOption::class, "minUppercase"],
         "minLowercase" => [CharacterOption::class, "minLowercase"],
         "validIPv6" => [IPv6Option::class, "validIPv6"]
-        // ... other mappings ...
     ];
 
     /**

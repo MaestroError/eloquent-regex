@@ -5,14 +5,15 @@ namespace Maestroerror\EloquentRegex\Patterns;
 use Maestroerror\EloquentRegex\Patterns\BasePattern;
 use Maestroerror\EloquentRegex\Traits\Pattern;
 
-class FilePathPattern extends BasePattern {
+class FilePathWinPattern extends BasePattern {
 
     use Pattern;
 
+    // Regex pattern for Windows file paths
     // Matches both Directory and File paths
-    protected string $pattern = "[~\/]?[^\/:*,?\"<>|\r\n\s]+(?:\/[^\/:*,?\"<>|\r\n\s]+)+\/?(?:\.[a-zA-Z0-9]+)?";
+    protected string $pattern = "([A-Za-z]:\\\\[^:*,?\"<>|\r\n]*)";
 
-    public static string $name = "filePath";
+    public static string $name = "filePathWin";
 
     public static array $args = [];
 }
