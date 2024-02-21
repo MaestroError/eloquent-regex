@@ -28,7 +28,7 @@ Examples: `->dot("zeroOrMore")` `->exact("hello worls", false, "1+")`
 - Add needed options for new patterns:
   - specialCharacters (min, max)
   - onlyLowercase, onlyUppercase
-  - Is file (ends with .format)
+  - Is file (ends with .[format])
   - Is directory
   - fileExists
   - fileExtension: Specify certain file extensions (e.g., .txt, .pdf).
@@ -68,7 +68,7 @@ Examples: `->dot("zeroOrMore")` `->exact("hello worls", false, "1+")`
 
 - Add facade for Laravel
 - Wrap Builder in class for static start
-- Write documentation (add credit for https://regexr.com/)
+- Write documentation (add credit for https://regexr.com/ and ChatGPT)
 
 - Implement string resolver pattern to use strings like "text(2)-digits()" (or "text:2-digits", or "text|2-digits") as pattern
 - Implement recursive pattern creation (Using "RI-321" string to create pattern matching this string)
