@@ -26,12 +26,12 @@ Examples: `->dot("zeroOrMore")` `->exact("hello worls", false, "1+")`
 - Default arguments and allow to use any other option +
 - Add FilePath and DirectoryPath patterns for different OS +
 - Add needed options for new patterns:
-  - specialCharacters (min, max)
-  - onlyLowercase, onlyUppercase
-  - Is file (ends with .[format])
-  - Is directory
-  - fileExists
-  - fileExtension: Specify certain file extensions (e.g., .txt, .pdf).
+  - specialCharacters (min, max) +
+  - onlyLowercase, onlyUppercase +
+  - Is file (ends with .[format]) +
+  - Is directory +
+  - fileExists +
+  - fileExtension: Specify certain file extensions (e.g., .txt, .pdf) +
   - specificCurrencies: Match only specific currency symbols.
   - relativePath, absolutePath: Specify if the path should be relative or absolute.
   - countryCode: Match phone numbers with specific country codes.
