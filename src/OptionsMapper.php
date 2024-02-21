@@ -6,6 +6,7 @@ use Maestroerror\EloquentRegex\Options\LengthOption;
 use Maestroerror\EloquentRegex\Options\NumberOption;
 use Maestroerror\EloquentRegex\Options\CharacterOption;
 use Maestroerror\EloquentRegex\Options\IPv6Option;
+use Maestroerror\EloquentRegex\Options\CharOption;
 
 /**
  * Class OptionsMapper
@@ -32,7 +33,11 @@ class OptionsMapper {
         "excludeChars" => [CharacterOption::class, "exclude"],
         "minUppercase" => [CharacterOption::class, "minUppercase"],
         "minLowercase" => [CharacterOption::class, "minLowercase"],
-        "validIPv6" => [IPv6Option::class, "validIPv6"]
+        "validIPv6" => [IPv6Option::class, "validIPv6"],
+        "minSpecialChars" => [CharOption::class, "minSpecialCharacters"],
+        "maxSpecialChars" => [CharOption::class, "maxSpecialCharacters"],
+        "onlyLowercase" => [CharOption::class, "onlyLowercase"],
+        "onlyUppercase" => [CharOption::class, "onlyUppercase"],
     ];
 
     /**

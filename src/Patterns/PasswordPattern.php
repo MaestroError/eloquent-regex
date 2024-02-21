@@ -19,7 +19,7 @@ class PasswordPattern extends BasePattern {
         "minLength",
         "minUppercase",
         "minNumbers",
-        // @todo min special characters
+        "minSpecialChars"
     ];
 
     

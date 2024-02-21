@@ -1,6 +1,8 @@
 <?php
 
 use Maestroerror\EloquentRegex\Options\CharacterOption;
+use Maestroerror\EloquentRegex\Options\CharOption;
+
 
 it('enforces allowed characters', function () {
     $charOption = new CharacterOption();
@@ -103,3 +105,31 @@ it('requires minimum number of lowercase, allows some characters and excludes so
     expect($charOption->validateUsingRegex('xyz'))->toBe(false);
 });
 
+it('enforces minimum special characters', function () {
+    $charOption = new CharOption();
+    $charOption->minSpecialCharacters(2);
+    expect($charOption->validate('ab#d$'))->toBeTrue();
+    expect($charOption->validate('ab#c'))->toBeFalse(); // Only 1 special character
+});
+
+it('enforces maximum special characters', function () {
+    $charOption = new CharOption();
+    $charOption->maxSpecialCharacters(1);
+    expect($charOption->validate('ab#d$'))->toBeFalse();
+    expect($charOption->validate('ab#c'))->toBeTrue(); // Only 1 special character
+});
+
+it('enforces only lowercase characters', function () {
+    $charOption = new CharOption();
+    $charOption->onlyLowercase();
+    echo $charOption->build();
+    expect($charOption->validate('abSDF'))->toBeFalse();
+    expect($charOption->validate('abc'))->toBeTrue();
+});
+
+it('enforces only uppercase characters', function () {
+    $charOption = new CharOption();
+    $charOption->onlyUppercase();
+    expect($charOption->validate('abSDF'))->toBeFalse();
+    expect($charOption->validate('ABC'))->toBeTrue();
+});
