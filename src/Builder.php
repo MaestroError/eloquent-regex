@@ -22,6 +22,7 @@ use Maestroerror\EloquentRegex\Patterns\PasswordPattern;
 use Maestroerror\EloquentRegex\Patterns\HtmlTagPattern;
 use Maestroerror\EloquentRegex\Patterns\CurrencyPattern;
 use Maestroerror\EloquentRegex\Patterns\FilePathPattern;
+use Maestroerror\EloquentRegex\Patterns\FilePathWinPattern;
 
 class Builder implements BuilderContract {
 
@@ -48,6 +49,7 @@ class Builder implements BuilderContract {
         HtmlTagPattern::class,
         CurrencyPattern::class,
         FilePathPattern::class,
+        FilePathWinPattern::class,
     ];
 
     public function __construct(string $str = "") {

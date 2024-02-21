@@ -24,18 +24,17 @@ Examples: `->dot("zeroOrMore")` `->exact("hello worls", false, "1+")`
 - Make patterns dynamic +
 - Add commonly used patterns & tests +
 - Default arguments and allow to use any other option +
-- Add FilePath and DirectoryPath patterns for different OS
-- Add Test for BuilderPattern
-- Add Dockblocs and comments for new methods
+- Add FilePath and DirectoryPath patterns for different OS +
 - Add needed options for new patterns:
   - specialCharacters (min, max)
   - onlyLowercase, onlyUppercase
+  - file (ends with .format)
+  - Is directory
+  - fileExists
 - Consider to register Patterns like options using key (name) => value (class) pairs (check performance)
-
-- Add facade for Laravel
-- Wrap Builder in class for static start
-- Write documentation (add credit for https://regexr.com/)
+- Add benchmarks and test against large data (cheap alternative of ElasticSearch)
 - Extend BuilderPattern, try to add methods:
+
   - group(callable $callback): Creates a grouped subpattern.
   - nonCapturingGroup(callable $callback): Creates a non-capturing group.
   - orPattern(): Alternation, allowing for multiple possibilities.
@@ -45,8 +44,17 @@ Examples: `->dot("zeroOrMore")` `->exact("hello worls", false, "1+")`
   - negativeLookBehind(callable $callback): Negative lookbehind assertion.
   - Raw regex methods for advanced users.
   - BuilderPattern should be able to reproduce patterns used in HSA
+
+- Add Feature Tests for BuilderPattern
+- Add Dockblocs and comments for new methods
+
+- Add facade for Laravel
+- Wrap Builder in class for static start
+- Write documentation (add credit for https://regexr.com/)
+
 - Implement string resolver pattern to use strings like "text(2)-digits()" (or "text:2-digits", or "text|2-digits") as pattern
 - Implement recursive pattern creation (Using "RI-321" string to create pattern matching this string)
+
 - Consider to add Postal Code Pattern
 - Make options controllable from config or provider (?)
 - Make pattern controllable from config or provider (?)
