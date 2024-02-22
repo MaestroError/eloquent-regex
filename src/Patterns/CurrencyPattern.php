@@ -13,7 +13,11 @@ class CurrencyPattern extends BasePattern {
 
     public static string $name = "currency";
 
-    public static array $args = [];
+    public static array $args = [
+        "minDigits",
+        "maxDigits",
+        "specificCurrencies",
+    ];
 
     public function getInputValidationPattern(): string {
         return "/^{$this->pattern}$/u";

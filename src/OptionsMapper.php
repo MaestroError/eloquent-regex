@@ -9,6 +9,7 @@ use Maestroerror\EloquentRegex\Options\IPv6Option;
 use Maestroerror\EloquentRegex\Options\CharOption;
 use Maestroerror\EloquentRegex\Options\FileOption;
 use Maestroerror\EloquentRegex\Options\FileExistsOption;
+use Maestroerror\EloquentRegex\Options\SpecificCurrenciesOption;
 
 /**
  * Class OptionsMapper
@@ -43,6 +44,11 @@ class OptionsMapper {
         "isFile" => [FileOption::class, "isFile"],
         "isDirectory" => [FileOption::class, "isDirectory"],
         "fileExists" => [FileExistsOption::class, "fileExists"],
+        "specificCurrencies" => [SpecificCurrenciesOption::class, "setSpecificCurrencies"],
+        "onlyUSD" => [SpecificCurrenciesOption::class, "onlyUSD"],
+        "onlyEUR" => [SpecificCurrenciesOption::class, "onlyEUR"],
+        "onlyGBP" => [SpecificCurrenciesOption::class, "onlyGBP"],
+        "onlyGEL" => [SpecificCurrenciesOption::class, "onlyGEL"],
     ];
 
     /**
