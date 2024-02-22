@@ -10,7 +10,7 @@ class FileOption implements OptionContract {
     use ValidateUsingRegexTrait;
 
     private $isFile = false;
-    private $isDirectory = false;
+    private $isDirectory = 0;
     private $fileExtension = null;
     private $validateUsingRegex = true;
 
@@ -41,27 +41,27 @@ class FileOption implements OptionContract {
     public function build(): string {
         if ($this->isFile) {
             if ($this->fileExtension) {
-                return "[A-Za-z0-9\\/:]*\." . preg_quote($this->fileExtension);
+                return "[A-Za-z0-9\\/:\.\-\\\\]*\." . preg_quote($this->fileExtension);
             } else {
-                return "[A-Za-z0-9\\/:]*\.[a-zA-Z0-9]+";
+                return "[A-Za-z0-9\\/:\.\-\\\\]*\.[a-zA-Z0-9]+";
             }
         }
 
         if ($this->isDirectory) {
-            return "(?:[a\\/:-zA-Z0-9]+)+";
+            return "(?:[a-zA-Z0-9\\/:\-\\\\]+)+";
         }
 
         return '.*';
     }
 
-    public function isFile($extension = null) {
+    public function isFile(string|null $extension = null) {
         $this->isFile = true;
         $this->fileExtension = $extension;
         return $this;
     }
 
-    public function isDirectory() {
-        $this->isDirectory = true;
+    public function isDirectory(int $check = 1) {
+        $this->isDirectory = $check;
         return $this;
     }
 }
