@@ -33,7 +33,7 @@ Examples: `->dot("zeroOrMore")` `->exact("hello worls", false, "1+")`
   - fileExists +
   - fileExtension: Specify certain file extensions (e.g., .txt, .pdf) +
   - specificCurrencies: Match only specific currency symbols.+
-  - relativePath, absolutePath: Specify if the path should be relative or absolute.
+  - relativePath, absolutePath: Specify if the path should be relative or absolute.+
   - countryCode: Match phone numbers with specific country codes.
   - dateFormat, timeFormat: Specify the format of date and time (e.g., MM-DD-YYYY, HH:MM).
   - containSpaces: Allow or disallow spaces.

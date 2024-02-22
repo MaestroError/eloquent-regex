@@ -56,3 +56,19 @@ it('checks path using isFile option', function () {
 
     expect($check)->toBeTrue();
 });
+
+
+it('checks path using pathType option', function () {
+    $string = "/usr/local/bin/script.sh";
+    $builder = new Builder($string);
+
+    // With int
+    $check = $builder->filePath(0, null, false, 1)->check(); // 1 for absolute path
+    expect($check)->toBeTrue();
+    // With string
+    $check = $builder->filePath(0, null, false, "absolute")->check();
+    expect($check)->toBeTrue();
+    // With array
+    $check = $builder->filePath(["pathType" => "absolute"])->get();
+    expect($check)->toEqual(["/usr/local/bin/script.sh"]);
+});

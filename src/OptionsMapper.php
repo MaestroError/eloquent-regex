@@ -10,6 +10,7 @@ use Maestroerror\EloquentRegex\Options\CharOption;
 use Maestroerror\EloquentRegex\Options\FileOption;
 use Maestroerror\EloquentRegex\Options\FileExistsOption;
 use Maestroerror\EloquentRegex\Options\SpecificCurrenciesOption;
+use Maestroerror\EloquentRegex\Options\PathTypeOption;
 
 /**
  * Class OptionsMapper
@@ -49,6 +50,7 @@ class OptionsMapper {
         "onlyEUR" => [SpecificCurrenciesOption::class, "onlyEUR"],
         "onlyGBP" => [SpecificCurrenciesOption::class, "onlyGBP"],
         "onlyGEL" => [SpecificCurrenciesOption::class, "onlyGEL"],
+        "pathType" => [PathTypeOption::class, "setPathType"],
     ];
 
     /**
