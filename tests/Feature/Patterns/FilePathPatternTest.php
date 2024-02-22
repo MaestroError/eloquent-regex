@@ -38,3 +38,21 @@ it('does not validate a Linux file path in a string without a valid path', funct
 
     expect($check)->toBeFalse();
 });
+
+it('get path using isFile option', function () {
+    $string = "/usr/local/bin/script.sh /home/user/document.pdf";
+    $builder = new Builder($string);
+
+    $check = $builder->filePath(0, "sh")->get();
+
+    expect($check)->toEqual(["/usr/local/bin/script.sh"]);
+});
+
+it('checks path using isFile option', function () {
+    $string = "/usr/local/bin/script.sh";
+    $builder = new Builder($string);
+
+    $check = $builder->filePath(0, null)->check();
+
+    expect($check)->toBeTrue();
+});

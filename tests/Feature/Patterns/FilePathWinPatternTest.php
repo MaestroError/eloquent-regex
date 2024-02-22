@@ -37,11 +37,33 @@ it('validates a single Windows file path correctly in string', function () {
 });
 
 it('does not match invalid Windows file paths', function () {
-    $string = "InvalidPath\\file.txt, Another\\Invalid\\Path";
+    $string = "InvalidPath//file.txt, Another/Invalid/Path";
     $builder = new Builder($string);
 
     $matches = $builder->filePathWin()->get();
 
     // Assert that no invalid file paths are matched
     expect($matches)->toBeEmpty();
+});
+
+it('checks file exists using fileExists option', function () {
+    $string = __DIR__.'\..\..\TestFiles\document.txt';
+    $builder = new Builder($string);
+
+    $check = $builder->filePathWin(0, null, true)->check();
+
+    expect($check)->toBeTrue();
+});
+
+it('checks file using array options', function () {
+    $string = __DIR__.'\..\..\TestFiles\document.txt';
+    $builder = new Builder($string);
+
+    $check = $builder->filePathWin([
+        "isDirectory" => 0,
+        "isFile" => "txt",
+        "fileExists" => true,
+    ])->check();
+
+    expect($check)->toBeTrue();
 });

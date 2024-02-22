@@ -9,7 +9,7 @@ class FileExistsOption implements OptionContract {
     private $fileExists = false;
 
     public function validate(string $input): bool {
-
+        
         if ($this->fileExists && !file_exists($input)) {
             return false;
         }
@@ -21,8 +21,8 @@ class FileExistsOption implements OptionContract {
         return '';
     }
 
-    public function fileExists() {
-        $this->fileExists = true;
+    public function fileExists(bool $check = true) {
+        $this->fileExists = $check;
         return $this;
     }
 }

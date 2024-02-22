@@ -14,6 +14,9 @@ class FilePathPattern extends BasePattern {
 
     public static string $name = "filePath";
 
-    // @todo add options
-    public static array $args = [];
+    public static array $args = [
+        "isDirectory",
+        "isFile",
+        "fileExists",
+    ];
 }
