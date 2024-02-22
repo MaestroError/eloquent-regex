@@ -14,5 +14,7 @@ class PhonePattern extends BasePattern {
 
     public static string $name = "phone";
 
-    public static array $args = [];
+    public static array $args = [
+        "countryCode"
+    ];
 }

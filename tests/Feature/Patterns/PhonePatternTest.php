@@ -41,3 +41,15 @@ it('does not match invalid phone numbers', function () {
     // Assert that no valid phone numbers are matched
     expect($matches)->toBeEmpty();
 });
+
+
+
+it('validates a single phone number using country code correctly', function () {
+    $string = "+1-800-123-4567";
+    $builder = new Builder($string);
+
+    $check = $builder->phone("1")->check();
+
+    // Assert that the single phone number format is validated correctly
+    expect($check)->toBeTrue();
+});
