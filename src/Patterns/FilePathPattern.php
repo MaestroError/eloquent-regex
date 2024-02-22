@@ -18,5 +18,6 @@ class FilePathPattern extends BasePattern {
         "isDirectory",
         "isFile",
         "fileExists",
+        "pathType"
     ];
 }
