@@ -17,7 +17,6 @@ class BuilderPattern extends BasePattern {
 
     protected array $options = [];
     protected string $pattern = "";
-    protected string $expressionFlags = "";
     protected BuilderContract $builder; // Reference to the main Builder object
 
     public function __construct(BuilderContract $builder = new Builder()) {
@@ -63,12 +62,6 @@ class BuilderPattern extends BasePattern {
         }
     
         return "+";  // Default case, one or more times
-    }
-
-    private function addExpressionFlag(string $flag): void {
-        if (strpos($this->expressionFlags, $flag) === false) {
-            $this->expressionFlags .= $flag;
-        }
     }
     
 }

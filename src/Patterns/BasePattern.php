@@ -33,6 +33,8 @@ class BasePattern implements PatternContract {
 
     public static array $defaultOptions = [];
 
+    protected string $expressionFlags = "";
+
     /**
      * Retrieves the current regex pattern.
      *
@@ -155,7 +157,7 @@ class BasePattern implements PatternContract {
      * @return string The regex pattern for validating the entire input.
      */
     public function getInputValidationPattern(): string {
-        return "/^{$this->pattern}$/";
+        return "/^{$this->pattern}$/" . $this->expressionFlags;
     }
 
     /**
@@ -164,7 +166,7 @@ class BasePattern implements PatternContract {
      * @return string The regex pattern for finding matches within the input.
      */
     public function getMatchesValidationPattern(): string {
-        return "/{$this->pattern}/";
+        return "/{$this->pattern}/" . $this->expressionFlags;
     }
     
     protected static function processArguments(array $args, array $values): array {
@@ -186,5 +188,11 @@ class BasePattern implements PatternContract {
         $optionsBuilder = new OptionsBuilder();
         $optionsBuilder = $callback($optionsBuilder);
         return $optionsBuilder->getOptions();
+    }
+
+    protected function addExpressionFlag(string $flag): void {
+        if (strpos($this->expressionFlags, $flag) === false) {
+            $this->expressionFlags .= $flag;
+        }
     }
 }
