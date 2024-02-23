@@ -15,5 +15,7 @@ class EmailPattern extends BasePattern {
 
     public static array $args = [
         "maxLength",
+        "onlyDomains",
+        "onlyExtensions",
     ];
 }

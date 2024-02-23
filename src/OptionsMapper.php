@@ -13,6 +13,7 @@ use Maestroerror\EloquentRegex\Options\SpecificCurrenciesOption;
 use Maestroerror\EloquentRegex\Options\PathTypeOption;
 use Maestroerror\EloquentRegex\Options\CountryCodeOption;
 use Maestroerror\EloquentRegex\Options\ContainSpacesOption;
+use Maestroerror\EloquentRegex\Options\DomainSpecificOption;
 
 /**
  * Class OptionsMapper
@@ -55,9 +56,11 @@ class OptionsMapper {
         "pathType" => [PathTypeOption::class, "setPathType"],
         "countryCode" => [CountryCodeOption::class, "setCountryCode"],
         "noSpecialChars" => [CharOption::class, "noSpecialCharacters"],
-        "noSpaces" => [CharOption::class, "noSpaces"],
-        "noDoubleSpaces" => [CharOption::class, "noDoubleSpaces"],
-        "maxSpaces" => [CharOption::class, "maxSpaces"],
+        "noSpaces" => [ContainSpacesOption::class, "noSpaces"],
+        "noDoubleSpaces" => [ContainSpacesOption::class, "noDoubleSpaces"],
+        "maxSpaces" => [ContainSpacesOption::class, "maxSpaces"],
+        "onlyDomains" => [DomainSpecificOption::class, "setAllowedDomains"],
+        "onlyExtensions" => [DomainSpecificOption::class, "setAllowedExtensions"],
     ];
 
     /**
