@@ -39,7 +39,7 @@ Examples: `->dot("zeroOrMore")` `->exact("hello worls", false, "1+")`
   - domainSpecific: Limit email addresses to specific domains.✔️
   - domainExtension: Restrict to certain domain extensions.✔️
   - protocolSpecific: Limit URLs to specific protocols (e.g., http, https). ✔️
-  - cardType: Restrict to specific card types (e.g., Visa, MasterCard).
+  - cardType: Restrict to specific card types (e.g., Visa, MasterCard). ✔️
   - onlyAlphanumeric: Restrict to alphanumeric characters only.
   - SpecificTags (HtmlTagPattern): To allow or restrict specific HTML tags.
   - RegexFlags: To allow users to set global regex flags (like case-insensitivity, multiline, etc.).

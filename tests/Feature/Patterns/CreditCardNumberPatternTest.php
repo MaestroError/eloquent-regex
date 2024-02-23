@@ -49,3 +49,15 @@ it('checks invalid credit card number correctly', function () {
 
     expect($check)->toBeFalse();
 });
+
+
+it('gets only needed card types', function () {
+    $string = "Visa: 4111 1111 1111 1111, MasterCard: 5500 0000 0000 0004, Amex: 3400 000000 00009";
+    $builder = new Builder($string);
+    $check = $builder->creditCardNumber("visa, amex")->get();
+
+    expect($check)->toEqual([
+        "4111 1111 1111 1111",
+        "3400 000000 00009"
+    ]);
+});

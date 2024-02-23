@@ -14,5 +14,5 @@ class CreditCardNumberPattern extends BasePattern {
 
     public static string $name = "creditCardNumber";
 
-    public static array $args = [];
+    public static array $args = ["cardTypes"];
 }
