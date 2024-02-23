@@ -190,7 +190,7 @@ class BasePattern implements PatternContract {
         return $optionsBuilder->getOptions();
     }
 
-    protected function addExpressionFlag(string $flag): void {
+    public function addExpressionFlag(string $flag): void {
         if (strpos($this->expressionFlags, $flag) === false) {
             $this->expressionFlags .= $flag;
         }
