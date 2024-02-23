@@ -20,26 +20,25 @@ Examples: `->dot("zeroOrMore")` `->exact("hello worls", false, "1+")`
 
 ##### To Do
 
-- Make patterns dynamic +
-- Add commonly used patterns & tests +
-- Default arguments and allow to use any other option beside args +
-- Add FilePath and DirectoryPath patterns for different OS +
+- Make patterns dynamic ✔️
+- Add commonly used patterns & tests ✔️
+- Default arguments and allow to use any other option beside args ✔️
+- Add FilePath and DirectoryPath patterns for different OS ✔️
 - Add needed options for new patterns:
-  - specialCharacters (min, max) +
-  - onlyLowercase, onlyUppercase +
-  - Is file (ends with .[format]) +
-  - Is directory +
-  - fileExists +
-  - fileExtension: Specify certain file extensions (e.g., .txt, .pdf) +
-  - specificCurrencies: Match only specific currency symbols.+
-  - relativePath, absolutePath: Specify if the path should be relative or absolute.+
-  - countryCode: Match phone numbers with specific country codes. +
-  - specialCharacters: Allow or disallow special characters. +
-  - containSpaces: Allow or disallow spaces. +
-  - domainSpecific: Limit email addresses to specific domains.+
-  - domainExtension: Restrict to certain domain extensions.+
-  - protocolSpecific: Limit URLs to specific protocols (e.g., http, https). +
-  - topLevelDomain: Specify allowed top-level domains.
+  - specialCharacters (min, max) ✔️
+  - onlyLowercase, onlyUppercase ✔️
+  - Is file (ends with .[format]) ✔️
+  - Is directory ✔️
+  - fileExists ✔️
+  - fileExtension: Specify certain file extensions (e.g., .txt, .pdf) ✔️
+  - specificCurrencies: Match only specific currency symbols.✔️
+  - relativePath, absolutePath: Specify if the path should be relative or absolute.✔️
+  - countryCode: Match phone numbers with specific country codes. ✔️
+  - specialCharacters: Allow or disallow special characters. ✔️
+  - containSpaces: Allow or disallow spaces. ✔️
+  - domainSpecific: Limit email addresses to specific domains.✔️
+  - domainExtension: Restrict to certain domain extensions.✔️
+  - protocolSpecific: Limit URLs to specific protocols (e.g., http, https). ✔️
   - cardType: Restrict to specific card types (e.g., Visa, MasterCard).
   - onlyAlphanumeric: Restrict to alphanumeric characters only.
   - SpecificTags (HtmlTagPattern): To allow or restrict specific HTML tags.
