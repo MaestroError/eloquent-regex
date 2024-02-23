@@ -15,6 +15,7 @@ use Maestroerror\EloquentRegex\Options\CountryCodeOption;
 use Maestroerror\EloquentRegex\Options\ContainSpacesOption;
 use Maestroerror\EloquentRegex\Options\DomainSpecificOption;
 use Maestroerror\EloquentRegex\Options\ProtocolOption;
+use Maestroerror\EloquentRegex\Options\CardTypeOption;
 
 /**
  * Class OptionsMapper
@@ -65,6 +66,10 @@ class OptionsMapper {
         "onlyProtocol" => [ProtocolOption::class, "onlyProtocol"],
         "onlyHttp" => [ProtocolOption::class, "onlyHttp"],
         "onlyHttps" => [ProtocolOption::class, "onlyHttps"],
+        "onlyVisa" => [CardTypeOption::class, "onlyVisa"],
+        "onlyMasterCard" => [CardTypeOption::class, "onlyMasterCard"],
+        "onlyAmex" => [CardTypeOption::class, "onlyAmex"],
+        "cardTypes" => [CardTypeOption::class, "allowCardTypes"],
     ];
 
     /**
