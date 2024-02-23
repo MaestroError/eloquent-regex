@@ -20,10 +20,9 @@ Examples: `->dot("zeroOrMore")` `->exact("hello worls", false, "1+")`
 
 ##### To Do
 
-- Review all comments +
 - Make patterns dynamic +
 - Add commonly used patterns & tests +
-- Default arguments and allow to use any other option +
+- Default arguments and allow to use any other option beside args +
 - Add FilePath and DirectoryPath patterns for different OS +
 - Add needed options for new patterns:
   - specialCharacters (min, max) +
@@ -35,7 +34,7 @@ Examples: `->dot("zeroOrMore")` `->exact("hello worls", false, "1+")`
   - specificCurrencies: Match only specific currency symbols.+
   - relativePath, absolutePath: Specify if the path should be relative or absolute.+
   - countryCode: Match phone numbers with specific country codes. +
-  - dateFormat, timeFormat: Specify the format of date and time (e.g., MM-DD-YYYY, HH:MM).
+  - specialCharacters: Allow or disallow special characters. +
   - containSpaces: Allow or disallow spaces.
   - domainSpecific: Limit email addresses to specific domains.
   - usernameLength: Set minimum and maximum length for the username part of the email.
@@ -43,12 +42,11 @@ Examples: `->dot("zeroOrMore")` `->exact("hello worls", false, "1+")`
   - domainExtension: Restrict to certain domain extensions.
   - topLevelDomain: Specify allowed top-level domains.
   - cardType: Restrict to specific card types (e.g., Visa, MasterCard).
-  - specialCharacters: Allow or disallow special characters.
   - onlyAlphanumeric: Restrict to alphanumeric characters only.
-  - UsernameLength (EmailPattern): To set the minimum and maximum length for the username part of an email.
   - SpecificTags (HtmlTagPattern): To allow or restrict specific HTML tags.
   - RegexFlags: To allow users to set global regex flags (like case-insensitivity, multiline, etc.).
   - CharacterRange: To specify a range of characters that should or shouldn't appear in the pattern.
+  - dateFormat, timeFormat: Specify the format of date and time (e.g., MM-DD-YYYY, HH:MM).
 - Consider to register Patterns like options using key (name) => value (class) pairs (check performance)
 - Add benchmarks and test against large data (cheap alternative of ElasticSearch)
 - Extend BuilderPattern, try to add methods:

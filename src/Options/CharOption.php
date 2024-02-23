@@ -64,6 +64,13 @@ class CharOption implements OptionContract {
         return $this;
     }
 
+    public function noSpecialCharacters(bool $disable = true) {
+        if ($disable) {
+            $this->maxSpecialCharacters = 0;
+        }
+        return $this;
+    }
+
     public function onlyLowercase(bool $only = true) {
         $this->onlyLowercase = $only;
         return $this;

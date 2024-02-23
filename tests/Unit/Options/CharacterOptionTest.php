@@ -119,6 +119,13 @@ it('enforces maximum special characters', function () {
     expect($charOption->validate('ab#c'))->toBeTrue(); // Only 1 special character
 });
 
+it('enforces no special characters', function () {
+    $charOption = new CharOption();
+    $charOption->noSpecialCharacters();
+    expect($charOption->validate('ab#d$'))->toBeFalse();
+    expect($charOption->validate('abc'))->toBeTrue(); // Only 1 special character
+});
+
 it('enforces only lowercase characters', function () {
     $charOption = new CharOption();
     $charOption->onlyLowercase();
