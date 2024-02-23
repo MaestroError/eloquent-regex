@@ -15,9 +15,7 @@ class UrlPattern extends BasePattern {
     public static string $name = "url";
 
     public static array $args = [
-        // @todo Define any specific arguments you might need for URL pattern..
-        // For example: "requireProtocol" could be an option to enforce HTTP or HTTPS in the URL.
+        "onlyProtocol"
     ];
 
-    // Implement any additional methods or overrides required for the URL pattern.
 }
