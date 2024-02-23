@@ -38,7 +38,7 @@ Examples: `->dot("zeroOrMore")` `->exact("hello worls", false, "1+")`
   - containSpaces: Allow or disallow spaces. +
   - domainSpecific: Limit email addresses to specific domains.+
   - domainExtension: Restrict to certain domain extensions.+
-  - protocolSpecific: Limit URLs to specific protocols (e.g., http, https).
+  - protocolSpecific: Limit URLs to specific protocols (e.g., http, https). +
   - topLevelDomain: Specify allowed top-level domains.
   - cardType: Restrict to specific card types (e.g., Visa, MasterCard).
   - onlyAlphanumeric: Restrict to alphanumeric characters only.
@@ -48,7 +48,6 @@ Examples: `->dot("zeroOrMore")` `->exact("hello worls", false, "1+")`
   - usernameLength: Set minimum and maximum length for the username part of the email.
   - dateFormat, timeFormat: Specify the format of date and time (e.g., MM-DD-YYYY, HH:MM).
 - Consider to register Patterns like options using key (name) => value (class) pairs (check performance)
-- Add benchmarks and test against large data (cheap alternative of ElasticSearch)
 - Extend BuilderPattern, try to add methods:
 
   - group(callable $callback): Creates a grouped subpattern.
@@ -61,6 +60,7 @@ Examples: `->dot("zeroOrMore")` `->exact("hello worls", false, "1+")`
   - Raw regex methods for advanced users.
   - BuilderPattern should be able to reproduce patterns used in HSA
 
+- Add benchmarks and test against large data (cheap alternative of ElasticSearch)
 - Add Feature Tests for BuilderPattern
 - Add Dockblocs and comments for new methods
 

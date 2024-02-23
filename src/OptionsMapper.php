@@ -14,6 +14,7 @@ use Maestroerror\EloquentRegex\Options\PathTypeOption;
 use Maestroerror\EloquentRegex\Options\CountryCodeOption;
 use Maestroerror\EloquentRegex\Options\ContainSpacesOption;
 use Maestroerror\EloquentRegex\Options\DomainSpecificOption;
+use Maestroerror\EloquentRegex\Options\ProtocolOption;
 
 /**
  * Class OptionsMapper
@@ -61,6 +62,9 @@ class OptionsMapper {
         "maxSpaces" => [ContainSpacesOption::class, "maxSpaces"],
         "onlyDomains" => [DomainSpecificOption::class, "setAllowedDomains"],
         "onlyExtensions" => [DomainSpecificOption::class, "setAllowedExtensions"],
+        "onlyProtocol" => [ProtocolOption::class, "onlyProtocol"],
+        "onlyHttp" => [ProtocolOption::class, "onlyHttp"],
+        "onlyHttps" => [ProtocolOption::class, "onlyHttps"],
     ];
 
     /**
