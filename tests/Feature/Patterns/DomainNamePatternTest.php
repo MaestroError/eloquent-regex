@@ -31,3 +31,23 @@ it('counts domain names correctly', function () {
     // Assert that the count matches the expected number of domain names
     expect($count)->toEqual(3);
 });
+
+it('matches domain names with specific extensions', function () {
+    $string = "example.com, example.org, example.net";
+    $builder = new Builder($string);
+
+    $matches = $builder->domainName(0, "", 'com,org')->get();
+
+    // Assert that only domains with specified extensions are matched
+    expect($matches)->toEqual(['example.com', 'example.org']);
+});
+
+it('matches domain names from specific domains', function () {
+    $string = "visit example.com, contact us at info@example.org";
+    $builder = new Builder($string);
+
+    $matches = $builder->domainName(['onlyDomains' => ['example.com']])->get();
+
+    // Assert that only domains from the specified list are matched
+    expect($matches)->toEqual(['example.com']);
+});

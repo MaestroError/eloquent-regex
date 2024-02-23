@@ -14,6 +14,10 @@ class DomainNamePattern extends BasePattern {
     public static string $name = "domainName";
 
     // No specific arguments required for this pattern
-    public static array $args = [];
+    public static array $args = [
+        "maxLength",
+        "onlyDomains",
+        "onlyExtensions",
+    ];
 }
 

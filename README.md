@@ -35,17 +35,17 @@ Examples: `->dot("zeroOrMore")` `->exact("hello worls", false, "1+")`
   - relativePath, absolutePath: Specify if the path should be relative or absolute.+
   - countryCode: Match phone numbers with specific country codes. +
   - specialCharacters: Allow or disallow special characters. +
-  - containSpaces: Allow or disallow spaces.
-  - domainSpecific: Limit email addresses to specific domains.
-  - usernameLength: Set minimum and maximum length for the username part of the email.
+  - containSpaces: Allow or disallow spaces. +
+  - domainSpecific: Limit email addresses to specific domains.+
+  - domainExtension: Restrict to certain domain extensions.+
   - protocolSpecific: Limit URLs to specific protocols (e.g., http, https).
-  - domainExtension: Restrict to certain domain extensions.
   - topLevelDomain: Specify allowed top-level domains.
   - cardType: Restrict to specific card types (e.g., Visa, MasterCard).
   - onlyAlphanumeric: Restrict to alphanumeric characters only.
   - SpecificTags (HtmlTagPattern): To allow or restrict specific HTML tags.
   - RegexFlags: To allow users to set global regex flags (like case-insensitivity, multiline, etc.).
   - CharacterRange: To specify a range of characters that should or shouldn't appear in the pattern.
+  - usernameLength: Set minimum and maximum length for the username part of the email.
   - dateFormat, timeFormat: Specify the format of date and time (e.g., MM-DD-YYYY, HH:MM).
 - Consider to register Patterns like options using key (name) => value (class) pairs (check performance)
 - Add benchmarks and test against large data (cheap alternative of ElasticSearch)

@@ -15,7 +15,7 @@ class TextOrNumbersPattern extends BasePattern {
     public static string $name = "textOrNumbers";
 
     public static array $args = [
-        "minLength", // First argument
+        "minLength", // First argument (should always be int or string based option)
         "maxLength", // Second argument
         "minUppercase", // Third argument and etc.
         "minLowercase",

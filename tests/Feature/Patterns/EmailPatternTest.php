@@ -34,3 +34,41 @@ it('correctly invalidates an incorrect email with EmailPattern and MaxLength opt
     $check = $builder->email(10)->check();
     expect($check)->toBeFalse();
 });
+
+it('validates email addresses with specific domain extensions', function () {
+    $builder = new Builder("user@example.com");
+
+    $check = $builder->email(['onlyExtensions' => ['com', 'org']])->check();
+
+    // Assert that the email with the specified extension is validated correctly
+    expect($check)->toBeTrue();
+});
+
+it('does not validate email addresses with unlisted domain extensions', function () {
+    $builder = new Builder("user@example.net");
+
+    $check = $builder->email(function($query) {
+        return $query->onlyExtensions(['com', 'org']);
+    })->check();
+
+    // Assert that the email with an unlisted extension is not validated
+    expect($check)->toBeFalse();
+});
+
+it('validates email addresses from specific domains', function () {
+    $builder = new Builder("user@example.com");
+
+    $check = $builder->email(['onlyDomains' => ['example.com', 'example.org']])->check();
+
+    // Assert that the email from the specified domain is validated correctly
+    expect($check)->toBeTrue();
+});
+
+it('does not validate email addresses from unlisted domains', function () {
+    $builder = new Builder("user@otherdomain.com");
+
+    $check = $builder->email(['onlyDomains' => ['example.com', 'example.org']])->check();
+
+    // Assert that the email from an unlisted domain is not validated
+    expect($check)->toBeFalse();
+});
