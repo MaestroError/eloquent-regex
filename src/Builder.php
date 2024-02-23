@@ -176,6 +176,31 @@ class Builder implements BuilderContract {
     public function getPatterns(): array {
         return $this->patterns;
     }
+
+    public function asCaseInsensitive(): self {
+        $this->pattern->addExpressionFlag("i");
+        return $this;
+    }
+
+    public function asMultiline(): self {
+        $this->pattern->addExpressionFlag("m");
+        return $this;
+    }
+
+    public function asSingleline(): self {
+        $this->pattern->addExpressionFlag("s");
+        return $this;
+    }
+
+    public function asUnicode(): self {
+        $this->pattern->addExpressionFlag("u");
+        return $this;
+    }
+
+    public function asSticky(): self {
+        $this->pattern->addExpressionFlag("y");
+        return $this;
+    }
     
     public function __call(
         $name,

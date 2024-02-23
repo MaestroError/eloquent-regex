@@ -42,7 +42,7 @@ Examples: `->dot("zeroOrMore")` `->exact("hello worls", false, "1+")`
   - cardType: Restrict to specific card types (e.g., Visa, MasterCard). ✔️
   - onlyAlphanumeric: Restrict to alphanumeric characters only.
   - SpecificTags (HtmlTagPattern): To allow or restrict specific HTML tags.
-  - RegexFlags: To allow users to set global regex flags (like case-insensitivity, multiline, etc.).
+  - RegexFlags: To allow users to set global regex flags (like case-insensitivity, multiline, etc.). ✔️ (Added in Builder and basePattern)
   - CharacterRange: To specify a range of characters that should or shouldn't appear in the pattern.
   - usernameLength: Set minimum and maximum length for the username part of the email.
   - dateFormat, timeFormat: Specify the format of date and time (e.g., MM-DD-YYYY, HH:MM).
