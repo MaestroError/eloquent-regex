@@ -12,6 +12,7 @@ use Maestroerror\EloquentRegex\Options\FileExistsOption;
 use Maestroerror\EloquentRegex\Options\SpecificCurrenciesOption;
 use Maestroerror\EloquentRegex\Options\PathTypeOption;
 use Maestroerror\EloquentRegex\Options\CountryCodeOption;
+use Maestroerror\EloquentRegex\Options\ContainSpacesOption;
 
 /**
  * Class OptionsMapper
@@ -53,6 +54,10 @@ class OptionsMapper {
         "onlyGEL" => [SpecificCurrenciesOption::class, "onlyGEL"],
         "pathType" => [PathTypeOption::class, "setPathType"],
         "countryCode" => [CountryCodeOption::class, "setCountryCode"],
+        "noSpecialChars" => [CharOption::class, "noSpecialCharacters"],
+        "noSpaces" => [CharOption::class, "noSpaces"],
+        "noDoubleSpaces" => [CharOption::class, "noDoubleSpaces"],
+        "maxSpaces" => [CharOption::class, "maxSpaces"],
     ];
 
     /**
