@@ -58,7 +58,7 @@ Examples: `->dot("zeroOrMore")` `->exact("hello worls", false, "1+")`
   - Raw regex methods for advanced users.
   - BuilderPattern should be able to reproduce patterns used in HSA
 
-- Add benchmarks and test against large data (cheap alternative of ElasticSearch)
+- Add benchmarks and tests for search against large data ✔️
 - Add Feature Tests for BuilderPattern
 - Add Dockblocs and comments for new methods
 
@@ -72,3 +72,4 @@ Examples: `->dot("zeroOrMore")` `->exact("hello worls", false, "1+")`
 - Consider to add Postal Code Pattern
 - Make options controllable from config or provider (?)
 - Make pattern controllable from config or provider (?)
+- I should be able to make new pattern using BuilderPattern
