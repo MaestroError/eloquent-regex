@@ -19,3 +19,12 @@ it('does not match invalid HTML tags', function () {
     // Assert that invalid HTML tags are not matched
     expect($check)->toBeFalse();
 });
+
+it('matches only allowed HTML tags correctly', function () {
+    $builder = new Builder("<p>Paragr<small>aph</small></p> <div>Div content</div>");
+
+    $matches = $builder->htmlTag("", "p, small")->get();
+
+    // Assert that the returned matches are as expected
+    expect($matches)->toEqual(['<p>Paragr<small>aph</small></p>']);
+});

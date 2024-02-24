@@ -17,6 +17,7 @@ use Maestroerror\EloquentRegex\Options\DomainSpecificOption;
 use Maestroerror\EloquentRegex\Options\ProtocolOption;
 use Maestroerror\EloquentRegex\Options\CardTypeOption;
 use Maestroerror\EloquentRegex\Options\OnlyAlphanumericOption;
+use Maestroerror\EloquentRegex\Options\HtmlTagsOption;
 
 /**
  * Class OptionsMapper
@@ -72,6 +73,8 @@ class OptionsMapper {
         "onlyAmex" => [CardTypeOption::class, "onlyAmex"],
         "cardTypes" => [CardTypeOption::class, "allowCardTypes"],
         "onlyAlphanumeric" => [OnlyAlphanumericOption::class, "onlyAlphanumeric"],
+        "onlyTags" => [HtmlTagsOption::class, "allowTags"],
+        "restrictTags" => [HtmlTagsOption::class, "restrictTags"],
     ];
 
     /**
