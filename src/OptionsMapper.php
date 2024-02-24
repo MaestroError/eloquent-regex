@@ -16,6 +16,7 @@ use Maestroerror\EloquentRegex\Options\ContainSpacesOption;
 use Maestroerror\EloquentRegex\Options\DomainSpecificOption;
 use Maestroerror\EloquentRegex\Options\ProtocolOption;
 use Maestroerror\EloquentRegex\Options\CardTypeOption;
+use Maestroerror\EloquentRegex\Options\OnlyAlphanumericOption;
 
 /**
  * Class OptionsMapper
@@ -70,6 +71,7 @@ class OptionsMapper {
         "onlyMasterCard" => [CardTypeOption::class, "onlyMasterCard"],
         "onlyAmex" => [CardTypeOption::class, "onlyAmex"],
         "cardTypes" => [CardTypeOption::class, "allowCardTypes"],
+        "onlyAlphanumeric" => [OnlyAlphanumericOption::class, "onlyAlphanumeric"],
     ];
 
     /**
