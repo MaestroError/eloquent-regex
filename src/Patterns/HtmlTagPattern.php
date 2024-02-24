@@ -13,5 +13,8 @@ class HtmlTagPattern extends BasePattern {
     
     public static string $name = "htmlTag";
 
-    public static array $args = [];
+    public static array $args = [
+        "restrictTags",
+        "onlyTags",
+    ];
 }
