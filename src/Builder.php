@@ -67,7 +67,7 @@ class Builder implements BuilderContract {
 
     protected function processCallback(callable $callback) {
         $optionsBuilder = new OptionsBuilder();
-        $optionsBuilder = $callback($optionsBuilder);
+        $callback($optionsBuilder);
         $this->processConfigArray($optionsBuilder->getOptions());
     }
 

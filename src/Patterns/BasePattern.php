@@ -186,7 +186,7 @@ class BasePattern implements PatternContract {
 
     protected static function processCallback(callable $callback): array {
         $optionsBuilder = new OptionsBuilder();
-        $optionsBuilder = $callback($optionsBuilder);
+        $callback($optionsBuilder);
         return $optionsBuilder->getOptions();
     }
 

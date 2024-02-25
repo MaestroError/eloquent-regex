@@ -63,5 +63,19 @@ class BuilderPattern extends BasePattern {
     
         return "+";  // Default case, one or more times
     }
+
+    public function group(callable $callback): self {
+        $subPattern = new self($this->builder);
+        $callback($subPattern);
+        $this->pattern .= '(' . $subPattern->getPattern() . ')';
+        return $this;
+    }
+
+    public function nonCapturingGroup(callable $callback): self {
+        $subPattern = new self($this->builder);
+        $callback($subPattern);
+        $this->pattern .= '(?:' . $subPattern->getPattern() . ')';
+        return $this;
+    }
     
 }
