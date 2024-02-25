@@ -51,7 +51,8 @@ it('does not match currencies outside specific symbols', function () {
     $builder = new Builder("$1000, €200, £30");
 
     $check = $builder->currency(function($query) {
-        return $query->specificCurrencies(['￥']);
+        $query->specificCurrencies(['￥']); // You can use options without return
+        // return $query->specificCurrencies(['￥']); // Or with return, both has the same effect
     })->checkString();
 
     // Assert that currencies not in the specific symbols are not matched

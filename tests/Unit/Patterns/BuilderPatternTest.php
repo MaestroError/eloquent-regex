@@ -392,3 +392,52 @@ test('invisibleChars method matches invisible characters correctly', function ()
     expect(preg_match($regex, ' '))->toBe(0); // Only one invisible character
     expect(preg_match($regex, '   '))->toBe(0); // More than 2 invisible characters
 });
+
+
+test('group method creates capturing groups correctly', function () {
+    $builder = new BuilderPattern();
+    $builder->group(function($group) {
+        $group->digits(3); // Matches exactly 3 digits
+    })->character("-")->digits(2); // Followed by a hyphen and 2 digits
+
+    $regex = $builder->getMatchesValidationPattern();
+    expect(preg_match($regex, '123-45'))->toBe(1);
+    expect(preg_match($regex, '12345'))->toBe(0); // No hyphen
+    expect(preg_match($regex, '12-34'))->toBe(0); // First group doesn't have 3 digits
+});
+
+test('nonCapturingGroup method creates non-capturing groups correctly', function () {
+    $builder = new BuilderPattern();
+    $builder->nonCapturingGroup(function($group) {
+        $group->digits(3); // Matches exactly 3 digits
+    })->character("-")->digits(2); // Followed by a hyphen and 2 digits
+
+    $regex = $builder->getMatchesValidationPattern();
+    expect(preg_match($regex, '123-45'))->toBe(1);
+    expect(preg_match($regex, '12345'))->toBe(0); // No hyphen
+    expect(preg_match($regex, '12-34'))->toBe(0); // First group doesn't have 3 digits
+});
+
+test('capturing group captures content correctly', function () {
+    $builder = new BuilderPattern();
+    $builder->group(function($group) {
+        $group->exact('abc'); 
+    });
+
+    $regex = $builder->getMatchesValidationPattern();
+    $matches = [];
+    preg_match($regex, 'abcdef', $matches);
+    expect($matches[1])->toBe('abc'); // Check the captured content
+});
+
+test('non-capturing group does not capture content', function () {
+    $builder = new BuilderPattern();
+    $builder->nonCapturingGroup(function($group) {
+        $group->exact('abc');
+    });
+
+    $regex = $builder->getInputValidationPattern();
+    $matches = [];
+    preg_match($regex, 'abcdef', $matches);
+    expect(isset($matches[1]))->toBeFalse(); // No captured content
+});

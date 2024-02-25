@@ -48,7 +48,7 @@ it('does not validate email addresses with unlisted domain extensions', function
     $builder = new Builder("user@example.net");
 
     $check = $builder->email(function($query) {
-        return $query->onlyExtensions(['com', 'org']);
+        $query->onlyExtensions(['com', 'org']);
     })->check();
 
     // Assert that the email with an unlisted extension is not validated
