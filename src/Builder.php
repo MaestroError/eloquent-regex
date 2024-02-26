@@ -28,10 +28,24 @@ class Builder implements BuilderContract {
 
     use BuilderPatternMethods;
 
+    /**
+     * The string to be processed with regex.
+     */
     protected string $str;
+
+    /**
+     * The current pattern being applied.
+     */
     protected PatternContract $pattern;
+
+    /**
+     * Manages options for the current pattern.
+     */
     protected OptionsManager $manager;
 
+    /**
+     * List of available patterns.
+     */
     public array $patterns = 
     [
         TextOrNumbersPattern::class,
@@ -52,12 +66,22 @@ class Builder implements BuilderContract {
         FilePathWinPattern::class,
     ];
 
+    /**
+     * Constructs a new Builder instance.
+     *
+     * @param string $str The initial string to process with regex.
+     */
     public function __construct(string $str = "") {
         $this->str = $str;
         $this->manager = new OptionsManager();
         // @todo add patterns via config
     }
 
+    /**
+     * Processes an options array and applies it to the current pattern.
+     *
+     * @param array $options An associative array of options.
+     */
     protected function processConfigArray(array $options) {
         // Build options in options manager
         $this->manager->buildOptions($options);
@@ -65,12 +89,22 @@ class Builder implements BuilderContract {
         $this->pattern->setOptions($this->manager->getUsedOptions());
     }
 
+    /**
+     * Processes a callback function to configure options.
+     *
+     * @param callable $callback A function that configures options using an OptionsBuilder.
+     */
     protected function processCallback(callable $callback) {
         $optionsBuilder = new OptionsBuilder();
         $callback($optionsBuilder);
         $this->processConfigArray($optionsBuilder->getOptions());
     }
 
+    /**
+     * Validates the current string as an exact match against the current pattern.
+     *
+     * @return bool True if the string is an exact match, false otherwise.
+     */
     protected function validateAsInput(): bool {
         if (!$this->pattern->validateInput($this->str)) {
             return false;
@@ -78,6 +112,11 @@ class Builder implements BuilderContract {
         return true;
     }
 
+    /**
+     * Validates if the current string contains any matches for the current pattern.
+     *
+     * @return bool True if the string contains matches, false otherwise.
+     */
     protected function validateAsString(): bool {
         if (!$this->pattern->validateMatches($this->str)) {
             return false;
@@ -85,6 +124,11 @@ class Builder implements BuilderContract {
         return true;
     }
 
+    /**
+     * Retrieves all matches of the current pattern within the string.
+     *
+     * @return array|null An array of matches or null if no matches are found.
+     */
     protected function getAllMatches(): ?array {
         return $this->pattern->getMatches($this->str);
     }
@@ -157,11 +201,23 @@ class Builder implements BuilderContract {
         } 
     }
     
+    /**
+     * Registers a single pattern in the Builder.
+     *
+     * @param PatternContract $pattern The pattern to register.
+     * @return self The Builder instance, for method chaining.
+     */
     public function registerPattern(PatternContract $pattern): self {
         $this->patterns[] = $pattern;
         return $this;
     }
     
+    /**
+     * Registers multiple patterns in the Builder.
+     *
+     * @param array $patterns An array of patterns to register.
+     * @return self The Builder instance, for method chaining.
+     */
     public function registerPatterns(array $patterns): self {
         foreach ($patterns as $pattern) {
             if (is_subclass_of($pattern, PatternContract::class)) {
@@ -173,9 +229,16 @@ class Builder implements BuilderContract {
         return $this;
     }
     
+    /**
+     * Retrieves the list of registered patterns.
+     *
+     * @return array An array of registered patterns.
+     */
     public function getPatterns(): array {
         return $this->patterns;
     }
+
+    // Expression flag methods:
 
     public function asCaseInsensitive(): self {
         $this->pattern->addExpressionFlag("i");
@@ -201,7 +264,17 @@ class Builder implements BuilderContract {
         $this->pattern->addExpressionFlag("y");
         return $this;
     }
-    
+
+    /**
+     * Dynamically handles calls to pattern methods.
+     *
+     * This method is invoked when a method is called on the Builder that matches the name of a registered pattern.
+     *
+     * @param string $name The name of the method being called.
+     * @param array $args The arguments passed to the method.
+     * @return self The Builder instance, for method chaining.
+     * @throws \LogicException If no patterns are registered or the pattern name is not found.
+     */
     public function __call(
         $name,
         $args

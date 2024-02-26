@@ -76,6 +76,12 @@ interface PatternContract {
      */
     public function getMatchesValidationPattern(): string;
 
+    /**
+     * Adds regex flag to the pattern
+     * 
+     * @param string $flag to add after regex pattern
+     * @return void
+     */
     public function addExpressionFlag(string $flag): void;
 
     /**
