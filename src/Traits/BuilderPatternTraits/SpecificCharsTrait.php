@@ -4,29 +4,17 @@ namespace Maestroerror\EloquentRegex\Traits\BuilderPatternTraits;
 
 trait SpecificCharsTrait {
 
-    // Specific Characters START
-
-    public function exact(string $string, $caseSensitive = true, $quantifier = null): self {
-        $escapedString = preg_quote($string, '/');
+    private function handleExact(string|array $string, $caseSensitive = true, $quantifier = null) {
+        if (is_array($string)) {
+            $string = $this->escapeArray($string);
+            $escapedString = "(" . implode("|", $string) . ")";
+        } else {
+            $escapedString = preg_quote($string, '/');
+        }
         $pattern = $caseSensitive ? $escapedString : "(?i)" . $escapedString;
         $this->pattern .= $this->applyQuantifier($pattern, $quantifier);
         return $this;
     }
-    
-    public function character(string $char, $caseSensitive = true, $quantifier = null): self {
-        $escapedChar = preg_quote($char, '/');
-        $pattern = $caseSensitive ? $escapedChar : "(?i)" . $escapedChar;
-        $this->pattern .= $this->applyQuantifier($pattern, $quantifier);
-        return $this;
-    }
-
-    public function dot($quantifier = null): self {
-        $this->pattern .= '.'; // Matches any character except newline
-        $this->pattern = $this->applyQuantifier($this->pattern, $quantifier);
-        return $this;
-    }
-    
-    // Specific Characters END
 
     private function escapeAndAdd(string $char): self {
         $escapedChar = preg_quote($char, '/');
@@ -34,6 +22,35 @@ trait SpecificCharsTrait {
         return $this;
     }
 
+    private function escapeArray(array $arr) {
+        return array_map(function ($item) {
+            return preg_quote($item, '/');
+        }, $arr);
+    }
+
+    // Specific Characters START
+
+    public function exact(string|array $string, $caseSensitive = true, $quantifier = null): self {
+        return $this->handleExact($string, $caseSensitive, $quantifier);
+    }
+
+    public function exactly(string|array $string, $caseSensitive = true, $quantifier = null): self {
+        return $this->handleExact($string, $caseSensitive, $quantifier);
+    }
+
+    public function literal(string|array $string, $caseSensitive = true, $quantifier = null): self {
+        return $this->handleExact($string, $caseSensitive, $quantifier);
+    }
+    
+    public function character(string $char, $caseSensitive = true, $quantifier = null): self {
+        return $this->handleExact($char, $caseSensitive, $quantifier);
+    }
+    
+    public function char(string $char, $caseSensitive = true, $quantifier = null): self {
+        return $this->handleExact($char, $caseSensitive, $quantifier);
+    }
+
+    
     public function tab(): self {
         $this->pattern .= "\\t"; // Matches a tab character
         return $this;
@@ -63,6 +80,14 @@ trait SpecificCharsTrait {
         return $this->escapeAndAdd("-");
     }
 
+    public function dot($quantifier = null): self {
+        return $this->escapeAndAdd("."); // Matches dot "." character
+    }
+
+    public function space() {
+        return $this->escapeAndAdd(" ");
+    }
+
     public function backslash(): self {
         return $this->escapeAndAdd("\\");
     }
@@ -73,6 +98,10 @@ trait SpecificCharsTrait {
 
     public function slash(): self {
         return $this->escapeAndAdd("/");
+    }
+
+    public function doubleSlash(): self {
+        return $this->escapeAndAdd("//");
     }
 
     public function underscore(): self {
@@ -103,6 +132,10 @@ trait SpecificCharsTrait {
         return $this->escapeAndAdd("@");
     }
 
+    public function atSymbol(): self {
+        return $this->escapeAndAdd("@");
+    }
+    
     public function exclamationMark(): self {
         return $this->escapeAndAdd("!");
     }

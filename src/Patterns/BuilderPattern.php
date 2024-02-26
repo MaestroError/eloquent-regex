@@ -17,6 +17,7 @@ class BuilderPattern extends BasePattern {
 
     protected array $options = [];
     protected string $pattern = "";
+    protected bool $lazy = false;
     protected BuilderContract $builder; // Reference to the main Builder object
 
     public function __construct(BuilderContract $builder = new Builder()) {
@@ -50,24 +51,47 @@ class BuilderPattern extends BasePattern {
 
     private function getLengthOption($length = null, $minLength = 0, $maxLength = 0): string {
         if (is_int($length) && $length >= 0) {
-            return "{" . $length . "}";
+            $qntf = "{" . $length . "}";
+            return $this->lazy ? $this->addLazy($qntf) : $qntf;
         }
     
         if ($minLength > 0 && $maxLength > 0) {
-            return "{" . $minLength . "," . $maxLength . "}";
+            $qntf = "{" . $minLength . "," . $maxLength . "}";
+            return $this->lazy ? $this->addLazy($qntf) : $qntf;
         } else if ($minLength > 0) {
-            return "{" . $minLength . ",}";
+            $qntf = "{" . $minLength . ",}";
+            return $this->lazy ? $this->addLazy($qntf) : $qntf;
         } else if ($maxLength > 0) {
-            return "{0," . $maxLength . "}";
+            $qntf = "{0," . $maxLength . "}";
+            return $this->lazy ? $this->addLazy($qntf) : $qntf;
         }
     
-        return "+";  // Default case, one or more times
+        $qntf = "+";  // Default case, one or more times
+        return $this->lazy ? $this->addLazy($qntf) : $qntf;
+    }
+
+    private function addLazy($quantifier): string {
+        $this->lazy = false;
+        return $quantifier . "?";
+    }
+
+    // The next quantifier-based method will considered as lazy (adds "?")
+    public function lazy(): self {
+        $this->lazy = true;
+        return $this;
     }
 
     public function set(callable $callback): self {
         $subPattern = new self();
         $callback($subPattern);
         $this->pattern .= '[' . $subPattern->getPattern() . ']';
+        return $this;
+    }
+
+    public function negativeSet(callable $callback): self {
+        $subPattern = new self();
+        $callback($subPattern);
+        $this->pattern .= '[^' . $subPattern->getPattern() . ']';
         return $this;
     }
 

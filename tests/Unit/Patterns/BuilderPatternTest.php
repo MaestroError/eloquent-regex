@@ -150,13 +150,12 @@ test('dot method matches correctly', function () {
     $builder->dot();
     
     // Test for validateInput (exact match)
-    expect($builder->validateInput('a'))->toBeTrue();
-    expect($builder->validateInput(' '))->toBeTrue();
-    expect($builder->validateInput("\n"))->toBeFalse(); // Dot does not match newlines
-    expect($builder->validateInput("\ntest"))->toBeFalse(); // Dot does not match newlines
+    expect($builder->validateInput('.'))->toBeTrue();
+    expect($builder->validateInput("\n"))->toBeFalse();
+    expect($builder->validateInput("\ntest"))->toBeFalse();
 
     // Test for validateMatches (contains match)
-    expect($builder->validateMatches('test 123'))->toBeTrue();
+    expect($builder->validateMatches('test.123'))->toBeTrue();
 });
 
 test('wordBoundary method adds a word boundary correctly', function () {

@@ -60,7 +60,7 @@ Examples: `->dot("zeroOrMore")` `->exact("hello worls", false, "1+")`
   - BuilderPattern should be able to reproduce patterns used in HSA✔️
 
 - Add benchmarks and tests for search against large data ✔️
-- Add Feature Tests for BuilderPattern
+- Add Feature Tests for BuilderPattern ✔️
 - Add Dockblocs and comments for new methods
 
 - Add facade for Laravel
