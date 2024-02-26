@@ -8,6 +8,10 @@ All available option classes and option names are hardcoded in `src\OptionsMappe
 
 Think about options as an extra assertions you add to the pattern. To keep it simple, all options (so the option methods too) should have only 1 argument.
 
+#### Adding new patterns
+
+All available redy-to-use pattern classes are hardcoded in `src\Builder.php`. Refer to it, if you want add new or disable existing one.
+
 #### Quantifiers
 
 Available values for quantifiers as argument:
@@ -16,7 +20,7 @@ Available values for quantifiers as argument:
 - oneOrMore = `"oneOrMore"`, `"1>"`, `"1+"`
 - optional = `"optional"`, `"?"`, `"|"`
 
-Examples: `->dot("zeroOrMore")` `->exact("hello worls", false, "1+")`
+Examples: `->exact("hello world", false, "1+")`
 
 ##### To Do
 

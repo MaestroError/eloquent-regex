@@ -83,7 +83,7 @@ trait SpecificCharsTrait {
         return $this->escapeAndAdd("-");
     }
 
-    public function dot($quantifier = null): self {
+    public function dot(): self {
         return $this->escapeAndAdd("."); // Matches dot "." character
     }
 
