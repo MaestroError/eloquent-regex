@@ -441,3 +441,92 @@ test('non-capturing group does not capture content', function () {
     preg_match($regex, 'abcdef', $matches);
     expect(isset($matches[1]))->toBeFalse(); // No captured content
 });
+
+test('orPattern method combines patterns with alternation correctly', function () {
+    $builder = new BuilderPattern();
+    $builder->exact('apple')->orPattern(function($pattern) {
+        $pattern->exact('orange');
+    });
+
+    $regex = $builder->getInputValidationPattern();
+    expect(preg_match($regex, 'apple'))->toBe(1);
+    expect(preg_match($regex, 'orange'))->toBe(1);
+    expect(preg_match($regex, 'banana'))->toBe(0); // Not part of the alternation
+});
+
+test('orPattern can be used multiple times for complex alternation', function () {
+    $builder = new BuilderPattern();
+    $builder->exact('apple')->orPattern(function($pattern) {
+        $pattern->exact('orange');
+    })->orPattern(function($pattern) {
+        $pattern->exact('banana');
+    });
+
+    $regex = $builder->getInputValidationPattern();
+    expect(preg_match($regex, 'apple'))->toBe(1);
+    expect(preg_match($regex, 'orange'))->toBe(1);
+    expect(preg_match($regex, 'banana'))->toBe(1);
+    expect(preg_match($regex, 'pear'))->toBe(0); // Not part of the alternation
+});
+
+test('lookAhead method adds positive lookahead correctly', function () {
+    $builder = new BuilderPattern();
+    $builder->digits()->lookAhead(function($pattern) {
+        $pattern->character('D');
+    });
+
+    $regex = $builder->getMatchesValidationPattern();
+    expect(preg_match($regex, '3D'))->toBe(1); // Digit followed by 'D'
+    expect(preg_match($regex, '3A'))->toBe(0); // Digit not followed by 'D'
+});
+
+test('lookBehind method adds positive lookbehind correctly', function () {
+    $builder = new BuilderPattern();
+    $builder->lookBehind(function($pattern) {
+        $pattern->character('P');
+    })->digits();
+
+    $regex = $builder->getMatchesValidationPattern();
+    expect(preg_match($regex, 'P3'))->toBe(1); // Digit preceded by 'P', in case of get() ot will return only digit
+    expect(preg_match($regex, 'A3'))->toBe(0); // Digit not preceded by 'P'
+});
+
+test('negativeLookAhead method adds negative lookahead correctly', function () {
+    $builder = new BuilderPattern();
+    $builder->digits()->negativeLookAhead(function($pattern) {
+        $pattern->character('-');
+    });
+
+    $regex = $builder->getMatchesValidationPattern();
+    expect(preg_match($regex, '3A'))->toBe(1); // Digit not followed by '-'
+    expect(preg_match($regex, '3-'))->toBe(0); // Digit followed by '-'
+});
+
+test('negativeLookBehind method adds negative lookbehind correctly', function () {
+    $builder = new BuilderPattern();
+    $builder->negativeLookBehind(function($pattern) {
+        $pattern->character('-');
+    })->digits();
+
+    $regex = $builder->getMatchesValidationPattern();
+    expect(preg_match($regex, 'A3'))->toBe(1); // Digit not preceded by '-'
+    expect(preg_match($regex, '-3'))->toBe(0); // Digit preceded by '-'
+});
+
+test('addRawRegex method adds raw regex patterns correctly', function () {
+    $builder = new BuilderPattern();
+    $builder->addRawRegex('\d{3}-\d{2}-\d{4}'); // SSN pattern
+
+    $regex = $builder->getInputValidationPattern();
+    expect(preg_match($regex, '123-45-6789'))->toBe(1);
+    expect(preg_match($regex, '123456789'))->toBe(0);
+});
+
+test('addRawNonCapturingGroup method adds and wraps raw regex in a non-capturing group', function () {
+    $builder = new BuilderPattern();
+    $builder->addRawNonCapturingGroup('\d+')->exact('A');
+
+    $regex = $builder->getInputValidationPattern();
+    expect(preg_match($regex, '123A'))->toBe(1);
+    expect(preg_match($regex, 'A123'))->toBe(0);
+});

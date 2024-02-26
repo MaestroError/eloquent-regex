@@ -49,14 +49,14 @@ Examples: `->dot("zeroOrMore")` `->exact("hello worls", false, "1+")`
 
 - Extend BuilderPattern, try to add methods:
 
-  - group(callable $callback): Creates a grouped subpattern.
-  - nonCapturingGroup(callable $callback): Creates a non-capturing group.
-  - orPattern(): Alternation, allowing for multiple possibilities.
-  - lookAhead(callable $callback): Positive lookahead assertion.
-  - lookBehind(callable $callback): Positive lookbehind assertion.
-  - negativeLookAhead(callable $callback): Negative lookahead assertion.
-  - negativeLookBehind(callable $callback): Negative lookbehind assertion.
-  - Raw regex methods for advanced users.
+  - group(callable $callback): Creates a grouped subpattern.✔️
+  - nonCapturingGroup(callable $callback): Creates a non-capturing group.✔️
+  - orPattern(): Alternation, allowing for multiple possibilities.✔️
+  - lookAhead(callable $callback): Positive lookahead assertion.✔️
+  - lookBehind(callable $callback): Positive lookbehind assertion.✔️
+  - negativeLookAhead(callable $callback): Negative lookahead assertion.✔️
+  - negativeLookBehind(callable $callback): Negative lookbehind assertion.✔️
+  - Raw regex methods for advanced users.✔️
   - BuilderPattern should be able to reproduce patterns used in HSA
 
 - Add benchmarks and tests for search against large data ✔️
