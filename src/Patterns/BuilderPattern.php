@@ -65,17 +65,73 @@ class BuilderPattern extends BasePattern {
     }
 
     public function group(callable $callback): self {
-        $subPattern = new self($this->builder);
+        $subPattern = new self();
         $callback($subPattern);
         $this->pattern .= '(' . $subPattern->getPattern() . ')';
         return $this;
     }
 
     public function nonCapturingGroup(callable $callback): self {
-        $subPattern = new self($this->builder);
+        $subPattern = new self();
         $callback($subPattern);
         $this->pattern .= '(?:' . $subPattern->getPattern() . ')';
         return $this;
     }
     
+    public function orPattern(callable $callback): self {
+        $builder = new self();
+        $callback($builder);
+        $this->pattern .= '|' . $builder->getPattern();
+        return $this;
+    }
+
+    public function lookAhead(callable $callback): self {
+        $builder = new self();
+        $callback($builder);
+        $this->pattern .= '(?=' . $builder->getPattern() . ')';
+        return $this;
+    }
+
+    public function lookBehind(callable $callback): self {
+        $builder = new self();
+        $callback($builder);
+        $this->pattern .= '(?<=' . $builder->getPattern() . ')';
+        return $this;
+    }
+
+    public function negativeLookAhead(callable $callback): self {
+        $builder = new self();
+        $callback($builder);
+        $this->pattern .= '(?!' . $builder->pattern . ')';
+        return $this;
+    }
+
+    public function negativeLookBehind(callable $callback): self {
+        $builder = new self();
+        $callback($builder);
+        $this->pattern .= '(?<!' . $builder->pattern . ')';
+        return $this;
+    }
+
+    /**
+     * Adds a raw regex string to the pattern.
+     *
+     * @param string $regex The raw regex string to add.
+     * @return self
+     */
+    public function addRawRegex(string $regex): self {
+        $this->pattern .= $regex;
+        return $this;
+    }
+
+    /**
+     * Wraps a given regex string in a non-capturing group and adds it to the pattern.
+     *
+     * @param string $regex The regex string to wrap and add.
+     * @return self
+     */
+    public function addRawNonCapturingGroup(string $regex): self {
+        $this->pattern .= '(?:' . $regex . ')';
+        return $this;
+    }
 }
