@@ -53,7 +53,7 @@ class CharOption implements OptionContract {
         return true;
     }
 
-    // Option methods
+    // Option methods:
     public function minSpecialCharacters(int $count) {
         $this->minSpecialCharacters = $count;
         return $this;

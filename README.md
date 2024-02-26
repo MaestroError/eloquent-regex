@@ -61,10 +61,13 @@ Examples: `->dot("zeroOrMore")` `->exact("hello worls", false, "1+")`
 
 - Add benchmarks and tests for search against large data ✔️
 - Add Feature Tests for BuilderPattern ✔️
-- Add Dockblocs and comments for new methods
+- Remove need for "end" method in BuilderPattern ✔️
+- Add Dockblocs and comments for new methods ✔️
 
 - Add facade for Laravel
 - Wrap Builder in class for static start
+  - "string" and "source" for builder start
+  - "start" and "pattern" for builderPattern start
 - Write documentation (add credit for https://regexr.com/ and ChatGPT)
 
 - Implement string resolver pattern to use strings like "text(2)-digits()" (or "text:2-digits", or "text|2-digits") as pattern
@@ -74,3 +77,4 @@ Examples: `->dot("zeroOrMore")` `->exact("hello worls", false, "1+")`
 - Make options controllable from config or provider (?)
 - Make pattern controllable from config or provider (?)
 - I should be able to make new pattern using BuilderPattern
+- I should be able to make add custom pattern to the existing one using BuilderPattern

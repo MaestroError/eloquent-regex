@@ -9,7 +9,7 @@ it('reproduces alt prefix pattern from HSA', function () {
         $pattern->doubleQuote()->orPattern(function ($pattern) {
             $pattern->singleQuote();
         });
-    })->end()->toRegex();
+    })->toRegex();
 
     
     expect($regex)->toBe("alt\=(\"|')");
@@ -19,10 +19,10 @@ it('reproduces hashtag prefix pattern from HSA', function () {
     $builder = new Builder("");
 
     $regex = $builder->start()->lookBehind(function ($pattern) {
-        $pattern->set(function ($pattern) {
+        $pattern->charSet(function ($pattern) {
             $pattern->doubleQuote()->closeAngleBracket()->addRawRegex("\\s");
         });
-    })->hash()->end()->toRegex(); 
+    })->hash()->toRegex(); 
 
     expect($regex)->toBe('(?<=["\>\s])\#');
 });
@@ -32,7 +32,7 @@ it('reproduces Text suffix pattern from HSA', function () {
 
     $regex = $builder->start()
         ->openAngleBracket()->slash()->alphanumericRange(0, 10)->closeAngleBracket()
-        ->end()->toRegex();
+        ->toRegex();
 
     expect($regex)->toBe('\<\/[a-zA-Z0-9]{0,10}\>');
 });
@@ -46,7 +46,7 @@ it('constructs regex for simple email validation', function () {
             ->textLowercase()
             ->dot()
             ->textLowercaseRange(2, 4)
-            ->end()->toRegex();
+            ->toRegex();
 
     expect($regex)->toBe('[a-z]+@[a-z]+\.[a-z]{2,4}');
 });
@@ -61,7 +61,7 @@ it('constructs regex for URL validation', function () {
             ->text()
             ->dot()
             ->text()
-            ->end()->toRegex();
+            ->toRegex();
 
     expect($regex)->toBe('(http|https)\:\/\/[a-zA-Z]+\.[a-zA-Z]+');
 });
@@ -77,7 +77,7 @@ it('constructs regex for specific phone number format', function () {
             ->digits(3)
             ->dash()
             ->digits(4)
-            ->end()->toRegex();
+            ->toRegex();
 
     expect($regex)->toBe('\(\d{3}\) \d{3}\-\d{4}');
 });
@@ -91,7 +91,7 @@ it('extracts dates in specific format from text', function () {
                        ->digits(2)
                        ->dash()
                        ->digits(2)
-                       ->end()->get();
+                       ->get();
 
     expect($matches)->toEqual(['2021-09-15', '2021-10-20']);
 });
@@ -103,7 +103,7 @@ it('validates usernames in a string', function () {
                      ->alphanumeric()
                      ->underscore("?")
                      ->digitsRange(0, 2)
-                     ->end()->checkString();
+                     ->checkString();
 
     expect($check)->toBeTrue();
 });
@@ -114,7 +114,7 @@ it('extracts hashtags from text', function () {
     $matches = $builder->start()
                        ->hash()
                        ->text()
-                       ->end()->get();
+                       ->get();
 
     expect($matches)->toEqual(['#hello', '#world', '#test']);
 });
@@ -132,7 +132,7 @@ it('extracts secret coded messages from text', function () {
         ->lookAhead(function ($pattern) {
             $pattern->closeCurlyBrace();
         })
-        ->end()->get();
+        ->get();
 
     // Expected secret messages are 'secret: message one' and 'secret: another hidden text'
     expect($matches)->toEqual(['message one', 'another hidden text']);

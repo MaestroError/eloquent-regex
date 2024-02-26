@@ -27,12 +27,24 @@ class BasePattern implements PatternContract {
      */
     protected string $pattern = "[a-z]";
 
+    /**
+     * @var string Static property to define the pattern name.
+     */
     public static string $name = "";
 
+    /**
+     * @var array Static property to define the pattern arguments one by one.
+     */
     public static array $args = [];
 
+    /**
+     * @var array Static property to apply the default options for the pattern.
+     */
     public static array $defaultOptions = [];
 
+    /**
+     * @var string A string to hold expression flags for the regex pattern.
+     */
     protected string $expressionFlags = "";
 
     /**
@@ -169,6 +181,13 @@ class BasePattern implements PatternContract {
         return "/{$this->pattern}/" . $this->expressionFlags;
     }
     
+    /**
+     * Processes an array of arguments and builds an options array.
+     *
+     * @param array $args Names of the arguments.
+     * @param array $values Values of the arguments.
+     * @return array An associative array of options.
+     */
     protected static function processArguments(array $args, array $values): array {
         $options = [];
         // Build options array based on condition
@@ -184,12 +203,23 @@ class BasePattern implements PatternContract {
         return $options;
     }
 
+    /**
+     * Processes a callback function to configure options.
+     *
+     * @param callable $callback The callback function used for configuring options.
+     * @return array An associative array of options set by the callback.
+     */
     protected static function processCallback(callable $callback): array {
         $optionsBuilder = new OptionsBuilder();
         $callback($optionsBuilder);
         return $optionsBuilder->getOptions();
     }
 
+    /**
+     * Adds a regex expression flag to the pattern.
+     *
+     * @param string $flag The single-character flag to add to the regex pattern.
+     */
     public function addExpressionFlag(string $flag): void {
         if (strpos($this->expressionFlags, $flag) === false) {
             $this->expressionFlags .= $flag;

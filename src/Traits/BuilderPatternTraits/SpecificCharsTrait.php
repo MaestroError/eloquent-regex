@@ -4,6 +4,8 @@ namespace Maestroerror\EloquentRegex\Traits\BuilderPatternTraits;
 
 trait SpecificCharsTrait {
 
+    // Helper methods:
+
     private function handleExact(string|array $string, $caseSensitive = true, $quantifier = null) {
         if (is_array($string)) {
             $string = $this->escapeArray($string);
@@ -28,7 +30,7 @@ trait SpecificCharsTrait {
         }, $arr);
     }
 
-    // Specific Characters START
+    // Exact string methods:
 
     public function exact(string|array $string, $caseSensitive = true, $quantifier = null): self {
         return $this->handleExact($string, $caseSensitive, $quantifier);
@@ -50,6 +52,7 @@ trait SpecificCharsTrait {
         return $this->handleExact($char, $caseSensitive, $quantifier);
     }
 
+    // Specific Characters:
     
     public function tab(): self {
         $this->pattern .= "\\t"; // Matches a tab character
@@ -156,56 +159,6 @@ trait SpecificCharsTrait {
         return $this->escapeAndAdd(":");
     }
 
-    // Methods for paired characters with separate open and close methods and an extra method with a boolean argument
-
-    public function openSquareBracket(): self {
-        return $this->escapeAndAdd("[");
-    }
-
-    public function closeSquareBracket(): self {
-        return $this->escapeAndAdd("]");
-    }
-
-    public function squareBracket($isOpen = true): self {
-        return $isOpen ? $this->openSquareBracket() : $this->closeSquareBracket();
-    }
-
-    public function openCurlyBrace(): self {
-        return $this->escapeAndAdd("{");
-    }
-
-    public function closeCurlyBrace(): self {
-        return $this->escapeAndAdd("}");
-    }
-
-    public function curlyBrace($isOpen = true): self {
-        return $isOpen ? $this->openCurlyBrace() : $this->closeCurlyBrace();
-    }
-
-    public function openParenthesis(): self {
-        return $this->escapeAndAdd("(");
-    }
-
-    public function closeParenthesis(): self {
-        return $this->escapeAndAdd(")");
-    }
-
-    public function parenthesis($isOpen = true): self {
-        return $isOpen ? $this->openParenthesis() : $this->closeParenthesis();
-    }
-
-    public function openAngleBracket(): self {
-        return $this->escapeAndAdd("<");
-    }
-
-    public function closeAngleBracket(): self {
-        return $this->escapeAndAdd(">");
-    }
-
-    public function angleBracket($isOpen = true): self {
-        return $isOpen ? $this->openAngleBracket() : $this->closeAngleBracket();
-    }
-
     public function equalSign(): self {
         return $this->escapeAndAdd("=");
     }
@@ -258,6 +211,56 @@ trait SpecificCharsTrait {
         $this->pattern .= "\\x{" . dechex($code) . "}";
         $this->addExpressionFlag("u");
         return $this;
+    }
+
+    // Methods for paired characters with separate open and close methods and an extra method with a boolean argument
+
+    public function openSquareBracket(): self {
+        return $this->escapeAndAdd("[");
+    }
+
+    public function closeSquareBracket(): self {
+        return $this->escapeAndAdd("]");
+    }
+
+    public function squareBracket($isOpen = true): self {
+        return $isOpen ? $this->openSquareBracket() : $this->closeSquareBracket();
+    }
+
+    public function openCurlyBrace(): self {
+        return $this->escapeAndAdd("{");
+    }
+
+    public function closeCurlyBrace(): self {
+        return $this->escapeAndAdd("}");
+    }
+
+    public function curlyBrace($isOpen = true): self {
+        return $isOpen ? $this->openCurlyBrace() : $this->closeCurlyBrace();
+    }
+
+    public function openParenthesis(): self {
+        return $this->escapeAndAdd("(");
+    }
+
+    public function closeParenthesis(): self {
+        return $this->escapeAndAdd(")");
+    }
+
+    public function parenthesis($isOpen = true): self {
+        return $isOpen ? $this->openParenthesis() : $this->closeParenthesis();
+    }
+
+    public function openAngleBracket(): self {
+        return $this->escapeAndAdd("<");
+    }
+
+    public function closeAngleBracket(): self {
+        return $this->escapeAndAdd(">");
+    }
+
+    public function angleBracket($isOpen = true): self {
+        return $isOpen ? $this->openAngleBracket() : $this->closeAngleBracket();
     }
 
 }
