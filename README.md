@@ -57,7 +57,7 @@ Examples: `->dot("zeroOrMore")` `->exact("hello worls", false, "1+")`
   - negativeLookAhead(callable $callback): Negative lookahead assertion.✔️
   - negativeLookBehind(callable $callback): Negative lookbehind assertion.✔️
   - Raw regex methods for advanced users.✔️
-  - BuilderPattern should be able to reproduce patterns used in HSA
+  - BuilderPattern should be able to reproduce patterns used in HSA✔️
 
 - Add benchmarks and tests for search against large data ✔️
 - Add Feature Tests for BuilderPattern
