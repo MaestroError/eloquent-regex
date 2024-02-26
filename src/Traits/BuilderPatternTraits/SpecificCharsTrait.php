@@ -71,6 +71,10 @@ trait SpecificCharsTrait {
         return $this->escapeAndAdd("/");
     }
 
+    public function slash(): self {
+        return $this->escapeAndAdd("/");
+    }
+
     public function underscore(): self {
         return $this->escapeAndAdd("_");
     }
@@ -202,6 +206,10 @@ trait SpecificCharsTrait {
     }
 
     public function hash(): self {
+        return $this->escapeAndAdd("#");
+    }
+
+    public function hashtag(): self {
         return $this->escapeAndAdd("#");
     }
 
