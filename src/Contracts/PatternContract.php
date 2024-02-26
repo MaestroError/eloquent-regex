@@ -76,6 +76,8 @@ interface PatternContract {
      */
     public function getMatchesValidationPattern(): string;
 
+    public function addExpressionFlag(string $flag): void;
+
     /**
      * Executes the pattern with the provided arguments.
      *

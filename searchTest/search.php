@@ -31,9 +31,17 @@ $testFiles = [
 */
 
 function search($keyword, $file) {
+    // Get data from file
     $data = file_get_contents(__DIR__."/".$file);
-    preg_match_all("/.+(?=$keyword).+/", $data, $matches);
-    return $matches[0];
+    // Build search pattern
+    $builder = new Builder($data);
+    $builder->start()
+        ->anyChar()
+        ->lookAhead(function ($pattern) use ($keyword) {
+            $pattern->exact($keyword);
+        })->anyChar()->end(); // .+(?=$keyword).+
+
+    return $builder->get();
 }
 
 function makeObject($json) {
