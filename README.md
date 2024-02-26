@@ -1,6 +1,6 @@
 # eloquent-regex
 
-Eloquent Regex brings the simplicity and elegance of Laravel's Eloquent ORM to regular expressions. Designed for Laravel developers, this package offers a fluent, intuitive interface for building and executing regex patterns in your PHP applications. Streamline your pattern matching with an eloquent touch.
+Eloquent Regex brings the simplicity and elegance to regular expressions. Designed for Laravel developers, this package offers a fluent, intuitive interface for building and executing regex patterns in your PHP applications.
 
 #### Adding new options
 
@@ -24,29 +24,7 @@ Examples: `->exact("hello world", false, "1+")`
 
 ##### To Do
 
-- Make patterns dynamic ✔️
-- Add commonly used patterns & tests ✔️
-- Default arguments and allow to use any other option beside args ✔️
-- Add FilePath and DirectoryPath patterns for different OS ✔️
 - Add needed options for new patterns:
-  - specialCharacters (min, max) ✔️
-  - onlyLowercase, onlyUppercase ✔️
-  - Is file (ends with .[format]) ✔️
-  - Is directory ✔️
-  - fileExists ✔️
-  - fileExtension: Specify certain file extensions (e.g., .txt, .pdf) ✔️
-  - specificCurrencies: Match only specific currency symbols.✔️
-  - relativePath, absolutePath: Specify if the path should be relative or absolute.✔️
-  - countryCode: Match phone numbers with specific country codes. ✔️
-  - specialCharacters: Allow or disallow special characters. ✔️
-  - containSpaces: Allow or disallow spaces. ✔️
-  - domainSpecific: Limit email addresses to specific domains.✔️
-  - domainExtension: Restrict to certain domain extensions.✔️
-  - protocolSpecific: Limit URLs to specific protocols (e.g., http, https). ✔️
-  - cardType: Restrict to specific card types (e.g., Visa, MasterCard). ✔️
-  - onlyAlphanumeric: Restrict to alphanumeric characters only. ✔️
-  - SpecificTags (HtmlTagPattern): To allow or restrict specific HTML tags.✔️
-  - RegexFlags: To allow users to set global regex flags (like case-insensitivity, multiline, etc.). ✔️ (_Added not as option, but in Builder and basePattern_)
   - usernameLength: Set minimum and maximum length for the username part of the email.
   - dateFormat, timeFormat: Specify the format of date and time (e.g., MM-DD-YYYY, HH:MM).
 - Consider to register Patterns like options using key (name) => value (class) pairs (check performance) ✔️ (_No significant change before 50+ patterns_)
@@ -73,10 +51,12 @@ Examples: `->exact("hello world", false, "1+")`
   - "string" and "source" for builder start
   - "start" and "pattern" for builderPattern start
 - Write documentation (add credit for https://regexr.com/ and ChatGPT)
+- Add automated tests on PR creation or on marging to main branch
+
+##### Coming next
 
 - Implement string resolver pattern to use strings like "text(2)-digits()" (or "text:2-digits", or "text|2-digits") as pattern
 - Implement recursive pattern creation (Using "RI-321" string to create pattern matching this string)
-
 - Consider to add Postal Code Pattern
 - Make options controllable from config or provider (?)
 - Make pattern controllable from config or provider (?)
