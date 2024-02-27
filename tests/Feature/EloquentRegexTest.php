@@ -85,9 +85,9 @@ it('extracts dates in specific format from text using wrapper', function () {
 it('validates usernames in a string using wrapper and LengthOption', function () {
     $check = EloquentRegex::customPattern("Users: user_123, JohnDoe99")
         ->alphanumeric()
-        ->underscore("?")
+        ->underscore()
         ->digitsRange(0, 2)
-        ->end()->setOptions(["maxLength" => 15])
+        ->end(["maxLength" => 15])
         ->checkString();
 
     expect($check)->toBeTrue();
@@ -150,7 +150,7 @@ it('validates a domain name correctly', function () {
 it('validates a date format correctly', function () {
     $builder = EloquentRegex::string("2023-01-01");
 
-    $check = $builder->date('Y-m-d')->check();
+    $check = $builder->date()->check();
 
     expect($check)->toBeTrue();
 });

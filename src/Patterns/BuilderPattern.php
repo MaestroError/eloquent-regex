@@ -46,8 +46,8 @@ class BuilderPattern extends BasePattern {
 
     // Builder class implementation methods START
 
-    public function end(): BuilderContract {
-        return $this->builder; // Return the Builder object
+    public function end(array|callable $config = []): BuilderContract {
+        return $this->builder->setOptions($config); // Return the Builder object
     }
 
     public function get(): ?array {

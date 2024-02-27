@@ -193,7 +193,7 @@ class Builder implements BuilderContract {
         }
 
         // Handle options array scenario
-        if (is_array($config)) {
+        if (is_array($config) && !empty($config)) {
             $this->processConfigArray($config);
         }
         // Handle callback scenario
