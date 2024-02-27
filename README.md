@@ -53,6 +53,9 @@ Examples: `->exact("hello world", false, "1+")`
 - Write documentation (add credit for https://regexr.com/ and ChatGPT)
 - Add automated tests on PR creation or on marging to main branch ✔️
 
+- Make Tests for quantifiers (add grouping)
+- Make quantifiers available for special chars
+
 ##### Coming next
 
 - Implement string resolver pattern to use strings like "text(2)-digits()" (or "text:2-digits", or "text|2-digits") as pattern
