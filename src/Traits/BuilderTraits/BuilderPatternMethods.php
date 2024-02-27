@@ -1,6 +1,6 @@
 <?php
 
-namespace Maestroerror\EloquentRegex\Traits\BuilderPatternTraits;
+namespace Maestroerror\EloquentRegex\Traits\BuilderTraits;
 
 use Maestroerror\EloquentRegex\Patterns\BuilderPattern;
 use Maestroerror\EloquentRegex\Contracts\BuilderContract;
@@ -38,15 +38,15 @@ trait BuilderPatternMethods {
      * @param callable|null $callback A callback function that receives a BuilderPattern instance to define the regex pattern.
      * @return BuilderContract|BuilderPattern Returns the main Builder instance after the pattern is defined.
      */
-    public function pattern(callable|null $callback): BuilderContract|BuilderPattern {
+    public function pattern(callable|null $callback = null): BuilderContract|BuilderPattern {
         if (is_null($callback)) {
             return $this->start();
         }
         // Pass the current Builder instance to the BuilderPattern
         $this->pattern = new BuilderPattern($this);
         // Run callback to create pattern
-        $builderPattern = $callback($this->pattern);
+        $callback($this->pattern);
         // return back the Builder object
-        return $builderPattern->end();
+        return $this->pattern->end();
     }
 }
