@@ -22,5 +22,15 @@
     "allow-plugins": {
       "pestphp/pest-plugin": true
     }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Maestroerror\\EloquentRegex\\EloquentRegexServiceProvider"
+      ],
+      "aliases": {
+        "EloquentRegex": "Maestroerror\\EloquentRegex\\Facades\\EloquentRegex"
+      }
+    }
   }
 }
