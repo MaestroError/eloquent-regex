@@ -46,10 +46,10 @@ Examples: `->exact("hello world", false, "1+")`
 - Remove need for "end" method in BuilderPattern ✔️
 - Add Dockblocs and comments for new methods ✔️
 
-- Add facade for Laravel
-- Wrap Builder in class for static start
-  - "string" and "source" for builder start✔️
-  - "start" and "pattern" for builderPattern start✔️
+- Add facade for Laravel ✔️
+- Wrap Builder in class for static start ✔️
+  - "string" and "source" for builder start ✔️
+  - "start" and "pattern" for builderPattern start ✔️
 - Write documentation (add credit for https://regexr.com/ and ChatGPT)
 - Add automated tests on PR creation or on marging to main branch ✔️
 
