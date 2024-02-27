@@ -53,7 +53,7 @@ it('checks file exists using fileExists option', function () {
     $check = $builder->filePathWin(0, null, true)->check();
 
     expect($check)->toBeTrue();
-});
+})->onlyOnWindows();
 
 it('checks file using array options', function () {
     $string = __DIR__.'\..\..\TestFiles\document.txt';
@@ -66,4 +66,4 @@ it('checks file using array options', function () {
     ])->check();
 
     expect($check)->toBeTrue();
-});
+})->onlyOnWindows();
