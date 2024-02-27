@@ -6,7 +6,8 @@ use Maestroerror\EloquentRegex\Contracts\PatternContract;
 use Maestroerror\EloquentRegex\Contracts\BuilderContract;
 use Maestroerror\EloquentRegex\OptionsManager;
 use Maestroerror\EloquentRegex\OptionsBuilder;
-use Maestroerror\EloquentRegex\Traits\BuilderPatternTraits\BuilderPatternMethods;
+use Maestroerror\EloquentRegex\Traits\BuilderTraits\BuilderPatternMethods;
+use Maestroerror\EloquentRegex\Traits\BuilderTraits\InitMethods;
 use Maestroerror\EloquentRegex\Patterns\TextOrNumbersPattern;
 use Maestroerror\EloquentRegex\Patterns\EmailPattern;
 use Maestroerror\EloquentRegex\Patterns\UrlPattern;
@@ -26,7 +27,7 @@ use Maestroerror\EloquentRegex\Patterns\FilePathWinPattern;
 
 class Builder implements BuilderContract {
 
-    use BuilderPatternMethods;
+    use BuilderPatternMethods, InitMethods;
 
     /**
      * The string to be processed with regex.
