@@ -4,7 +4,7 @@ Eloquent Regex brings the simplicity and elegance to regular expressions. Design
 
 # Overview
 
-### Dreaming of a world where regex doesn't feel like rocket science? 😄🚀
+### Dreaming of a world where regex doesn't feel like a rocket science? 😄🚀
 
 Regular expressions (regex) are powerful, no doubt. They're the Swiss Army knife for string manipulation and validation. But let's be honest, they can also be a bit of a headache. The syntax is dense, and a tiny mistake can throw everything off. It's like they're designed to be as intimidating as possible, especially when you're just trying to validate an email address!
 
@@ -31,7 +31,7 @@ Simply install the package via Composer, and you're ready to take the pain out o
 composer require maestroerror/eloquent-regex
 ```
 
-Later, Here will be added our quick start guide.
+Later, here will be added our quick start guide.
 
 Remember, regex doesn't have to be a source of frustration. With EloquentRegex, you're on your way to becoming a regex master, all while writing cleaner, more maintainable Laravel code.
 
@@ -45,7 +45,7 @@ First of all, you need to include EloquentRegex class.
 use Maestroerror\EloquentRegex\EloquentRegex;
 ```
 
-Recomended for **Laravel:**
+**Recomended for Laravel:**
 
 ```php
 use Maestroerror\EloquentRegex\Facades\EloquentRegex;
@@ -59,21 +59,21 @@ Usage structure is very similar to Laravel's Eloquent ORM, check this out:
 
 Let's break it down:
 
-- _Initiator_ sets the target string
+- **_Initiator_** sets the target string
 
 ```php
 EloquentRegex::source($yourString);
 ```
 
-- _Pattern_ Could be method for one of the ready-to-use patterns or your custom pattern (we will talk about custom pattern later). Let's keep the example simple and add url pattern:
+- **_Pattern_** Could be method for one of the ready-to-use patterns or your custom pattern (we will talk about custom pattern later). Let's keep the example simple and add url pattern:
 
 ```php
 EloquentRegex::source($yourString)->url();
 ```
 
-_Note: **Optional** methods mostly are the expression flags, we will talk about them in next sections_
+_Note: **?Optional** methods mostly are the expression flags, we will talk about them in next sections_
 
-- _Action_ are execution methods, check the example:
+- **_Action_** is the execution method, check the example:
 
 ```php
 // get() will return array/collection of URLs if any found in $yourString
@@ -102,22 +102,74 @@ We have different ways to apply options, but the most common and easy way is to 
 
 Here you can check all available methods of ready-to-use patterns and their arguments:
 
-- `textOrNumbers(int $minLength, int $maxLength, int $minUppercase, int $minLowercase, int $minNumbers, int $maxNumbers)`
-- `email(int $maxLength, array|string $onlyDomains, array|string $onlyExtensions)` - $onlyDomains & $onlyExtensions array or string separated by comma `"example.org,example.com"`
-- `url(array|string $onlyProtocol)`
-- `domainName(int $maxLength, array|string $onlyDomains, array|string $onlyExtensions)` - $onlyDomains & $onlyExtensions array or string separated by comma `"org,com"`
-- `date()`
-- `time()`
-- `ipAddress()`
-- `ipv6Address()`
-- `creditCardNumber(string $cardTypes)` - $cardTypes string separated by comma `"visa, amex"`
-- `phone(string $countryCode)` - $countryCode should passed without "+" sign: `phone("1")`, `phone("995")`
-- `username(int $maxLength)`
-- `password(int $minLength, int $minUppercase, int $minNumbers, int $minSpecialChars)`
-- `htmlTag(array|string $restrictTags, array|string $onlyTags)` - $restrictTags & $onlyTags array or string separated by comma `"script, style"`. It isn't recomended to use both option in simultaneously
-- `currency(int $minDigits, int $maxDigits, array|string $specificCurrencies)`- $specificCurrencies array of currency symbols or string separated by comma `"$, ₾"`
-- `filePath(int $isDirectory, bool $isFile, bool $fileExists,string $pathType)` - $pathType allowed values: `absolute` & `relative`
-- `filePathWin(int $isDirectory, bool $isFile, bool $fileExists)`
+```php
+textOrNumbers(int $minLength, int $maxLength, int $minUppercase, int $minLowercase, int $minNumbers, int $maxNumbers)
+```
+
+```php
+// $onlyDomains & $onlyExtensions array or string separated by comma `"example.org,example.com"`
+email(int $maxLength, array|string $onlyDomains, array|string $onlyExtensions)`
+```
+
+````php
+url(array|string $onlyProtocol)`
+```php
+// $onlyDomains & $onlyExtensions array or string separated by comma "org,com"
+domainName(int $maxLength, array|string $onlyDomains, array|string $onlyExtensions)`
+````
+
+```php
+date()
+```
+
+```php
+time()
+```
+
+```php
+ipAddress()
+```
+
+```php
+ipv6Address()
+```
+
+```php
+// $cardTypes string separated by comma "visa, amex"
+creditCardNumber(string $cardTypes)
+```
+
+```php
+// $countryCode should passed without "+" sign: phone("1"), phone("995")
+phone(string $countryCode)
+```
+
+```php
+username(int $maxLength)
+```
+
+```php
+password(int $minLength, int $minUppercase, int $minNumbers, int $minSpecialChars)
+```
+
+```php
+// $restrictTags & $onlyTags array or string separated by comma `"script, style"`. It isn't recomended to use both option in simultaneously
+htmlTag(array|string $restrictTags, array|string $onlyTags)
+```
+
+```php
+// $specificCurrencies array of currency symbols or string separated by comma "$, ₾"
+currency(int $minDigits, int $maxDigits, array|string $specificCurrencies)
+```
+
+```php
+// $pathType allowed values: "absolute" & "relative"
+filePath(int $isDirectory, bool $isFile, bool $fileExists,string $pathType) -
+```
+
+```php
+filePathWin(int $isDirectory, bool $isFile, bool $fileExists)
+```
 
 #### Quantifiers
 
