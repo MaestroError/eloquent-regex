@@ -207,6 +207,8 @@ if ($result) {
 
 ```
 
+_Note: You can use `EloquentRegex::builder()->pattern()` if you need just build a regex without source string_
+
 Custom pattern builder supports a wide range of character classes and all special chars. Also, `literal` or `exact` method could be used to match exact string you need, or `char` method could be used to match exact character. The full list of pattern builder methods is comming soon. Before that, you can check this files out:
 
 - [Character Classes](https://github.com/MaestroError/eloquent-regex/blob/documentation-and-examples/src/Traits/BuilderPatternTraits/CharacterClassesTrait.php)
@@ -214,51 +216,122 @@ Custom pattern builder supports a wide range of character classes and all specia
 - [Groups](https://github.com/MaestroError/eloquent-regex/blob/documentation-and-examples/src/Traits/BuilderPatternTraits/GroupsTrait.php)
 - [Anchors](https://github.com/MaestroError/eloquent-regex/blob/documentation-and-examples/src/Traits/BuilderPatternTraits/AnchorsTrait.php)
 
-#### Quantifiers
+## Applying Quantifiers
 
-Available values for quantifiers as argument:
+Quantifiers in regular expressions are symbols or sets of symbols that specify how many instances of a character, group, or character class must be present in the input for a match to be found. EloquentRegex enhances the way quantifiers are used, making it simpler and more intuitive to define the frequency of pattern occurrences.
 
-- zeroOrMore = `"zeroOrMore"`, `"0>"`, `"0+"`
-- oneOrMore = `"oneOrMore"`, `"1>"`, `"1+"`
-- optional = `"optional"`, `"?"`, `"|"`
+### Optional Elements
 
-Examples: `->exact("hello world", false, "1+")`
+To make an element optional, use '?'. This matches zero or one occurrence of the preceding element.
+
+```php
+// Matches a string that may or may not contain a dash
+$result = EloquentRegex::start($yourString)->exact("123")->dash('?')->exact("456")->check();
+// Result would be true in both cases of $yourString: "123456" & "123-456"
+```
+
+### Specifying a Range
+
+For specifying a range of occurrences, use a string with two numbers separated by a comma '2,5'. This matches the preceding element at least and at most the specified times.
+
+```php
+// Matches a string with 2 to 5 spaces
+$result = EloquentRegex::start($yourString)->text()->space('2,5')->digits()->check();
+// Result: the "someText  234" would return true, the "someText 234" false
+```
+
+### One or More
+
+To match one or more occurrences of an element, use '+', '1+', '1>' or 'oneOrMore'. This ensures the element appears at least once.
+
+```php
+// Matches strings with one or more backslashes
+$result = EloquentRegex::start("\\\\")->backslash('1+')->check();
+// Result: true (if one or more backslashes are found)
+```
+
+### Zero or More
+
+The '\*' quantifier matches zero or more occurrences of the preceding element.
+
+```php
+// Matches strings with zero or more forward slashes
+$result = EloquentRegex::start($yourString)->alphanumeric()->dot('0+')->check();
+// Result would be true in both cases of $yourString: "test258..." & "test"
+```
+
+### Exact Number
+
+To match an exact number of occurrences, directly specify the number.
+
+```php
+// Matches strings with exactly 2 underscores
+$result = EloquentRegex::start($yourString)->digits()->underscore('2')->digits()->check();
+// Result would be true in cases $yourString: "1235__158", but "1235___158" and "1235_158" will be false
+
+```
+
+### Custom Character Sets and groups
+
+You can apply quantifiers to custom character sets and groups as second argument after the callback, matching a specific number of occurrences.
+
+```php
+// Matches strings with exactly 3 periods or colons
+$regex = EloquentRegex::builder()->start()
+    ->charSet(function ($pattern) {
+        $pattern->period()->colon();
+    }, '3')->toRegex();
+// Result: ([\.\:]){3}
+```
+
+### Quantifier values
+
+In [Special characters](https://github.com/MaestroError/eloquent-regex/blob/documentation-and-examples/src/Traits/BuilderPatternTraits/SpecificCharsTrait.php)
+and
+[Groups](https://github.com/MaestroError/eloquent-regex/blob/documentation-and-examples/src/Traits/BuilderPatternTraits/GroupsTrait.php)Available
+nearly all methods allowing quantifiers with values:
+
+- Zero or More = `"zeroOrMore"`, `"0>"`, `"0+"`, `"*"`
+- One or More = `"oneOrMore"`, `"1>"`, `"1+"`, `"+"`
+- Optional (Zero or One) = `"optional"`, `"?"`, `"|"`
+- exact amount = `2`, `"5"`
+- range = `"{0,5}"`
+
+Example: `->exact("hello world", false, "1+")`
+
+But
+[Character Classes](https://github.com/MaestroError/eloquent-regex/blob/documentation-and-examples/src/Traits/BuilderPatternTraits/CharacterClassesTrait.php)
+have different approach, lets take `digits` as example:
+
+```php
+// By defualt it is set as One or More
+EloquentRegex::start($yourString)->digits();
+
+// You can completly remove quantifier by passing 0 as first argument
+EloquentRegex::start($yourString)->digits(0);
+
+// You can specify exact amount of digit by passing int
+EloquentRegex::start($yourString)->digits(5);
+
+// You can specify range of digits by adding "Range" to the method
+EloquentRegex::start($yourString)->digitsRange(1, 5); // Matches from 1 to 5 digits
+```
 
 ##### To Do
 
-- Add needed options for new patterns:
+- Add options for new patterns:
   - usernameLength: Set minimum and maximum length for the username part of the email.
   - dateFormat, timeFormat: Specify the format of date and time (e.g., MM-DD-YYYY, HH:MM).
 - Consider to register Patterns like options using key (name) => value (class) pairs (check performance) ✔️ (_No significant change before 50+ patterns_)
 
-- Extend BuilderPattern, try to add methods:
-
-  - group(callable $callback): Creates a grouped subpattern.✔️
-  - nonCapturingGroup(callable $callback): Creates a non-capturing group.✔️
-  - orPattern(): Alternation, allowing for multiple possibilities.✔️
-  - lookAhead(callable $callback): Positive lookahead assertion.✔️
-  - lookBehind(callable $callback): Positive lookbehind assertion.✔️
-  - negativeLookAhead(callable $callback): Negative lookahead assertion.✔️
-  - negativeLookBehind(callable $callback): Negative lookbehind assertion.✔️
-  - Raw regex methods for advanced users.✔️
-  - BuilderPattern should be able to reproduce patterns used in HSA✔️
-
-- Add benchmarks and tests for search against large data ✔️
-- Add Feature Tests for BuilderPattern ✔️
-- Remove need for "end" method in BuilderPattern ✔️
-- Add Dockblocs and comments for new methods ✔️
-
-- Add facade for Laravel ✔️
-- Wrap Builder in class for static start ✔️
-  - "string" and "source" for builder start ✔️
-  - "start" and "pattern" for builderPattern start ✔️
 - Write documentation (add credit for https://regexr.com/ and ChatGPT)
-- Add automated tests on PR creation or on marging to main branch ✔️
-
-- Make Tests for quantifiers (add grouping) ✔️
-- Make quantifiers available for special chars ✔️
 - Return collection on get method if laravel is available.
 - Create quick start guide and add in Docs.
+- Add advanced usage section in Docs:
+  - Options and Assertions: Detailed explanation of options, how to apply them, and their effects on patterns.
+  - Filters in Extraction: Using options as filters during extraction and the types of filters available.
+  - Regex Flags: Guide on applying regex flags to patterns for specialized matching behavior.
+  - Grouping and Capturing: How to use groups (capturing and non-capturing) and apply quantifiers to them.
 
 ##### Coming next
 
@@ -269,10 +342,6 @@ Examples: `->exact("hello world", false, "1+")`
 - Make patterns controllable from config or provider (?)
 - I should be able to make new pattern using BuilderPattern
 - I should be able to make add custom pattern to the existing one using BuilderPattern
-
-```
-
-```
 
 ```
 
