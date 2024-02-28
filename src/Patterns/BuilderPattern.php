@@ -7,13 +7,14 @@ use Maestroerror\EloquentRegex\Contracts\BuilderContract;
 use Maestroerror\EloquentRegex\Traits\BuilderPatternTraits\CharacterClassesTrait;
 use Maestroerror\EloquentRegex\Traits\BuilderPatternTraits\SpecificCharsTrait;
 use Maestroerror\EloquentRegex\Traits\BuilderPatternTraits\AnchorsTrait;
+use Maestroerror\EloquentRegex\Traits\BuilderPatternTraits\GroupsTrait;
 use Maestroerror\EloquentRegex\Builder;
 
 
 class BuilderPattern extends BasePattern {
 
     // BuilderPattern doesn't need the "execute" method (src\Traits\Pattern.php)
-    use CharacterClassesTrait, SpecificCharsTrait, AnchorsTrait;
+    use CharacterClassesTrait, SpecificCharsTrait, AnchorsTrait, GroupsTrait;
 
     /**
      * @var array Array of options for the pattern.
@@ -46,8 +47,8 @@ class BuilderPattern extends BasePattern {
 
     // Builder class implementation methods START
 
-    public function end(): BuilderContract {
-        return $this->builder; // Return the Builder object
+    public function end(array|callable $config = []): BuilderContract {
+        return $this->builder->setOptions($config); // Return the Builder object
     }
 
     public function get(): ?array {
@@ -87,19 +88,38 @@ class BuilderPattern extends BasePattern {
      * @param string|null $quantifier The quantifier to apply. Can be 'zeroOrMore', 'oneOrMore', or 'optional'.
      * @return string The modified pattern with the quantifier applied.
      */
-    private function applyQuantifier(string $pattern, string|null $quantifier): string {
-        switch ($quantifier) {
-            case 'zeroOrMore' || '0>' || '0+':
-                $p = $pattern . '*';
-                return $this->lazy ? $this->addLazy($p) : $p;
-            case 'oneOrMore' || '1>' || '1+':
-                $p = $pattern . '+';
-                return $this->lazy ? $this->addLazy($p) : $p;
-                case 'optional' || '?' || '|':
-                return $pattern . '?';
-            default:
-                return $pattern;
+    private function applyQuantifier(string $pattern, string|null $q): string {
+
+        if (!$q) {
+            return $pattern;
         }
+        
+        if ($q == 'zeroOrMore' || $q == '0>' || $q == '0+' || $q == '*') {
+            $p = "(" . $pattern . ')*';
+            return $this->lazy ? $this->addLazy($p) : $p;
+        } elseif ($q == 'oneOrMore' || $q == '1>' || $q == '1+' || $q == '+') {
+            $p = "(" . $pattern . ')+';
+            return $this->lazy ? $this->addLazy($p) : $p;
+        } elseif ($q == 'optional' || $q == '?' || $q == '|') {
+            $p = "(" . $pattern . ')?';
+            return $this->lazy ? $this->addLazy($p) : $p;
+        }
+
+        if (is_int($q)) {
+            $p = "(" . $pattern . "){".$q."}";
+            return $this->lazy ? $this->addLazy($p) : $p;
+        } elseif (preg_match("/^\d{1,10}$/", $q)) {
+            $p = "(" . $pattern . '){'.$q.'}';
+            return $this->lazy ? $this->addLazy($p) : $p;
+        } elseif (preg_match("/^\d{1,10},\d{1,10}$/", $q)) {
+            $range = explode(",", $q);
+            $f = $range[0];
+            $s = $range[1];
+            $p = "(" . $pattern . ")" . "{" . $f . "," . $s ."}";
+            return $this->lazy ? $this->addLazy($p) : $p;
+        }
+
+        return $pattern;
     }
 
     /**
@@ -111,9 +131,11 @@ class BuilderPattern extends BasePattern {
      * @return string The generated regex quantifier string.
      */
     private function getLengthOption(int|null $length = null, int $minLength = 0, int $maxLength = 0): string {
-        if (is_int($length) && $length >= 0) {
+        if (is_int($length) && $length > 0) {
             $qntf = "{" . $length . "}";
             return $this->lazy ? $this->addLazy($qntf) : $qntf;
+        } elseif ($length === 0) {
+            return "";
         }
     
         if ($minLength > 0 && $maxLength > 0) {
@@ -153,142 +175,5 @@ class BuilderPattern extends BasePattern {
         return $this;
     }
 
-    /**
-     * Adds a new set of characters.
-     *
-     * @param callable $callback A callback that receives a BuilderPattern instance to define the subpattern.
-     * @return self
-     */
-    public function charSet(callable $callback): self {
-        $subPattern = new self();
-        $callback($subPattern);
-        $this->pattern .= '[' . $subPattern->getPattern() . ']';
-        return $this;
-    }
-
-    /**
-     * Adds a new set of denied characters.
-     *
-     * @param callable $callback A callback that receives a BuilderPattern instance to define the subpattern.
-     * @return self
-     */
-    public function negativeCharSet(callable $callback): self {
-        $subPattern = new self();
-        $callback($subPattern);
-        $this->pattern .= '[^' . $subPattern->getPattern() . ']';
-        return $this;
-    }
-
-    /**
-     * Adds a new grouped subpattern.
-     *
-     * @param callable $callback A callback that receives a BuilderPattern instance to define the subpattern.
-     * @return self
-     */
-    public function group(callable $callback): self {
-        $subPattern = new self();
-        $callback($subPattern);
-        $this->pattern .= '(' . $subPattern->getPattern() . ')';
-        return $this;
-    }
-
-    /**
-     * Adds a new non-capturing grouped subpattern.
-     *
-     * @param callable $callback A callback that receives a BuilderPattern instance to define the subpattern.
-     * @return self
-     */
-    public function nonCapturingGroup(callable $callback): self {
-        $subPattern = new self();
-        $callback($subPattern);
-        $this->pattern .= '(?:' . $subPattern->getPattern() . ')';
-        return $this;
-    }
     
-    /**
-     * Adds an alternation pattern.
-     *
-     * @param callable $callback A callback that receives a BuilderPattern instance to define the alternation.
-     * @return self
-     */
-    public function orPattern(callable $callback): self {
-        $builder = new self();
-        $callback($builder);
-        $this->pattern .= '|' . $builder->getPattern();
-        return $this;
-    }
-
-    /**
-     * Adds a positive lookahead assertion.
-     *
-     * @param callable $callback A callback that receives a BuilderPattern instance to define the assertion.
-     * @return self
-     */
-    public function lookAhead(callable $callback): self {
-        $builder = new self();
-        $callback($builder);
-        $this->pattern .= '(?=' . $builder->getPattern() . ')';
-        return $this;
-    }
-
-    /**
-     * Adds a positive lookbehind assertion.
-     *
-     * @param callable $callback A callback that receives a BuilderPattern instance to define the assertion.
-     * @return self
-     */
-    public function lookBehind(callable $callback): self {
-        $builder = new self();
-        $callback($builder);
-        $this->pattern .= '(?<=' . $builder->getPattern() . ')';
-        return $this;
-    }
-
-    /**
-     * Adds a negative lookahead assertion.
-     *
-     * @param callable $callback A callback that receives a BuilderPattern instance to define the assertion.
-     * @return self
-     */
-    public function negativeLookAhead(callable $callback): self {
-        $builder = new self();
-        $callback($builder);
-        $this->pattern .= '(?!' . $builder->pattern . ')';
-        return $this;
-    }
-
-    /**
-     * Adds a negative lookbehind assertion.
-     *
-     * @param callable $callback A callback that receives a BuilderPattern instance to define the assertion.
-     * @return self
-     */
-    public function negativeLookBehind(callable $callback): self {
-        $builder = new self();
-        $callback($builder);
-        $this->pattern .= '(?<!' . $builder->pattern . ')';
-        return $this;
-    }
-
-    /**
-     * Adds a raw regex string to the pattern.
-     *
-     * @param string $regex The raw regex string to add.
-     * @return self
-     */
-    public function addRawRegex(string $regex): self {
-        $this->pattern .= $regex;
-        return $this;
-    }
-
-    /**
-     * Wraps a given regex string in a non-capturing group and adds it to the pattern.
-     *
-     * @param string $regex The regex string to wrap and add.
-     * @return self
-     */
-    public function addRawNonCapturingGroup(string $regex): self {
-        $this->pattern .= '(?:' . $regex . ')';
-        return $this;
-    }
 }

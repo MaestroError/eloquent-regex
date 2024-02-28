@@ -4,7 +4,7 @@ use Maestroerror\EloquentRegex\EloquentRegex;
 
 // Custom Pattern tests:
 
-it('reproduces alt prefix pattern from HSA using facade', function () {
+it('reproduces alt prefix pattern from HSA using wrapper', function () {
     $regex = EloquentRegex::builder()->start()
         ->exact("alt=")
         ->group(function ($pattern) {
@@ -16,7 +16,7 @@ it('reproduces alt prefix pattern from HSA using facade', function () {
     expect($regex)->toBe("alt\=(\"|')");
 });
 
-it('reproduces hashtag prefix pattern from HSA using facade', function () {
+it('reproduces hashtag prefix pattern from HSA using wrapper', function () {
     $regex = EloquentRegex::builder()->start()
         ->lookBehind(function ($pattern) {
             $pattern->charSet(function ($pattern) {
@@ -27,7 +27,7 @@ it('reproduces hashtag prefix pattern from HSA using facade', function () {
     expect($regex)->toBe('(?<=["\>\s])\#');
 });
 
-it('reproduces Text suffix pattern from HSA using facade', function () {
+it('reproduces Text suffix pattern from HSA using wrapper', function () {
     $regex = EloquentRegex::builder()->start()
         ->openAngleBracket()->slash()->alphanumericRange(0, 10)->closeAngleBracket()
         ->toRegex();
@@ -35,7 +35,7 @@ it('reproduces Text suffix pattern from HSA using facade', function () {
     expect($regex)->toBe('\<\/[a-zA-Z0-9]{0,10}\>');
 });
 
-it('constructs regex for simple email validation using facade', function () {
+it('constructs regex for simple email validation using wrapper', function () {
     $regex = EloquentRegex::builder()->start()
         ->textLowercase()
         ->atSymbol()
@@ -47,7 +47,7 @@ it('constructs regex for simple email validation using facade', function () {
     expect($regex)->toBe('[a-z]+@[a-z]+\.[a-z]{2,4}');
 });
 
-it('constructs regex for URL validation using facade', function () {
+it('constructs regex for URL validation using wrapper', function () {
     $regex = EloquentRegex::builder()->pattern()
         ->exact(['http', 'https'])
         ->colon()
@@ -60,7 +60,7 @@ it('constructs regex for URL validation using facade', function () {
     expect($regex)->toBe('(http|https)\:\/\/[a-zA-Z]+\.[a-zA-Z]+');
 });
 
-it('constructs regex for specific phone number format using facade', function () {
+it('constructs regex for specific phone number format using wrapper', function () {
     $regex = EloquentRegex::builder()->pattern(function ($p) {
             $p->openParenthesis()->digits(3)->closeParenthesis()
             ->space()
@@ -70,7 +70,7 @@ it('constructs regex for specific phone number format using facade', function ()
     expect($regex)->toBe('\(\d{3}\) \d{3}\-\d{4}');
 });
 
-it('extracts dates in specific format from text using facade', function () {
+it('extracts dates in specific format from text using wrapper', function () {
     $matches = EloquentRegex::customPattern("Meeting on 2021-09-15 and 2021-10-20")
         ->digits(4)
         ->dash()
@@ -82,17 +82,18 @@ it('extracts dates in specific format from text using facade', function () {
     expect($matches)->toEqual(['2021-09-15', '2021-10-20']);
 });
 
-it('validates usernames in a string using facade', function () {
+it('validates usernames in a string using wrapper and LengthOption', function () {
     $check = EloquentRegex::customPattern("Users: user_123, JohnDoe99")
         ->alphanumeric()
-        ->underscore("?")
+        ->underscore()
         ->digitsRange(0, 2)
+        ->end(["maxLength" => 15])
         ->checkString();
 
     expect($check)->toBeTrue();
 });
 
-it('extracts hashtags from text using facade', function () {
+it('extracts hashtags from text using wrapper', function () {
     $matches = EloquentRegex::start("#hello #world This is a #test")
         ->hash()
         ->text()
@@ -101,7 +102,7 @@ it('extracts hashtags from text using facade', function () {
     expect($matches)->toEqual(['#hello', '#world', '#test']);
 });
 
-it('extracts secret coded messages from text using facade', function () {
+it('extracts secret coded messages from text using wrapper', function () {
     $text = "Normal text {secret: message one} more text {secret: another hidden text} end";
     $matches = EloquentRegex::start($text)
         ->lookBehind(function ($pattern) {
@@ -149,7 +150,7 @@ it('validates a domain name correctly', function () {
 it('validates a date format correctly', function () {
     $builder = EloquentRegex::string("2023-01-01");
 
-    $check = $builder->date('Y-m-d')->check();
+    $check = $builder->date()->check();
 
     expect($check)->toBeTrue();
 });
@@ -237,4 +238,92 @@ it('validates a Unix file path correctly', function () {
     ])->check();
 
     expect($check)->toBeTrue();
+});
+
+
+// Quantifier tests:
+it('matches specific number of dashes', function () {
+    $result = EloquentRegex::builder()->pattern()->dash('?')->toRegex();
+    expect($result)->toBe('(\-)?');
+});
+
+it('matches optional dots', function () {
+    $result = EloquentRegex::builder()->pattern()->dot('?')->toRegex();
+    expect($result)->toBe('(\.)?');
+});
+
+it('matches multiple spaces', function () {
+    $result = EloquentRegex::builder()->pattern()->space('2,5')->toRegex();
+    expect($result)->toBe('( ){2,5}');
+});
+
+it('matches one or more backslashes', function () {
+    $result = EloquentRegex::start("\\\\\\")->backslash('+')->check();
+    expect($result)->toBe(true);
+});
+
+it('matches zero or more forward slashes', function () {
+    $result = EloquentRegex::builder()->start()->forwardSlash('*')->toRegex();
+    expect($result)->toBe('(\/)*');
+});
+
+it('matches exactly 4 underscores', function () {
+    $result = EloquentRegex::builder()->start()->underscore('4')->toRegex();
+    expect($result)->toBe('(_){4}');
+});
+
+it('matches one or more pipes', function () {
+    $result = EloquentRegex::builder()->start()->pipe('+')->toRegex();
+    expect($result)->toBe('(\|)+');
+});
+
+it('matches a specific number of character sets', function () {
+    $regex = EloquentRegex::builder()->start()
+        ->charSet(function ($pattern) {
+            $pattern->period()->colon();
+        }, '3')->toRegex();
+
+    expect($regex)->toBe('([\.\:]){3}');
+});
+
+it('matches a specific number of negative character sets', function () {
+    $regex = EloquentRegex::builder()->start()
+        ->negativeCharSet(function ($pattern) {
+            // "digits" and similar classes adds quantifier+ automaticaly
+            // Inside set "+" is parsed as symbol, instead of quantifier
+            // So, inside charSet and negativeCharSet method, you should
+            // pass 0 as first argument to do not apply quantifier here
+            $pattern->digits(0); 
+        }, '2,4')->toRegex();
+
+    expect($regex)->toBe('([^\d]){2,4}');
+});
+
+it('applies quantifier to capturing groups correctly', function () {
+    $regex = EloquentRegex::builder()->start()
+        ->group(function ($pattern) {
+            $pattern->text();
+        }, '+')->toRegex();
+
+    expect($regex)->toBe('([a-zA-Z]+)+');
+});
+
+it('applies quantifier to non-capturing groups correctly', function () {
+    $regex = EloquentRegex::builder()->start()
+        ->nonCapturingGroup(function ($pattern) {
+            $pattern->digits();
+        }, '*')->toRegex();
+
+    expect($regex)->toBe('((?:\d+))*');
+});
+
+it('uses quantifier with alternation patterns correctly', function () {
+    $regex = EloquentRegex::builder()->start()
+        ->group(function ($pattern) {
+            $pattern->text()->orPattern(function ($pattern) {
+                $pattern->digits();
+            }, "?");
+        })->toRegex();
+
+    expect($regex)->toBe('([a-zA-Z]+|(\d+)?)');
 });

@@ -186,20 +186,22 @@ class Builder implements BuilderContract {
     }
 
     // In cases when pattern doesn't allow setting the options (like BuilderPattern)
-    public function setOptions(array|callable $config): void {
+    public function setOptions(array|callable $config): self {
         // Check if the pattern is set
         if (!$this->patternIsSet()) {
             throw new \LogicException("Pattern must be set before setting options.");
         }
 
         // Handle options array scenario
-        if (is_array($config)) {
+        if (is_array($config) && !empty($config)) {
             $this->processConfigArray($config);
         }
         // Handle callback scenario
         else if (is_callable($config)) {
             $this->processCallback($config);
         } 
+
+        return $this;
     }
     
     /**
