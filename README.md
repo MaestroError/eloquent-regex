@@ -13,14 +13,14 @@ Eloquent Regex brings the simplicity and elegance to regular expressions. Design
   - [Ready-to-Use Patterns](#ready-to-use-patterns)
   - [Custom Patterns](#custom-patterns)
     - [Creating a Custom Pattern](#creating-a-custom-pattern)
-    - [Applying Quantifiers](#applying-quantifiers)
-      - [Optional Elements](#optional-elements)
-      - [Specifying a Range](#specifying-a-range)
-      - [One or More](#one-or-more)
-      - [Zero or More](#zero-or-more)
-      - [Exact Number](#exact-number)
-      - [Custom Character Sets and Groups](#custom-character-sets-and-groups)
-      - [Quantifier Values](#quantifier-values)
+  - [Applying Quantifiers](#applying-quantifiers)
+    - [Optional Elements](#optional-elements)
+    - [Specifying a Range](#specifying-a-range)
+    - [One or More](#one-or-more)
+    - [Zero or More](#zero-or-more)
+    - [Exact Number](#exact-number)
+    - [Custom Character Sets and Groups](#custom-character-sets-and-groups)
+    - [Quantifier Values](#quantifier-values)
 
 # Overview
 
