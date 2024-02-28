@@ -2,9 +2,29 @@
 
 Eloquent Regex brings the simplicity and elegance to regular expressions. Designed for Laravel developers, this package offers a fluent, intuitive interface for building and executing regex patterns in your PHP applications.
 
+### Table of Contents
+
+- [Overview](#overview)
+  - [Key Features](#key-features)
+  - [Getting Started](#getting-started)
+- [Basic Usage](#basic-usage)
+  - [Including EloquentRegex](#including-eloquentregex)
+  - [Usage Structure](#usage-structure)
+  - [Ready-to-Use Patterns](#ready-to-use-patterns)
+  - [Custom Patterns](#custom-patterns)
+    - [Creating a Custom Pattern](#creating-a-custom-pattern)
+    - [Applying Quantifiers](#applying-quantifiers)
+      - [Optional Elements](#optional-elements)
+      - [Specifying a Range](#specifying-a-range)
+      - [One or More](#one-or-more)
+      - [Zero or More](#zero-or-more)
+      - [Exact Number](#exact-number)
+      - [Custom Character Sets and Groups](#custom-character-sets-and-groups)
+      - [Quantifier Values](#quantifier-values)
+
 # Overview
 
-### Dreaming of a world where regex doesn't feel like a rocket science? 😄🚀
+#### Dreaming of a world where regex doesn't feel like a rocket science? 😄🚀
 
 Regular expressions (regex) are powerful, no doubt. They're the Swiss Army knife for string manipulation and validation. But let's be honest, they can also be a bit of a headache. The syntax is dense, and a tiny mistake can throw everything off. It's like they're designed to be as intimidating as possible, especially when you're just trying to validate an email address!
 
@@ -222,7 +242,7 @@ Quantifiers in regular expressions are symbols or sets of symbols that specify h
 
 ### Optional Elements
 
-To make an element optional, use '?'. This matches zero or one occurrence of the preceding element.
+To make an element optional, use '?'. This matches zero or one occurrence of the preceding element (`dash` in this example).
 
 ```php
 // Matches a string that may or may not contain a dash
@@ -237,7 +257,7 @@ For specifying a range of occurrences, use a string with two numbers separated b
 ```php
 // Matches a string with 2 to 5 spaces
 $result = EloquentRegex::start($yourString)->text()->space('2,5')->digits()->check();
-// Result: the "someText  234" would return true, the "someText 234" false
+// Result: the "someText  234" would return true, but the "someText 234" false
 ```
 
 ### One or More
@@ -252,7 +272,7 @@ $result = EloquentRegex::start("\\\\")->backslash('1+')->check();
 
 ### Zero or More
 
-The '\*' quantifier matches zero or more occurrences of the preceding element.
+The '0+' quantifier matches zero or more occurrences of the preceding element.
 
 ```php
 // Matches strings with zero or more forward slashes
@@ -287,9 +307,7 @@ $regex = EloquentRegex::builder()->start()
 ### Quantifier values
 
 In [Special characters](https://github.com/MaestroError/eloquent-regex/blob/documentation-and-examples/src/Traits/BuilderPatternTraits/SpecificCharsTrait.php)
-and
-[Groups](https://github.com/MaestroError/eloquent-regex/blob/documentation-and-examples/src/Traits/BuilderPatternTraits/GroupsTrait.php)Available
-nearly all methods allowing quantifiers with values:
+and [Groups](https://github.com/MaestroError/eloquent-regex/blob/documentation-and-examples/src/Traits/BuilderPatternTraits/GroupsTrait.php) - nearly all methods allowing quantifiers with values:
 
 - Zero or More = `"zeroOrMore"`, `"0>"`, `"0+"`, `"*"`
 - One or More = `"oneOrMore"`, `"1>"`, `"1+"`, `"+"`
@@ -297,7 +315,7 @@ nearly all methods allowing quantifiers with values:
 - exact amount = `2`, `"5"`
 - range = `"{0,5}"`
 
-Example: `->exact("hello world", false, "1+")`
+Example: `->literal("hello world", false, "1+")`
 
 But
 [Character Classes](https://github.com/MaestroError/eloquent-regex/blob/documentation-and-examples/src/Traits/BuilderPatternTraits/CharacterClassesTrait.php)
@@ -317,6 +335,8 @@ EloquentRegex::start($yourString)->digits(5);
 EloquentRegex::start($yourString)->digitsRange(1, 5); // Matches from 1 to 5 digits
 ```
 
+---
+
 ##### To Do
 
 - Add options for new patterns:
@@ -333,7 +353,7 @@ EloquentRegex::start($yourString)->digitsRange(1, 5); // Matches from 1 to 5 dig
     - Regex Flags: Guide on applying regex flags to patterns for specialized matching behavior.
     - Grouping and Capturing: How to use groups (capturing and non-capturing) and apply quantifiers to them.
   - Add section in docs for "lazy" method
-  - Add in docs sections:
+  - Add sections:
     - Testing and Debugging
     - Credits
     - Contributing
@@ -349,7 +369,3 @@ EloquentRegex::start($yourString)->digitsRange(1, 5); // Matches from 1 to 5 dig
 - Make patterns controllable from config or provider (?)
 - I should be able to make new pattern using BuilderPattern
 - I should be able to make add custom pattern to the existing one using BuilderPattern
-
-```
-
-```
