@@ -1,6 +1,6 @@
 # eloquent-regex
 
-Eloquent Regex brings the simplicity and elegance to regular expressions. Designed for Laravel developers, this package offers a fluent, intuitive interface for building and executing regex patterns in your PHP applications.
+EloquentRegex brings the simplicity and elegance to regular expressions. Designed for Laravel developers, this package offers a fluent, intuitive interface for building and executing regex patterns in your PHP applications.
 
 ### Table of Contents
 
@@ -8,8 +8,6 @@ Eloquent Regex brings the simplicity and elegance to regular expressions. Design
   - [Key Features](#key-features)
   - [Getting Started](#getting-started)
 - [Basic Usage](#basic-usage)
-  - [Including EloquentRegex](#including-eloquentregex)
-  - [Usage Structure](#usage-structure)
   - [Ready-to-Use Patterns](#ready-to-use-patterns)
   - [Custom Patterns](#custom-patterns)
     - [Creating a Custom Pattern](#creating-a-custom-pattern)
@@ -19,7 +17,7 @@ Eloquent Regex brings the simplicity and elegance to regular expressions. Design
     - [One or More](#one-or-more)
     - [Zero or More](#zero-or-more)
     - [Exact Number](#exact-number)
-    - [Custom Character Sets and Groups](#custom-character-sets-and-groups)
+    - [Custom Character Sets and Groups](#to-custom-character-sets-and-groups)
     - [Quantifier Values](#quantifier-values)
 
 # Overview
@@ -291,7 +289,7 @@ $result = EloquentRegex::start($yourString)->digits()->underscore('2')->digits()
 
 ```
 
-### Custom Character Sets and groups
+### To Custom Character Sets and groups
 
 You can apply quantifiers to custom character sets and groups as second argument after the callback, matching a specific number of occurrences.
 
