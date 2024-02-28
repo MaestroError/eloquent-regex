@@ -311,7 +311,7 @@ and [Groups](https://github.com/MaestroError/eloquent-regex/blob/documentation-a
 - One or More = `"oneOrMore"`, `"1>"`, `"1+"`, `"+"`
 - Optional (Zero or One) = `"optional"`, `"?"`, `"|"`
 - exact amount = `2`, `"5"`
-- range = `"{0,5}"`
+- range = `"0,5"`
 
 Example: `->literal("hello world", false, "1+")`
 
