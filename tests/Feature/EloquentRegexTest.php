@@ -239,3 +239,91 @@ it('validates a Unix file path correctly', function () {
 
     expect($check)->toBeTrue();
 });
+
+
+// Quantifier tests:
+it('matches specific number of dashes', function () {
+    $result = EloquentRegex::builder()->pattern()->dash('?')->toRegex();
+    expect($result)->toBe('(\-)?');
+});
+
+it('matches optional dots', function () {
+    $result = EloquentRegex::builder()->pattern()->dot('?')->toRegex();
+    expect($result)->toBe('(\.)?');
+});
+
+it('matches multiple spaces', function () {
+    $result = EloquentRegex::builder()->pattern()->space('2,5')->toRegex();
+    expect($result)->toBe('( ){2,5}');
+});
+
+it('matches one or more backslashes', function () {
+    $result = EloquentRegex::start("\\\\\\")->backslash('+')->check();
+    expect($result)->toBe(true);
+});
+
+it('matches zero or more forward slashes', function () {
+    $result = EloquentRegex::builder()->start()->forwardSlash('*')->toRegex();
+    expect($result)->toBe('(\/)*');
+});
+
+it('matches exactly 4 underscores', function () {
+    $result = EloquentRegex::builder()->start()->underscore('4')->toRegex();
+    expect($result)->toBe('(_){4}');
+});
+
+it('matches one or more pipes', function () {
+    $result = EloquentRegex::builder()->start()->pipe('+')->toRegex();
+    expect($result)->toBe('(\|)+');
+});
+
+it('matches a specific number of character sets', function () {
+    $regex = EloquentRegex::builder()->start()
+        ->charSet(function ($pattern) {
+            $pattern->period()->colon();
+        }, '3')->toRegex();
+
+    expect($regex)->toBe('([\.\:]){3}');
+});
+
+it('matches a specific number of negative character sets', function () {
+    $regex = EloquentRegex::builder()->start()
+        ->negativeCharSet(function ($pattern) {
+            // "digits" and similar classes adds quantifier+ automaticaly
+            // Inside set "+" is parsed as symbol, instead of quantifier
+            // So, inside charSet and negativeCharSet method, you should
+            // pass 0 as first argument to do not apply quantifier here
+            $pattern->digits(0); 
+        }, '2,4')->toRegex();
+
+    expect($regex)->toBe('([^\d]){2,4}');
+});
+
+it('applies quantifier to capturing groups correctly', function () {
+    $regex = EloquentRegex::builder()->start()
+        ->group(function ($pattern) {
+            $pattern->text();
+        }, '+')->toRegex();
+
+    expect($regex)->toBe('([a-zA-Z]+)+');
+});
+
+it('applies quantifier to non-capturing groups correctly', function () {
+    $regex = EloquentRegex::builder()->start()
+        ->nonCapturingGroup(function ($pattern) {
+            $pattern->digits();
+        }, '*')->toRegex();
+
+    expect($regex)->toBe('((?:\d+))*');
+});
+
+it('uses quantifier with alternation patterns correctly', function () {
+    $regex = EloquentRegex::builder()->start()
+        ->group(function ($pattern) {
+            $pattern->text()->orPattern(function ($pattern) {
+                $pattern->digits();
+            }, "?");
+        })->toRegex();
+
+    expect($regex)->toBe('([a-zA-Z]+|(\d+)?)');
+});

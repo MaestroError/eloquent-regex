@@ -18,9 +18,9 @@ trait SpecificCharsTrait {
         return $this;
     }
 
-    private function escapeAndAdd(string $char): self {
+    private function escapeAndAdd(string $char, $quantifier = null): self {
         $escapedChar = preg_quote($char, '/');
-        $this->pattern .= $escapedChar;
+        $this->pattern .= $quantifier ? $this->applyQuantifier($escapedChar, $quantifier) : $escapedChar;
         return $this;
     }
 
@@ -79,132 +79,132 @@ trait SpecificCharsTrait {
         return $this;
     }
 
-    public function dash() {
-        return $this->escapeAndAdd("-");
+    public function dash(string|null $q = null) {
+        return $this->escapeAndAdd("-", $q);
     }
 
-    public function dot(): self {
-        return $this->escapeAndAdd("."); // Matches dot "." character
+    public function dot(string|null $q = null): self {
+        return $this->escapeAndAdd(".", $q); // Matches dot "." character
     }
 
-    public function space() {
-        return $this->escapeAndAdd(" ");
+    public function space(string|null $q = null) {
+        return $this->escapeAndAdd(" ", $q);
     }
 
-    public function backslash(): self {
-        return $this->escapeAndAdd("\\");
+    public function backslash(string|null $q = null): self {
+        return $this->escapeAndAdd("\\", $q);
     }
 
-    public function forwardSlash(): self {
-        return $this->escapeAndAdd("/");
+    public function forwardSlash(string|null $q = null): self {
+        return $this->escapeAndAdd("/", $q);
     }
 
-    public function slash(): self {
-        return $this->escapeAndAdd("/");
+    public function slash(string|null $q = null): self {
+        return $this->escapeAndAdd("/", $q);
     }
 
-    public function doubleSlash(): self {
-        return $this->escapeAndAdd("//");
+    public function doubleSlash(string|null $q = null): self {
+        return $this->escapeAndAdd("//", $q);
     }
 
-    public function underscore(): self {
-        return $this->escapeAndAdd("_");
+    public function underscore(string|null $q = null): self {
+        return $this->escapeAndAdd("_", $q);
     }
 
-    public function pipe(): self {
-        return $this->escapeAndAdd("|");
+    public function pipe(string|null $q = null): self {
+        return $this->escapeAndAdd("|", $q);
     }
 
-    public function ampersand(): self {
-        return $this->escapeAndAdd("&");
+    public function ampersand(string|null $q = null): self {
+        return $this->escapeAndAdd("&", $q);
     }
 
-    public function asterisk(): self {
-        return $this->escapeAndAdd("*");
+    public function asterisk(string|null $q = null): self {
+        return $this->escapeAndAdd("*", $q);
     }
 
-    public function plus(): self {
-        return $this->escapeAndAdd("+");
+    public function plus(string|null $q = null): self {
+        return $this->escapeAndAdd("+", $q);
     }
 
-    public function questionMark(): self {
-        return $this->escapeAndAdd("?");
+    public function questionMark(string|null $q = null): self {
+        return $this->escapeAndAdd("?", $q);
     }
 
-    public function atSign(): self {
-        return $this->escapeAndAdd("@");
+    public function atSign(string|null $q = null): self {
+        return $this->escapeAndAdd("@", $q);
     }
 
-    public function atSymbol(): self {
-        return $this->escapeAndAdd("@");
+    public function atSymbol(string|null $q = null): self {
+        return $this->escapeAndAdd("@", $q);
     }
     
-    public function exclamationMark(): self {
-        return $this->escapeAndAdd("!");
+    public function exclamationMark(string|null $q = null): self {
+        return $this->escapeAndAdd("!", $q);
     }
 
-    public function period(): self {
-        return $this->escapeAndAdd(".");
+    public function period(string|null $q = null): self {
+        return $this->escapeAndAdd(".", $q);
     }
 
-    public function comma(): self {
-        return $this->escapeAndAdd(",");
+    public function comma(string|null $q = null): self {
+        return $this->escapeAndAdd(",", $q);
     }
 
-    public function semicolon(): self {
-        return $this->escapeAndAdd(";");
+    public function semicolon(string|null $q = null): self {
+        return $this->escapeAndAdd(";", $q);
     }
 
-    public function colon(): self {
-        return $this->escapeAndAdd(":");
+    public function colon(string|null $q = null): self {
+        return $this->escapeAndAdd(":", $q);
     }
 
-    public function equalSign(): self {
-        return $this->escapeAndAdd("=");
+    public function equalSign(string|null $q = null): self {
+        return $this->escapeAndAdd("=", $q);
     }
 
-    public function tilde(): self {
-        return $this->escapeAndAdd("~");
+    public function tilde(string|null $q = null): self {
+        return $this->escapeAndAdd("~", $q);
     }
 
-    public function hyphen(): self {
-        return $this->escapeAndAdd("-");
+    public function hyphen(string|null $q = null): self {
+        return $this->escapeAndAdd("-", $q);
     }
 
-    public function minus(): self {
-        return $this->escapeAndAdd("-");
+    public function minus(string|null $q = null): self {
+        return $this->escapeAndAdd("-", $q);
     }
 
-    public function doubleQuote(): self {
-        return $this->escapeAndAdd("\"");
+    public function doubleQuote(string|null $q = null): self {
+        return $this->escapeAndAdd("\"", $q);
     }
 
-    public function singleQuote(): self {
-        return $this->escapeAndAdd("'");
+    public function singleQuote(string|null $q = null): self {
+        return $this->escapeAndAdd("'", $q);
     }
 
-    public function percent(): self {
-        return $this->escapeAndAdd("%");
+    public function percent(string|null $q = null): self {
+        return $this->escapeAndAdd("%", $q);
     }
 
-    public function dollar(): self {
-        return $this->escapeAndAdd("$");
+    public function dollar(string|null $q = null): self {
+        return $this->escapeAndAdd("$", $q);
     }
 
-    public function hash(): self {
-        return $this->escapeAndAdd("#");
+    public function hash(string|null $q = null): self {
+        return $this->escapeAndAdd("#", $q);
     }
 
-    public function hashtag(): self {
-        return $this->escapeAndAdd("#");
+    public function hashtag(string|null $q = null): self {
+        return $this->escapeAndAdd("#", $q);
     }
 
-    public function backtick(): self {
-        return $this->escapeAndAdd("`");
+    public function backtick(string|null $q = null): self {
+        return $this->escapeAndAdd("`", $q);
     }
 
-    public function caret(): self {
-        return $this->escapeAndAdd("^");
+    public function caret(string|null $q = null): self {
+        return $this->escapeAndAdd("^", $q);
     }
 
     public function unicode($code): self {
@@ -215,48 +215,48 @@ trait SpecificCharsTrait {
 
     // Methods for paired characters with separate open and close methods and an extra method with a boolean argument
 
-    public function openSquareBracket(): self {
-        return $this->escapeAndAdd("[");
+    public function openSquareBracket(string|null $q = null): self {
+        return $this->escapeAndAdd("[", $q);
     }
 
-    public function closeSquareBracket(): self {
-        return $this->escapeAndAdd("]");
+    public function closeSquareBracket(string|null $q = null): self {
+        return $this->escapeAndAdd("]", $q);
     }
 
     public function squareBracket($isOpen = true): self {
         return $isOpen ? $this->openSquareBracket() : $this->closeSquareBracket();
     }
 
-    public function openCurlyBrace(): self {
-        return $this->escapeAndAdd("{");
+    public function openCurlyBrace(string|null $q = null): self {
+        return $this->escapeAndAdd("{", $q);
     }
 
-    public function closeCurlyBrace(): self {
-        return $this->escapeAndAdd("}");
+    public function closeCurlyBrace(string|null $q = null): self {
+        return $this->escapeAndAdd("}", $q);
     }
 
     public function curlyBrace($isOpen = true): self {
         return $isOpen ? $this->openCurlyBrace() : $this->closeCurlyBrace();
     }
 
-    public function openParenthesis(): self {
-        return $this->escapeAndAdd("(");
+    public function openParenthesis(string|null $q = null): self {
+        return $this->escapeAndAdd("(", $q);
     }
 
-    public function closeParenthesis(): self {
-        return $this->escapeAndAdd(")");
+    public function closeParenthesis(string|null $q = null): self {
+        return $this->escapeAndAdd(")", $q);
     }
 
     public function parenthesis($isOpen = true): self {
         return $isOpen ? $this->openParenthesis() : $this->closeParenthesis();
     }
 
-    public function openAngleBracket(): self {
-        return $this->escapeAndAdd("<");
+    public function openAngleBracket(string|null $q = null): self {
+        return $this->escapeAndAdd("<", $q);
     }
 
-    public function closeAngleBracket(): self {
-        return $this->escapeAndAdd(">");
+    public function closeAngleBracket(string|null $q = null): self {
+        return $this->escapeAndAdd(">", $q);
     }
 
     public function angleBracket($isOpen = true): self {
