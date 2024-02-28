@@ -111,12 +111,14 @@ textOrNumbers(int $minLength, int $maxLength, int $minUppercase, int $minLowerca
 email(int $maxLength, array|string $onlyDomains, array|string $onlyExtensions)`
 ```
 
-````php
+```php
 url(array|string $onlyProtocol)`
+```
+
 ```php
 // $onlyDomains & $onlyExtensions array or string separated by comma "org,com"
 domainName(int $maxLength, array|string $onlyDomains, array|string $onlyExtensions)`
-````
+```
 
 ```php
 date()
@@ -153,7 +155,9 @@ password(int $minLength, int $minUppercase, int $minNumbers, int $minSpecialChar
 ```
 
 ```php
-// $restrictTags & $onlyTags array or string separated by comma `"script, style"`. It isn't recomended to use both option in simultaneously
+// $restrictTags & $onlyTags array or string
+// separated by comma `"script, style"`.
+// It isn't recomended to use both option simultaneously
 htmlTag(array|string $restrictTags, array|string $onlyTags)
 ```
 
@@ -170,6 +174,45 @@ filePath(int $isDirectory, bool $isFile, bool $fileExists,string $pathType) -
 ```php
 filePathWin(int $isDirectory, bool $isFile, bool $fileExists)
 ```
+
+Didn't it cover all your needs? Let's take a look to the custom patterns section.
+
+## Custom Patterns
+
+For scenarios where predefined patterns do not suffice, EloquentRegex allows you to define custom patterns using the start or customPattern methods as initiator:
+
+```php
+EloquentRegex::start($yourString);
+// Or
+EloquentRegex::customPattern($yourString);
+```
+
+_Note: They does the exaclty same thing, you can use your favorite one_
+
+### Creating a Custom Pattern
+
+You can start building a custom pattern to match a specific string format, such as a custom ID format that starts with letters followed by digits:
+
+```php
+$result = EloquentRegex::start('ID123456')
+            ->literal('ID')
+            ->digitsRange(1, 10)
+            ->check();
+
+if ($result) {
+    echo "The string matches the custom ID format!";
+} else {
+    echo "The string does not match the custom ID format.";
+}
+
+```
+
+Custom pattern builder supports a wide range of character classes and all special chars. Also, `literal` or `exact` method could be used to match exact string you need, or `char` method could be used to match exact character. The full list of pattern builder methods is comming soon. Before that, you can check this files out:
+
+- [Character Classes](https://github.com/MaestroError/eloquent-regex/blob/documentation-and-examples/src/Traits/BuilderPatternTraits/CharacterClassesTrait.php)
+- [Special characters](https://github.com/MaestroError/eloquent-regex/blob/documentation-and-examples/src/Traits/BuilderPatternTraits/SpecificCharsTrait.php)
+- [Groups](https://github.com/MaestroError/eloquent-regex/blob/documentation-and-examples/src/Traits/BuilderPatternTraits/GroupsTrait.php)
+- [Anchors](https://github.com/MaestroError/eloquent-regex/blob/documentation-and-examples/src/Traits/BuilderPatternTraits/AnchorsTrait.php)
 
 #### Quantifiers
 
