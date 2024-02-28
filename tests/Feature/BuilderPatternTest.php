@@ -101,7 +101,7 @@ it('validates usernames in a string', function () {
 
     $check = $builder->start()
                      ->alphanumeric()
-                     ->underscore("?")
+                     ->underscore()
                      ->digitsRange(0, 2)
                      ->checkString();
 

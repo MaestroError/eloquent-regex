@@ -59,7 +59,7 @@ interface BuilderContract {
      * @param array|callable $config An array of options (optionName => value (arg)) or a callback function to configure options.
      * @return void
      */
-    public function setOptions(array|callable $config): void;
+    public function setOptions(array|callable $config): self;
 
     /**
      * Registers a single pattern in the Builder.
