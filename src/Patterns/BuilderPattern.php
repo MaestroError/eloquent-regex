@@ -87,19 +87,38 @@ class BuilderPattern extends BasePattern {
      * @param string|null $quantifier The quantifier to apply. Can be 'zeroOrMore', 'oneOrMore', or 'optional'.
      * @return string The modified pattern with the quantifier applied.
      */
-    private function applyQuantifier(string $pattern, string|null $quantifier): string {
-        switch ($quantifier) {
-            case 'zeroOrMore' || '0>' || '0+':
-                $p = $pattern . '*';
-                return $this->lazy ? $this->addLazy($p) : $p;
-            case 'oneOrMore' || '1>' || '1+':
-                $p = $pattern . '+';
-                return $this->lazy ? $this->addLazy($p) : $p;
-                case 'optional' || '?' || '|':
-                return $pattern . '?';
-            default:
-                return $pattern;
+    private function applyQuantifier(string $pattern, string|null $q): string {
+
+        if (!$q) {
+            return $pattern;
         }
+        
+        if ($q == 'zeroOrMore' || $q == '0>' || $q == '0+' || $q == '*') {
+            $p = "(" . $pattern . ')*';
+            return $this->lazy ? $this->addLazy($p) : $p;
+        } elseif ($q == 'oneOrMore' || $q == '1>' || $q == '1+' || $q == '+') {
+            $p = "(" . $pattern . ')+';
+            return $this->lazy ? $this->addLazy($p) : $p;
+        } elseif ($q == 'optional' || $q == '?' || $q == '|') {
+            $p = "(" . $pattern . ')?';
+            return $this->lazy ? $this->addLazy($p) : $p;
+        }
+
+        if (is_int($q)) {
+            $p = "(" . $pattern . "){".$q."}";
+            return $this->lazy ? $this->addLazy($p) : $p;
+        } elseif (preg_match("/^\d{1,10}$/", $q)) {
+            $p = "(" . $pattern . '){'.$q.'}';
+            return $this->lazy ? $this->addLazy($p) : $p;
+        } elseif (preg_match("/^\d{1,10},\d{1,10}$/", $q)) {
+            $range = explode(",", $q);
+            $f = $range[0];
+            $s = $range[1];
+            $p = "(" . $pattern . ")" . "{" . $f . "," . $s ."}";
+            return $this->lazy ? $this->addLazy($p) : $p;
+        }
+
+        return $pattern;
     }
 
     /**
@@ -111,9 +130,11 @@ class BuilderPattern extends BasePattern {
      * @return string The generated regex quantifier string.
      */
     private function getLengthOption(int|null $length = null, int $minLength = 0, int $maxLength = 0): string {
-        if (is_int($length) && $length >= 0) {
+        if (is_int($length) && $length > 0) {
             $qntf = "{" . $length . "}";
             return $this->lazy ? $this->addLazy($qntf) : $qntf;
+        } elseif ($length === 0) {
+            return "";
         }
     
         if ($minLength > 0 && $maxLength > 0) {
@@ -159,10 +180,11 @@ class BuilderPattern extends BasePattern {
      * @param callable $callback A callback that receives a BuilderPattern instance to define the subpattern.
      * @return self
      */
-    public function charSet(callable $callback): self {
+    public function charSet(callable $callback, ?string $q = null): self {
         $subPattern = new self();
         $callback($subPattern);
-        $this->pattern .= '[' . $subPattern->getPattern() . ']';
+        $p = '[' . $subPattern->getPattern() . ']';
+        $this->pattern .= $q ? $this->applyQuantifier($p, $q) : $p;
         return $this;
     }
 
@@ -172,10 +194,11 @@ class BuilderPattern extends BasePattern {
      * @param callable $callback A callback that receives a BuilderPattern instance to define the subpattern.
      * @return self
      */
-    public function negativeCharSet(callable $callback): self {
+    public function negativeCharSet(callable $callback, ?string $q = null): self {
         $subPattern = new self();
         $callback($subPattern);
-        $this->pattern .= '[^' . $subPattern->getPattern() . ']';
+        $p = '[^' . $subPattern->getPattern() . ']';
+        $this->pattern .= $q ? $this->applyQuantifier($p, $q) : $p;
         return $this;
     }
 
@@ -185,10 +208,11 @@ class BuilderPattern extends BasePattern {
      * @param callable $callback A callback that receives a BuilderPattern instance to define the subpattern.
      * @return self
      */
-    public function group(callable $callback): self {
+    public function group(callable $callback, ?string $q = null): self {
         $subPattern = new self();
         $callback($subPattern);
-        $this->pattern .= '(' . $subPattern->getPattern() . ')';
+        $p = $subPattern->getPattern();
+        $this->pattern .= $q ? $this->applyQuantifier($p, $q) : '(' . $p . ')';
         return $this;
     }
 
@@ -198,10 +222,11 @@ class BuilderPattern extends BasePattern {
      * @param callable $callback A callback that receives a BuilderPattern instance to define the subpattern.
      * @return self
      */
-    public function nonCapturingGroup(callable $callback): self {
+    public function nonCapturingGroup(callable $callback, ?string $q = null): self {
         $subPattern = new self();
         $callback($subPattern);
-        $this->pattern .= '(?:' . $subPattern->getPattern() . ')';
+        $p = '(?:' . $subPattern->getPattern() . ')';
+        $this->pattern .= $q ? $this->applyQuantifier($p, $q) : $p;
         return $this;
     }
     
@@ -211,10 +236,11 @@ class BuilderPattern extends BasePattern {
      * @param callable $callback A callback that receives a BuilderPattern instance to define the alternation.
      * @return self
      */
-    public function orPattern(callable $callback): self {
+    public function orPattern(callable $callback, ?string $q = null): self {
         $builder = new self();
         $callback($builder);
-        $this->pattern .= '|' . $builder->getPattern();
+        $p = $builder->getPattern();
+        $this->pattern .= $q ? '|' . $this->applyQuantifier($p, $q) : '|' . $p;
         return $this;
     }
 

@@ -53,8 +53,8 @@ Examples: `->exact("hello world", false, "1+")`
 - Write documentation (add credit for https://regexr.com/ and ChatGPT)
 - Add automated tests on PR creation or on marging to main branch ✔️
 
-- Make Tests for quantifiers (add grouping)
-- Make quantifiers available for special chars
+- Make Tests for quantifiers (add grouping) ✔️
+- Make quantifiers available for special chars ✔️
 
 ##### Coming next
 
@@ -62,6 +62,6 @@ Examples: `->exact("hello world", false, "1+")`
 - Implement recursive pattern creation (Using "RI-321" string to create pattern matching this string)
 - Consider to add Postal Code Pattern
 - Make options controllable from config or provider (?)
-- Make pattern controllable from config or provider (?)
+- Make patterns controllable from config or provider (?)
 - I should be able to make new pattern using BuilderPattern
 - I should be able to make add custom pattern to the existing one using BuilderPattern

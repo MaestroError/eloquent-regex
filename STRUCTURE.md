@@ -247,6 +247,8 @@ Here you can check the usage structure:
 - **?Optional** - Any optional methods like: regex expression flags and `end` method
 - **Action** - Final method which performs some action like: `get`, `check`, `toRegex` and etc.
 
+_Note: Action methods have replicas in `BuilderPattern` to ensure that `end` method remains optional_
+
 # Conclusion
 
 EloquentRegex simplifies the creation and execution of regular expressions in Laravel applications. Through its intuitive API, developers can quickly implement complex regex operations with precision and flexibility. Whether utilizing ready-to-use patterns for common tasks or crafting custom solutions with dynamic options, EloquentRegex enhances productivity and code clarity.
