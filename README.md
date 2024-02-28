@@ -323,15 +323,22 @@ EloquentRegex::start($yourString)->digitsRange(1, 5); // Matches from 1 to 5 dig
   - usernameLength: Set minimum and maximum length for the username part of the email.
   - dateFormat, timeFormat: Specify the format of date and time (e.g., MM-DD-YYYY, HH:MM).
 - Consider to register Patterns like options using key (name) => value (class) pairs (check performance) ✔️ (_No significant change before 50+ patterns_)
+- Return collection on get method if laravel is available.
 
 - Write documentation (add credit for https://regexr.com/ and ChatGPT)
-- Return collection on get method if laravel is available.
-- Create quick start guide and add in Docs.
-- Add advanced usage section in Docs:
-  - Options and Assertions: Detailed explanation of options, how to apply them, and their effects on patterns.
-  - Filters in Extraction: Using options as filters during extraction and the types of filters available.
-  - Regex Flags: Guide on applying regex flags to patterns for specialized matching behavior.
-  - Grouping and Capturing: How to use groups (capturing and non-capturing) and apply quantifiers to them.
+  - Create quick start guide and add in Docs.
+  - Add advanced usage section in Docs:
+    - Options and Assertions: Detailed explanation of options, how to apply them, and their effects on patterns.
+    - Filters in Extraction: Using options as filters during extraction and the types of filters available.
+    - Regex Flags: Guide on applying regex flags to patterns for specialized matching behavior.
+    - Grouping and Capturing: How to use groups (capturing and non-capturing) and apply quantifiers to them.
+  - Add section in docs for "lazy" method
+  - Add in docs sections:
+    - Testing and Debugging
+    - Credits
+    - Contributing
+    - FAQs
+    - Creating new patterns
 
 ##### Coming next
 
