@@ -41,6 +41,8 @@ $isValid = EloquentRegex::source('test@example.com')->email()->check();
 - **Options and Filters**: Tailor your regex operations with options and filters for precision matching. It's like having a regex wizard at your fingertips.
 - **Laravel Integration**: Seamlessly integrates with your Laravel projects, leveraging Laravel's elegant syntax and features.
 
+_For more details about package and it's inner workings check out [STRUCTURE.md](https://github.com/MaestroError/eloquent-regex/blob/update-documentation-and-add-advanced-usage-section/STRUCTURE.md) file._
+
 ## Getting Started
 
 Simply install the package via Composer, and you're ready to take the pain out of regex in your PHP/Laravel applications. Follow our quick start guide below to dive in.
@@ -122,22 +124,23 @@ Here you can check all available methods of ready-to-use patterns and their argu
 
 ```php
 public function textOrNumbers(
-    int $minLength,
-    int $maxLength,
-    int $minUppercase,
-    int $minLowercase,
-    int $minNumbers,
-    int $maxNumbers
-  );
+  int $minLength,
+  int $maxLength,
+  int $minUppercase,
+  int $minLowercase,
+  int $minNumbers,
+  int $maxNumbers
+);
 ```
 
 ```php
-// $onlyDomains & $onlyExtensions array or string separated by comma `"example.org,example.com"`
+// $onlyDomains & $onlyExtensions array
+// or string separated by comma `"example.org,example.com"`
 public function email(
-    int $maxLength,
-    array|string $onlyDomains,
-    array|string $onlyExtensions
-  );
+  int $maxLength,
+  array|string $onlyDomains,
+  array|string $onlyExtensions
+);
 ```
 
 ```php
@@ -147,10 +150,10 @@ public function url(array|string $onlyProtocol);
 ```php
 // $onlyDomains & $onlyExtensions array or string separated by comma "org,com"
 public function domainName(
-    int $maxLength,
-    array|string $onlyDomains,
-    array|string $onlyExtensions
-  );
+  int $maxLength,
+  array|string $onlyDomains,
+  array|string $onlyExtensions
+);
 ```
 
 ```php
@@ -185,11 +188,11 @@ public function username(int $maxLength);
 
 ```php
 public function password(
-    int $minLength,
-    int $minUppercase,
-    int $minNumbers,
-    int $minSpecialChars
-  );
+  int $minLength,
+  int $minUppercase,
+  int $minNumbers,
+  int $minSpecialChars
+);
 ```
 
 ```php
@@ -202,24 +205,28 @@ public function htmlTag(array|string $restrictTags, array|string $onlyTags);
 ```php
 // $specificCurrencies array of currency symbols or string separated by comma "$, ₾"
 public function currency(
-    int $minDigits,
-    int $maxDigits,
-    array|string $specificCurrencies
-  );
+  int $minDigits,
+  int $maxDigits,
+  array|string $specificCurrencies
+);
 ```
 
 ```php
 // $pathType allowed values: "absolute" & "relative"
 public function filePath(
-    int $isDirectory,
-    bool $isFile,
-    bool $fileExists,
-    string $pathType
-  );
+  int $isDirectory,
+  bool $isFile,
+  bool $fileExists,
+  string $pathType
+);
 ```
 
 ```php
-public function filePathWin(int $isDirectory, bool $isFile, bool $fileExists);
+public function filePathWin(
+  int $isDirectory,
+  bool $isFile,
+  bool $fileExists
+);
 ```
 
 Didn't it cover all your needs? Let's take a look to the custom patterns section.
