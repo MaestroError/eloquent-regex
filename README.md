@@ -19,6 +19,7 @@ EloquentRegex brings the simplicity and elegance to regular expressions. Designe
     - [Exact Number](#exact-number)
     - [Custom Character Sets and Groups](#to-custom-character-sets-and-groups)
     - [Quantifier Values](#quantifier-values)
+- [Advanced usage](#advanced-usage)
 
 # Overview
 
@@ -369,6 +370,74 @@ EloquentRegex::start($yourString)->digits(5);
 EloquentRegex::start($yourString)->digitsRange(1, 5); // Matches from 1 to 5 digits
 ```
 
+# Advanced usage
+
+As you become more comfortable with the basics of EloquentRegex, you might find yourself needing to tackle more complex string manipulation challenges. The "Advanced Usage" section is designed to take your skills to the next level.
+
+Whether you're dealing with intricate string formats, dynamic pattern requirements, or simply looking to optimize your regex operations for performance and clarity, this section will guide you through the advanced features of EloquentRegex. You'll learn how to leverage the full power of this package to make your Laravel application's text processing as efficient and effective as possible.
+
+## Options
+
+EloquentRegex provides a flexible system for applying options to your patterns. These options can serve as extra assertions to refine pattern matching or act as filters to select only specific matches. There are three main ways to apply options: directly as arguments, through a callback, and via an associative array.
+
+#### Direct Arguments
+
+Pass options directly as arguments to pattern methods for straightforward use cases.
+
+```php
+EloquentRegex::source("StrongP@ssw0rd")->password(8, 1, 1, 1)->check();
+```
+
+#### Callback
+
+A callback offers the most flexibility, allowing any option to be applied to any pattern. Also, It's the recommended approach for complex configurations to keep your code simple and readible.
+
+```php
+EloquentRegex::source("StrongP@ssw0rd")->password(function($pattern) {
+  $pattern->minLength(8)->minUppercase(1)->minNumbers(1)->minSpecialChars(1);
+})->check();
+
+```
+
+#### Associative Array
+
+Options can also be specified using an associative array, providing a clear and concise way to configure multiple options at once.
+
+```php
+EloquentRegex::source("StrongP@ssw0rd")
+->password([
+  "minLength" => 8,
+  "minUppercase" => 1,
+  "minNumbers" => 1,
+  "minSpecialChars" => 1,
+])->check();
+```
+
+_Note: To keep it simple - all option methods have exactly one argument_
+
+### Options as extra assertions
+
+Options can make extra assertions (while using `check` or `checkString` methods) beyond the basic pattern match, ensuring that matches meet specific criteria.
+
+```php
+// The "filePath" pattern matches any file path
+// While "pathType" option Asserts the file path is an absolute
+EloquentRegex::source("/var/www/html/index.php")
+  ->filePath(["pathType" => "absolute"])
+  ->check();
+```
+
+### Options as filters
+
+In some cases (While using `get` method), options serve to filter the results obtained from a pattern match, allowing only certain matches to pass through.
+
+```php
+$string = "Visa: 4111 1111 1111 1111, MasterCard: 5500 0000 0000 0004, Amex: 3400 000000 00009";
+// The "creditCardNumber" pattern matches any credit card number
+// While "cardTypes" (#1 argument) option filters and returns only VISA and AMEX accordingly
+$cards = EloquentRegex::source($string)->creditCardNumber("visa, amex")->get();
+```
+
 ---
 
 ##### To Do
@@ -382,8 +451,8 @@ EloquentRegex::start($yourString)->digitsRange(1, 5); // Matches from 1 to 5 dig
 - Write documentation (add credit for https://regexr.com/ and ChatGPT)
   - Create quick start guide and add in Docs.
   - Add advanced usage section in Docs:
-    - Options and Assertions: Detailed explanation of options, how to apply them, and their effects on patterns.
-    - Filters in Extraction: Using options as filters during extraction and the types of filters available.
+    - Options and Assertions: Detailed explanation of options, how to apply them, and their effects on patterns. ✔️
+    - Filters in Extraction: Using options as filters during extraction and the types of filters available. ✔️
     - Regex Flags: Guide on applying regex flags to patterns for specialized matching behavior.
     - Grouping and Capturing: How to use groups (capturing and non-capturing) and apply quantifiers to them.
   - Add section in docs for "lazy" method
