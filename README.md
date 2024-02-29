@@ -121,76 +121,76 @@ We have different ways to apply options, but the most common and easy way is to 
 Here you can check all available methods of ready-to-use patterns and their arguments:
 
 ```php
-textOrNumbers(int $minLength, int $maxLength, int $minUppercase, int $minLowercase, int $minNumbers, int $maxNumbers)
+public function textOrNumbers(int $minLength, int $maxLength, int $minUppercase, int $minLowercase, int $minNumbers, int $maxNumbers)
 ```
 
 ```php
 // $onlyDomains & $onlyExtensions array or string separated by comma `"example.org,example.com"`
-email(int $maxLength, array|string $onlyDomains, array|string $onlyExtensions)`
+public function email(int $maxLength, array|string $onlyDomains, array|string $onlyExtensions)`
 ```
 
 ```php
-url(array|string $onlyProtocol)`
+public function url(array|string $onlyProtocol)`
 ```
 
 ```php
 // $onlyDomains & $onlyExtensions array or string separated by comma "org,com"
-domainName(int $maxLength, array|string $onlyDomains, array|string $onlyExtensions)`
+public function domainName(int $maxLength, array|string $onlyDomains, array|string $onlyExtensions)`
 ```
 
 ```php
-date()
+public function date()
 ```
 
 ```php
-time()
+public function time()
 ```
 
 ```php
-ipAddress()
+public function ipAddress()
 ```
 
 ```php
-ipv6Address()
+public function ipv6Address()
 ```
 
 ```php
 // $cardTypes string separated by comma "visa, amex"
-creditCardNumber(string $cardTypes)
+public function creditCardNumber(string $cardTypes)
 ```
 
 ```php
 // $countryCode should passed without "+" sign: phone("1"), phone("995")
-phone(string $countryCode)
+public function phone(string $countryCode)
 ```
 
 ```php
-username(int $maxLength)
+public function username(int $maxLength)
 ```
 
 ```php
-password(int $minLength, int $minUppercase, int $minNumbers, int $minSpecialChars)
+public function password(int $minLength, int $minUppercase, int $minNumbers, int $minSpecialChars)
 ```
 
 ```php
 // $restrictTags & $onlyTags array or string
 // separated by comma `"script, style"`.
 // It isn't recomended to use both option simultaneously
-htmlTag(array|string $restrictTags, array|string $onlyTags)
+public function htmlTag(array|string $restrictTags, array|string $onlyTags)
 ```
 
 ```php
 // $specificCurrencies array of currency symbols or string separated by comma "$, ₾"
-currency(int $minDigits, int $maxDigits, array|string $specificCurrencies)
+public function currency(int $minDigits, int $maxDigits, array|string $specificCurrencies)
 ```
 
 ```php
 // $pathType allowed values: "absolute" & "relative"
-filePath(int $isDirectory, bool $isFile, bool $fileExists,string $pathType) -
+public function filePath(int $isDirectory, bool $isFile, bool $fileExists,string $pathType) -
 ```
 
 ```php
-filePathWin(int $isDirectory, bool $isFile, bool $fileExists)
+public function filePathWin(int $isDirectory, bool $isFile, bool $fileExists)
 ```
 
 Didn't it cover all your needs? Let's take a look to the custom patterns section.
