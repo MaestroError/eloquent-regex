@@ -83,11 +83,24 @@ it('extracts dates in specific format from text using wrapper', function () {
 });
 
 it('validates usernames in a string using wrapper and LengthOption', function () {
-    $check = EloquentRegex::customPattern("Users: user_123, JohnDoe99")
+    $check = EloquentRegex::customPattern("Users: user_123, JohnDoe_99")
         ->alphanumeric()
         ->underscore()
         ->digitsRange(0, 2)
-        ->end(["maxLength" => 15])
+        ->end(["minLength" => 10])
+        ->checkString();
+
+    expect($check)->toBeTrue();
+});
+
+it('validates usernames in a string using wrapper and callback options', function () {
+    $check = EloquentRegex::customPattern("Users: user_123, JohnDoe_99")
+        ->alphanumeric()
+        ->underscore()
+        ->digits()
+        ->end(function ($p) {
+            $p->minLength(10)->maxDigits(2);
+        })
         ->checkString();
 
     expect($check)->toBeTrue();

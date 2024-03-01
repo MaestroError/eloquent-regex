@@ -24,6 +24,12 @@ EloquentRegex brings the simplicity and elegance to regular expressions. Designe
     - [Options as extra assertions](#options-as-extra-assertions)
     - [Options as filters](#options-as-filters)
     - [Options list](#options-list)
+    - [Options in custom patterns](#options-in-custom-patterns)
+  - [Regex Flags](#regex-flags)
+    - [Case-Insensitive Matching](#case-Insensitive-matching)
+    - [Multiline Matching](#multiline-matching)
+    - [Single-Line Mode](#single-line-mode)
+    - [Unicode Character Matching](#unicode-character-matching)
 
 # Overview
 
@@ -448,8 +454,22 @@ Using custom pattern is greate way to cover specific use cases, but there can be
 
 ```php
 // example of using end() method with config array
+EloquentRegex::customPattern("Users: user_123, JohnDoe_99")
+  ->alphanumeric()
+  ->underscore()
+  ->digitsRange(0, 2)
+  ->end(["minLength" => 10])
+  ->checkString();
 
 // example of using end() method with callback
+$check = EloquentRegex::customPattern("Users: user_123, JohnDoe_99")
+  ->alphanumeric()
+  ->underscore()
+  ->digits()
+  ->end(function ($p) {
+      $p->minLength(10)->maxDigits(2);
+  })
+  ->checkString();
 ```
 
 ### Options list
@@ -589,10 +609,6 @@ Regex flags are special tokens that modify the behavior of regular expressions, 
 
 Sometimes, the case of letters in a string should not affect the match. To achieve case-insensitive matching, use the asCaseInsensitive() flag.
 
-### Multiline Matching
-
-The multiline flag allows the start (^) and end ($) anchors to match the start and end of lines within a string, rather than the entire string.
-
 ```php
 // When $string can be "Example@Email.COM", or "EXAMPLE@Email.com", or "example@EMAIL.COM" and etc.
 $checkWithFlag = EloquentRegex::source($string)
@@ -606,6 +622,10 @@ $checkWithFlag = EloquentRegex::source($string)
 // With the case-insensitive flag, the match succeeds.
 expect($checkWithFlag)->toBeTrue();
 ```
+
+### Multiline Matching
+
+The multiline flag allows the start (^) and end ($) anchors to match the start and end of lines within a string, rather than the entire string.
 
 **Example: Matching Dates Across Multiple Lines using check() method**
 
@@ -657,6 +677,7 @@ expect($matches)->toContain('და'); // Matches Unicode characters with the Un
 ##### To Do
 
 - Add options for new patterns:
+  - Add `contains` and `notContains` options
   - usernameLength: Set minimum and maximum length for the username part of the email.
   - dateFormat, timeFormat: Specify the format of date and time (e.g., MM-DD-YYYY, HH:MM).
 - Consider to register Patterns like options using key (name) => value (class) pairs (check performance) ✔️ (_No significant change before 50+ patterns_)
