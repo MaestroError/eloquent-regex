@@ -20,6 +20,10 @@ EloquentRegex brings the simplicity and elegance to regular expressions. Designe
     - [Custom Character Sets and Groups](#to-custom-character-sets-and-groups)
     - [Quantifier Values](#quantifier-values)
 - [Advanced usage](#advanced-usage)
+  - [Options]
+    - [Options as extra assertions](#options-as-extra-assertions)
+    - [Options as filters](#options-as-filters)
+    - [Options list](#options-list)
 
 # Overview
 
@@ -438,6 +442,141 @@ $string = "Visa: 4111 1111 1111 1111, MasterCard: 5500 0000 0000 0004, Amex: 340
 $cards = EloquentRegex::source($string)->creditCardNumber("visa, amex")->get();
 ```
 
+### Options in custom patterns
+
+```php
+// example of using end() method with option
+```
+
+### Options list
+
+Below is a list of all available options for now. As previously mentioned, options can be applied to any pattern using either a callback or an array.
+
+While this flexibility allows you to tailor your regex patterns precisely, it's important to understand that some options more specific and some are more global in terms of appliance. Choosing the right option depends on the specifics of your use case.
+
+I grouped options by the classes behind them to make their purpose more clear:
+
+- Length options
+
+```php
+public function minLength(int $minLength);
+public function maxLength(int $maxLength);
+public function length(int $exactLength);
+```
+
+- Numbers options
+
+```php
+public function minNumbers(int $minDigits);
+public function maxNumbers(int $maxDigits);
+public function minDigits(int $minDigits);
+public function maxDigits(int $maxDigits);
+public function numberAmount(int $exactAmountOfDigits);
+```
+
+- Character options
+
+```php
+public function allowChars(array $characters);
+public function excludeChars(array $characters);
+public function minUppercase(int $minAmount);
+public function minLowercase(int $maxAmount);
+public function minSpecialChars(int $minAmount);
+public function maxSpecialChars(int $maxAmount);
+public function noSpecialChars(bool $disable = true);
+public function onlyLowercase(bool $only = true);
+public function onlyUppercase(bool $only = true);
+```
+
+_Note: Options having default value can be used without arguments (`noSpecialChars()`) in callback, but it needs argument while using array `["noSpecialChars" => true]`_
+
+- IPv6 option
+
+```php
+public function validIPv6();
+```
+
+- File options
+
+```php
+public function isFile(string|null $extension = null);
+public function isDirectory(int $check = 1);
+```
+
+- File Exists option
+
+```php
+public function fileExists(bool $check = true);
+```
+
+- Specific Currencies options
+
+```php
+public function specificCurrencies(array|string $currencies);
+public function onlyUSD($only = true);
+public function onlyEUR($only = true);
+public function onlyGBP($only = true);
+public function onlyGEL($only = true);
+```
+
+- Path type option
+
+```php
+// Allowed values int 1; string "absolute" | int 2; string "relative";
+public function pathType(string|int $value = 0);
+```
+
+- Country Code option
+
+```php
+public function countryCode(string $code);
+```
+
+- Space options
+
+```php
+public function noSpaces(bool $disallow = true);
+public function noDoubleSpaces(bool $disallow = true);
+public function maxSpaces(int $max);
+```
+
+- Domain specific options
+
+```php
+public function onlyDomains(array|string $domains);
+public function onlyExtensions(array|string $extensions);
+```
+
+- Protocol options
+
+```php
+public function onlyProtocol(string|array $protocol);
+public function onlyHttp(bool $only = true);
+public function onlyHttps(bool $only = true);
+```
+
+- Card Type options
+
+```php
+public function onlyVisa(bool $only = true);
+public function onlyMasterCard(bool $only = true);
+public function onlyAmex(bool $only = true);
+public function cardTypes(string $cardTypes);
+```
+
+- onlyAlphanumeric option
+
+```php
+public function onlyAlphanumeric(bool $only = true);
+```
+
+- HTML tag options
+
+```php
+public function onlyTags(array|string $tags);
+public function restrictTags(array|string $tags);
+```
+
 ---
 
 ##### To Do
@@ -453,6 +592,7 @@ $cards = EloquentRegex::source($string)->creditCardNumber("visa, amex")->get();
   - Add advanced usage section in Docs:
     - Options and Assertions: Detailed explanation of options, how to apply them, and their effects on patterns. ✔️
     - Filters in Extraction: Using options as filters during extraction and the types of filters available. ✔️
+    - Options list
     - Regex Flags: Guide on applying regex flags to patterns for specialized matching behavior.
     - Grouping and Capturing: How to use groups (capturing and non-capturing) and apply quantifiers to them.
   - Add section in docs for "lazy" method
