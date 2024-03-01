@@ -20,7 +20,7 @@ EloquentRegex brings the simplicity and elegance to regular expressions. Designe
     - [Custom Character Sets and Groups](#to-custom-character-sets-and-groups)
     - [Quantifier Values](#quantifier-values)
 - [Advanced usage](#advanced-usage)
-  - [Options]
+  - [Options](#options)
     - [Options as extra assertions](#options-as-extra-assertions)
     - [Options as filters](#options-as-filters)
     - [Options list](#options-list)
