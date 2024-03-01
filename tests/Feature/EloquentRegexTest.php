@@ -108,7 +108,7 @@ it('extracts secret coded messages from text using wrapper', function () {
         ->lookBehind(function ($pattern) {
             $pattern->openCurlyBrace()->exact('secret: ');
         })
-        ->lazy()->anyChar()
+        ->lazy()->anyChars()
         ->lookAhead(function ($pattern) {
             $pattern->closeCurlyBrace();
         })
@@ -327,3 +327,18 @@ it('uses quantifier with alternation patterns correctly', function () {
 
     expect($regex)->toBe('([a-zA-Z]+|(\d+)?)');
 });
+
+// Regex flags tests:
+
+it('uses asCaseInsensitive method to match pattern correctly', function () {
+    $checkWithFlag = EloquentRegex::source("EXAMPLE@Email.com")
+        ->start()
+        ->exact("example")
+        ->character("@")
+        ->exact("email.com")
+        ->end()
+        ->asCaseInsensitive()->check();
+
+    expect($checkWithFlag)->toBeTrue();
+});
+

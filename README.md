@@ -444,8 +444,12 @@ $cards = EloquentRegex::source($string)->creditCardNumber("visa, amex")->get();
 
 ### Options in custom patterns
 
+Using custom pattern is greate way to cover specific use cases, but there can be a moment when you need extra assertion or filter for you matches. While the `end()` method if optional by default, if you need to apply the **Options** to yor custom pattern, you should pass array or callback to the `end()` method:
+
 ```php
-// example of using end() method with option
+// example of using end() method with config array
+
+// example of using end() method with callback
 ```
 
 ### Options list
@@ -577,6 +581,77 @@ public function onlyTags(array|string $tags);
 public function restrictTags(array|string $tags);
 ```
 
+## Regex Flags
+
+Regex flags are special tokens that modify the behavior of regular expressions, allowing for more flexible and powerful pattern matching. In EloquentRegex, applying regex flags to your patterns enables specialized matching behaviors such as case-insensitive searches, multiline matching, single-line mode, and support for Unicode characters. Let's explore how to apply these flags using examples.
+
+### Case-Insensitive Matching
+
+Sometimes, the case of letters in a string should not affect the match. To achieve case-insensitive matching, use the asCaseInsensitive() flag.
+
+### Multiline Matching
+
+The multiline flag allows the start (^) and end ($) anchors to match the start and end of lines within a string, rather than the entire string.
+
+```php
+// When $string can be "Example@Email.COM", or "EXAMPLE@Email.com", or "example@EMAIL.COM" and etc.
+$checkWithFlag = EloquentRegex::source($string)
+                ->start()
+                ->exact("example")
+                ->character("@")
+                ->exact("email.com")
+                ->end()
+                ->asCaseInsensitive()->check();
+
+// With the case-insensitive flag, the match succeeds.
+expect($checkWithFlag)->toBeTrue();
+```
+
+**Example: Matching Dates Across Multiple Lines using check() method**
+
+```php
+$string = "2024-01-30\n2024-02-15\n2024-11-30";
+$matches = EloquentRegex::source($string)
+            ->start()
+            ->digits(4)->dash()
+            ->digits(2)->dash()
+            ->digits(2)
+            ->end() // Here you can apply options
+            ->asMultiline()->check();
+expect($matches)->toBeTrue();
+```
+
+_Note: if you need to check if string contains a date, using checkString() method is enough. In this example we are checking that every line is exactly the date._
+
+### Single-Line Mode
+
+In single-line mode, the dot (.) matches every character, including newline characters, allowing patterns to match across lines.
+
+**Example: Matching Text Across Lines as a Single Line String using check() method**
+
+```php
+$string = "Check out\n this site:";
+$check = EloquentRegex::source($string)
+          ->start()->anyChars()->character(":")->end()->asSingleline()
+          ->check();
+expect($check)->toBeTrue(); // Matches across lines due to the single-line flag.
+
+```
+
+### Unicode Character Matching
+
+When working with texts containing Unicode characters, the Unicode flag ensures that character classes such as \w (word characters - `wordChars` method) and \d (digits - `digits` method) correctly match Unicode characters.
+
+**Example: Matching Text with Unicode Characters**
+
+```php
+$string = "მზადაა #1 ✔️ და #2 ✔️";
+$matches = EloquentRegex::source($string)
+            ->start()->wordCharsRange(0, 2)->end()->asUnicode()->get();
+expect($matches)->toContain('და'); // Matches Unicode characters with the Unicode flag.
+
+```
+
 ---
 
 ##### To Do
@@ -592,8 +667,9 @@ public function restrictTags(array|string $tags);
   - Add advanced usage section in Docs:
     - Options and Assertions: Detailed explanation of options, how to apply them, and their effects on patterns. ✔️
     - Filters in Extraction: Using options as filters during extraction and the types of filters available. ✔️
-    - Options list
-    - Regex Flags: Guide on applying regex flags to patterns for specialized matching behavior.
+    - Options list ✔️
+    - Ensure digits / digit behavior. ✔️
+    - Regex Flags: Guide on applying regex flags to patterns for specialized matching behavior. ✔️
     - Grouping and Capturing: How to use groups (capturing and non-capturing) and apply quantifiers to them.
   - Add section in docs for "lazy" method
   - Add sections:
