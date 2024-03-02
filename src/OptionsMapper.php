@@ -42,7 +42,7 @@ class OptionsMapper {
         "maxDigits" => [NumberOption::class, "setMaxValue"],
         "numberAmount" => [NumberOption::class, "setExactValue"],
 
-        "allowChars" => [CharacterOption::class, "allow"],
+        "onlyChars" => [CharacterOption::class, "allow"],
         "excludeChars" => [CharacterOption::class, "exclude"],
         "minUppercase" => [CharacterOption::class, "minUppercase"],
         "minLowercase" => [CharacterOption::class, "minLowercase"],

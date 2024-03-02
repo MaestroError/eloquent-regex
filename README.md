@@ -30,6 +30,7 @@ EloquentRegex brings the simplicity and elegance to regular expressions. Designe
     - [Multiline Matching](#multiline-matching)
     - [Single-Line Mode](#single-line-mode)
     - [Unicode Character Matching](#unicode-character-matching)
+  - [Character Sets](#character-sets)
   - [Groups](#groups)
     - [Capturing Groups](#capturing-groups)
     - [Non-Capturing Groups](#non-capturing-groups)
@@ -505,7 +506,7 @@ public function numberAmount(int $exactAmountOfDigits);
 - Character options
 
 ```php
-public function allowChars(array $characters);
+public function onlyChars(array $characters);
 public function excludeChars(array $characters);
 public function minUppercase(int $minAmount);
 public function minLowercase(int $maxAmount);
@@ -676,6 +677,53 @@ expect($matches)->toContain('და'); // Matches Unicode characters with the Un
 
 ```
 
+## Character Sets
+
+In regular expressions, character sets are a fundamental concept that allows you to define a set of characters to match within a single position in the input string. EloquentRegex provides an intuitive way to work with both positive and negative character sets, enhancing the versatility of your patterns. In character sets the order of characters isn't allow
+
+<!-- No quantifiers allowed inside set, cause it is parsed as symbols, so 0 (int) should be used where quantifier is enabled -->
+
+#### Positive set (only these characters)
+
+A positive character set matches any one of the characters included within the set. It's specified by enclosing the characters in square brackets `[...]`.
+
+**Example: Matching a Specific Number of Character Sets**
+
+```php
+// Matches exactly 3 occurrences of periods or colons
+EloquentRegex::source(".:.")
+->charSet(function ($pattern) {
+    $pattern->period()->colon();
+}, '3')->check();
+// Expected to be true as it matches three instances of either a period or a colon
+```
+
+In this example, the character set `[\.\:]` is created to match either a period . or a colon : (In charSet **order** of characters **not matter**). The quantifier '3' is applied outside the set to match exactly three occurrences of **any** of these characters.
+
+#### Negative set (all but not these characters)
+
+A negative character set, denoted by `[^...]`, matches any character that is not listed within the brackets.
+
+**Example: Matching a Specific Number of Negative Character Sets**
+
+```php
+// Matches a string containing 2 to 4 characters that are not digits
+EloquentRegex::start("abcd")
+->negativeCharSet(function ($pattern) {
+    // Here, quantifiers inside the set are interpreted as literal symbols
+    // Character classes like "digits", "text", and etc. sets default quantifier (+)
+    // Hence, '0' is used to disable automatic quantifier addition
+    $pattern->digits(0);
+}, '2,4')->check();
+// Expected to be true as it matches between 2 to 4 non-digit characters
+```
+
+#### Note about character classes
+
+When working with character sets in EloquentRegex, it's important to remember that quantifiers are not allowed inside the set itself because they will be interpreted as symbols. To include character classes like "\d" for digits within a set without applying a quantifier to the class itself, you should pass 0 as the first argument where quantifier application is an option. This ensures that the character class is included in the set as intended, without unintended quantification.
+
+_Update: From now, **0 as argument is optional**, because character classes willn't add default "+" quantifier inside the set_
+
 ## Groups
 
 EloquentRegex simplifies the process of creating both capturing and non-capturing groups, allowing you to organize your regex patterns into logical sections and apply quantifiers or assertions to these groups as a whole.
@@ -703,12 +751,14 @@ $result = EloquentRegex::start("2024-01-30, 2023-02-20")
  * the "2024-01-30" match and returns only "2023-02-20"
  * with it's capture groups, so that you get this array:
  * [
- *      "result" => "2023-02-20",
- *      "groups" => [
- *          "2023",
- *          "02",
- *          "20"
- *      ],
+ *     [
+ *          "result" => "2023-02-20",
+ *          "groups" => [
+ *              "2023",
+ *              "02",
+ *              "20"
+ *          ],
+ *     ]
  * ]
  */
 ```
@@ -719,7 +769,7 @@ Non-capturing groups organize patterns logically without capturing the matched t
 
 ```php
 // Reproduces an 'alt' html property pattern fron HSA
-$regex = EloquentRegex::source('alt="something"')
+$regex = EloquentRegex::start('alt="something"')
     ->exact("alt=")
     ->nonCapturingGroup(function ($pattern) {
         $pattern->doubleQuote()->orPattern(function ($pattern) {
@@ -730,7 +780,7 @@ $regex = EloquentRegex::source('alt="something"')
 
 ### Groups with quantifier
 
-Both group methods are supporting quantifier as second argument. Quantifiers can be applied with exact same logic as on special character methods.
+Both group methods are supporting quantifier as second argument. Quantifiers can be applied with exact same logic as described in [Applying Quantifiers](#applying-quantifiers) section.
 
 ```php
 EloquentRegex::start("345-45, 125-787, 344643")
@@ -741,11 +791,78 @@ EloquentRegex::start("345-45, 125-787, 344643")
 // It returns array: ["345-45", "125-787"]
 ```
 
+## Conditional matching
+
+Assertion groups allow for conditional matching based on the presence (positive) or absence (negative) of patterns ahead or behind the current match point, without consuming characters from the string, so that anything inside assertion group willn't be added in matches. See examples below:
+
+#### Positive Lookahead and Lookbehind Assertions
+
+**Example: Using lookAhead Assertions**
+
+Matches digits only if they are followed by a 'D'
+
+```php
+// Expected to be true as '3' is followed by 'D'
+EloquentRegex::start('3D')
+->digits()->lookAhead(function($pattern) {
+    $pattern->character('D');
+})->check();
+// While using "get()" method, 'D' doesn't appear in matches
+```
+
+**Example: Using lookBehind Assertions**
+
+Matches digits only if they are preceded by a 'P'
+
+```php
+// Expected to be true as '3' is preceded by 'P'
+EloquentRegex::start('P3')
+->negativeLookBehind(function($pattern) {
+    $pattern->character('P');
+})->digits()->check();
+// While using "get()" method, 'P' doesn't appear in matches
+```
+
+#### Negative negativeLookAhead and Lookbehind Assertions
+
+Matches digits only if they aren't followed by a '-'
+
+```php
+// "3A" returns True
+$string = "3A";
+// "3-" returns False
+$string = "3-";
+EloquentRegex::start($string)
+->digits()->negativeLookAhead(function($pattern) {
+    $pattern->character('-');
+})->check();
+// While using "get()" method, '-' doesn't appear in matches
+```
+
+**Example: Using negativeLookBehind Assertions**
+
+Matches digits only if they aren't preceded by a '-'
+
+```php
+// "A3" returns True
+$string = "A3";
+// "-3" returns False
+$string = "-3";
+EloquentRegex::start($string)
+->negativeLookBehind(function($pattern) {
+    $pattern->character('-');
+})->digits()->check();
+// While using "get()" method, '-' doesn't appear in matches
+```
+
 ---
 
 ##### To Do
 
 - Return captured groups while using `group()` method with `get()`.✔️
+- Remove default quantifier inside charSet.✔️
+- Remove extra "[]" inside charSet.✔️
+- Rename "allowChars" option to "onlyChars".✔️
 - Add options for new patterns:
   - Add `contains` and `notContains` options
   - usernameLength: Set minimum and maximum length for the username part of the email.
@@ -763,9 +880,9 @@ EloquentRegex::start("345-45, 125-787, 344643")
     - Ensure digits / digit behavior. ✔️
     - Regex Flags: Guide on applying regex flags to patterns for specialized matching behavior. ✔️
     - Grouping and Capturing: How to use groups (capturing and non-capturing) and apply quantifiers to them. ✔️
-    - Sets
+    - Sets ✔️
+    - Lookaheads ✔️
     - orPattern
-    - Lookaheads
     - Raw methods
   - Add section in docs for "lazy" method
   - Add sections:
@@ -779,8 +896,9 @@ EloquentRegex::start("345-45, 125-787, 344643")
 
 - Implement string resolver pattern to use strings like "text(2)-digits()" (or "text:2-digits", or "text|2-digits") as pattern
 - Implement recursive pattern creation (Using "RI-321" string to create pattern matching this string)
-- Consider to add Postal Code Pattern
 - Make options controllable from config or provider (?)
 - Make patterns controllable from config or provider (?)
+- Implement first() method using preg_match instead of preg_match_all
 - I should be able to make new pattern using BuilderPattern
 - I should be able to make add custom pattern to the existing one using BuilderPattern
+- Consider to add Postal Code Pattern

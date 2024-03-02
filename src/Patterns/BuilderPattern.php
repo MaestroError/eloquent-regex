@@ -32,6 +32,11 @@ class BuilderPattern extends BasePattern {
     protected bool $lazy = false;
 
     /**
+     * @var bool Flag to indicate that pattern is used inside charSet (Auto remove of extra "[]").
+     */
+    protected bool $inCharSet = false;
+
+    /**
      * @var BuilderContract Reference to the main Builder object.
      */
     protected BuilderContract $builder; 
@@ -134,7 +139,7 @@ class BuilderPattern extends BasePattern {
         if (is_int($length) && $length > 0) {
             $qntf = "{" . $length . "}";
             return $this->lazy ? $this->addLazy($qntf) : $qntf;
-        } elseif ($length === 0) {
+        } elseif ($length === 0 || $this->inCharSet) {
             return "";
         }
     
@@ -172,6 +177,11 @@ class BuilderPattern extends BasePattern {
      */
     public function lazy(): self {
         $this->lazy = true;
+        return $this;
+    }
+
+    public function inCharSet(): self {
+        $this->inCharSet = true;
         return $this;
     }
 

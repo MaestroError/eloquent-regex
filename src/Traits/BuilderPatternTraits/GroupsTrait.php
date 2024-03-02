@@ -28,6 +28,7 @@ trait GroupsTrait {
      */
     public function negativeCharSet(callable $callback, ?string $q = null): self {
         $subPattern = new self();
+        $subPattern->inCharSet();
         $callback($subPattern);
         $p = '[^' . $subPattern->getPattern() . ']';
         $this->pattern .= $q ? $this->applyQuantifier($p, $q) : $p;
