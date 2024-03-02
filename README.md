@@ -52,11 +52,13 @@ Regular expressions (regex) are powerful, no doubt. They're the Swiss Army knife
 
 Enter **EloquentRegex**. Our goal is to make working with regex in Laravel not just bearable, but actually enjoyable. Yes, you heard that right—**enjoyable**!
 
-EloquentRegex is a PHP/Laravel package that offers a fluent, intuitive interface for constructing and executing regular expressions. Whether you need to validate user input, parse text, or extract specific information from strings, EloquentRegex makes it simple and straightforward. For example:
+EloquentRegex is a PHP/Laravel package that offers a fluent, intuitive interface for constructing and executing regular expressions. Whether you need to validate user input, parse text, or extract specific information from strings, EloquentRegex makes it simple and straightforward.
+
+**For example:**
 
 ```php
 $link = 'https://www.example.com/home';
-$isValidUrl = EloquentRegex::source($link)->url()->check();
+$isValidUrl = EloquentRegex::source($link)->url()->check(); // true
 ```
 
 **Another:**
@@ -64,13 +66,14 @@ $isValidUrl = EloquentRegex::source($link)->url()->check();
 ```php
 $isStrong = EloquentRegex::source("StrongP@ssw0rd")->password(function($string) {
     return $string->minLength(8)->minUppercase(1)->minNumbers(1)->minSpecialChars(1);
-})->check();
+})->check(); // true
 ```
 
-**One more:** 😄
+**One more** 😄
 
 ```php
 EloquentRegex::start("#hello #world This is a #test")->hash()->text()->get();
+// ['#hello', '#world', '#test']
 ```
 
 ## Key Features
