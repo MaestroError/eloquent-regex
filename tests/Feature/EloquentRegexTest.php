@@ -306,10 +306,19 @@ it('matches a specific number of negative character sets', function () {
             // Inside set "+" is parsed as symbol, instead of quantifier
             // So, inside charSet and negativeCharSet method, you should
             // pass 0 as first argument to do not apply quantifier here
-            $pattern->digits(0); 
+            $pattern->digits();
         }, '2,4')->toRegex();
 
     expect($regex)->toBe('(?:[^\d]){2,4}');
+});
+
+it('matches a specific number of negative character sets using text method', function () {
+    $regex = EloquentRegex::builder()->start()
+        ->negativeCharSet(function ($pattern) {
+            $pattern->text();
+        }, '2,4')->toRegex();
+
+    expect($regex)->toBe('(?:[^a-zA-Z]){2,4}');
 });
 
 it('applies quantifier to capturing groups correctly', function () {

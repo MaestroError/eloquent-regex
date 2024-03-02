@@ -27,7 +27,7 @@ trait CharacterClassesTrait {
     }
 
     private function handleTextLowercase($length = null, $minLength = 0, $maxLength = 0): void {
-        $this->pattern .= "[a-z]";
+        $this->pattern .= $this->inCharSet ? "a-z" : "[a-z]";
         $this->pattern .= $this->getLengthOption($length, $minLength, $maxLength);
     }
 
@@ -52,7 +52,7 @@ trait CharacterClassesTrait {
     }
     
     private function handleTextUppercase($length = null, $minLength = 0, $maxLength = 0) {
-        $this->pattern .= "[A-Z]";
+        $this->pattern .= $this->inCharSet ? "A-Z" : "[A-Z]";
         $this->pattern .= $this->getLengthOption($length, $minLength, $maxLength);
     }
 
@@ -67,7 +67,7 @@ trait CharacterClassesTrait {
     }
     
     private function handleText($length = null, $minLength = 0, $maxLength = 0) {
-        $this->pattern .= "[a-zA-Z]";  // Matches both uppercase and lowercase letters
+        $this->pattern .= $this->inCharSet ? "a-zA-Z" : "[a-zA-Z]";  // Matches both uppercase and lowercase letters
         $this->pattern .= $this->getLengthOption($length, $minLength, $maxLength);
     }
 
@@ -150,7 +150,7 @@ trait CharacterClassesTrait {
     }
     
     private function handleAlphanumeric($length = null, $minLength = 0, $maxLength = 0) {
-        $this->pattern .= "[a-zA-Z0-9]";  // Matches alphanumeric characters
+        $this->pattern .= $this->inCharSet ? "a-zA-Z0-9" : "[a-zA-Z0-9]";  // Matches alphanumeric characters
         $this->pattern .= $this->getLengthOption($length, $minLength, $maxLength);
     }
     
