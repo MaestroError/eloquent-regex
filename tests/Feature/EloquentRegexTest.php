@@ -57,7 +57,7 @@ it('constructs regex for URL validation using wrapper', function () {
         ->text()
         ->toRegex();
 
-    expect($regex)->toBe('(http|https)\:\/\/[a-zA-Z]+\.[a-zA-Z]+');
+    expect($regex)->toBe('(?:http|https)\:\/\/[a-zA-Z]+\.[a-zA-Z]+');
 });
 
 it('constructs regex for specific phone number format using wrapper', function () {
@@ -257,17 +257,17 @@ it('validates a Unix file path correctly', function () {
 // Quantifier tests:
 it('matches specific number of dashes', function () {
     $result = EloquentRegex::builder()->pattern()->dash('?')->toRegex();
-    expect($result)->toBe('(\-)?');
+    expect($result)->toBe('(?:\-)?');
 });
 
 it('matches optional dots', function () {
     $result = EloquentRegex::builder()->pattern()->dot('?')->toRegex();
-    expect($result)->toBe('(\.)?');
+    expect($result)->toBe('(?:\.)?');
 });
 
 it('matches multiple spaces', function () {
     $result = EloquentRegex::builder()->pattern()->space('2,5')->toRegex();
-    expect($result)->toBe('( ){2,5}');
+    expect($result)->toBe('(?: ){2,5}');
 });
 
 it('matches one or more backslashes', function () {
@@ -277,17 +277,17 @@ it('matches one or more backslashes', function () {
 
 it('matches zero or more forward slashes', function () {
     $result = EloquentRegex::builder()->start()->forwardSlash('*')->toRegex();
-    expect($result)->toBe('(\/)*');
+    expect($result)->toBe('(?:\/)*');
 });
 
 it('matches exactly 4 underscores', function () {
     $result = EloquentRegex::builder()->start()->underscore('4')->toRegex();
-    expect($result)->toBe('(_){4}');
+    expect($result)->toBe('(?:_){4}');
 });
 
 it('matches one or more pipes', function () {
     $result = EloquentRegex::builder()->start()->pipe('+')->toRegex();
-    expect($result)->toBe('(\|)+');
+    expect($result)->toBe('(?:\|)+');
 });
 
 it('matches a specific number of character sets', function () {
@@ -296,7 +296,7 @@ it('matches a specific number of character sets', function () {
             $pattern->period()->colon();
         }, '3')->toRegex();
 
-    expect($regex)->toBe('([\.\:]){3}');
+    expect($regex)->toBe('(?:[\.\:]){3}');
 });
 
 it('matches a specific number of negative character sets', function () {
@@ -309,7 +309,7 @@ it('matches a specific number of negative character sets', function () {
             $pattern->digits(0); 
         }, '2,4')->toRegex();
 
-    expect($regex)->toBe('([^\d]){2,4}');
+    expect($regex)->toBe('(?:[^\d]){2,4}');
 });
 
 it('applies quantifier to capturing groups correctly', function () {
@@ -318,7 +318,7 @@ it('applies quantifier to capturing groups correctly', function () {
             $pattern->text();
         }, '+')->toRegex();
 
-    expect($regex)->toBe('([a-zA-Z]+)+');
+    expect($regex)->toBe('(?:[a-zA-Z]+)+');
 });
 
 it('applies quantifier to non-capturing groups correctly', function () {
@@ -327,7 +327,44 @@ it('applies quantifier to non-capturing groups correctly', function () {
             $pattern->digits();
         }, '*')->toRegex();
 
-    expect($regex)->toBe('((?:\d+))*');
+    expect($regex)->toBe('(?:(?:\d+))*');
+
+    $res = EloquentRegex::start("345-45, 125-787, 344643")
+    ->nonCapturingGroup(function ($pattern) {
+        $pattern->digits()->dash()->digits();
+    }, '+') // Using "+" to match One Or More of this group
+    ->get();
+
+    expect($res)->toBe([
+        "345-45",
+        "125-787"
+    ]);
+});
+
+test('group method creates capturing groups correctly', function () {
+    // Matching a date format across multiple lines without capturing the groups
+    $result = EloquentRegex::start("2024-01-30, 2023-02-20")
+    ->group(function($pattern) {
+        $pattern->digits(4); // Year
+    })->dash()
+    ->group(function($pattern) {
+        $pattern->digits(2); // Month
+    })->dash()
+    ->group(function($pattern) {
+        $pattern->digits(2); // Day
+    })->end(["excludeChars" => ["4"]])
+    ->get();
+
+    expect($result)->toBe([
+        [
+            "result" => "2023-02-20",
+            "groups" => [
+                "2023",
+                "02",
+                "20"
+            ],
+        ]
+    ]);
 });
 
 it('uses quantifier with alternation patterns correctly', function () {
@@ -338,7 +375,7 @@ it('uses quantifier with alternation patterns correctly', function () {
             }, "?");
         })->toRegex();
 
-    expect($regex)->toBe('([a-zA-Z]+|(\d+)?)');
+    expect($regex)->toBe('([a-zA-Z]+|(?:\d+)?)');
 });
 
 // Regex flags tests:

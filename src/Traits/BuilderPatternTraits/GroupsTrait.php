@@ -42,6 +42,7 @@ trait GroupsTrait {
      * @return self
      */
     public function group(callable $callback, ?string $q = null): self {
+        $this->builder->setReturnGroups(true);
         $subPattern = new self();
         $callback($subPattern);
         $p = $subPattern->getPattern();
