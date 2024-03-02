@@ -59,12 +59,18 @@ $link = 'https://www.example.com/home';
 $isValidUrl = EloquentRegex::source($link)->url()->check();
 ```
 
-**Or**
+**Another:**
 
 ```php
 $isStrong = EloquentRegex::source("StrongP@ssw0rd")->password(function($string) {
     return $string->minLength(8)->minUppercase(1)->minNumbers(1)->minSpecialChars(1);
 })->check();
+```
+
+**One more:** 😄
+
+```php
+EloquentRegex::start("#hello #world This is a #test")->hash()->text()->get();
 ```
 
 ## Key Features
