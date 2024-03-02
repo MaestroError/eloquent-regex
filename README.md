@@ -35,6 +35,7 @@ EloquentRegex brings the simplicity and elegance to regular expressions. Designe
     - [Capturing Groups](#capturing-groups)
     - [Non-Capturing Groups](#non-capturing-groups)
     - [Groups with quantifier](#groups-with-quantifier)
+  - [Conditional matching](#conditional-matching)
 
 # Overview
 
@@ -869,6 +870,7 @@ EloquentRegex::start($string)
   - dateFormat, timeFormat: Specify the format of date and time (e.g., MM-DD-YYYY, HH:MM).
 - Consider to register Patterns like options using key (name) => value (class) pairs (check performance) ✔️ (_No significant change before 50+ patterns_)
 - Return collection on get method if laravel is available.
+- Add builderPattern methods list MD file and link from the Docs.
 - Implement usage of named groups: `/(?P<year>\d{4})-(?P<month>\d{2})-(?P<day>\d{2})/`
 
 - Write documentation (add credit for https://regexr.com/ and ChatGPT)
@@ -888,7 +890,7 @@ EloquentRegex::start($string)
   - Add sections:
     - Testing and Debugging
     - Credits
-    - Contributing
+    - Contributing (+STRUCTURE.md)
     - FAQs
     - Creating new patterns
 
