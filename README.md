@@ -2,41 +2,47 @@
 
 EloquentRegex brings the simplicity and elegance to regular expressions. Designed for Laravel developers, this package offers a fluent, intuitive interface for building and executing regex patterns in your PHP applications.
 
+```php
+EloquentRegex::source('test@example.com')->email()->check();
+```
+
+Like what we're doing? Show your support with a quick star, please! ⭐
+
 ### Table of Contents
 
-- [Overview](#overview)
-  - [Key Features](#key-features)
-  - [Getting Started](#getting-started)
-- [Basic Usage](#basic-usage)
-  - [Ready-to-Use Patterns](#ready-to-use-patterns)
-  - [Custom Patterns](#custom-patterns)
-    - [Creating a Custom Pattern](#creating-a-custom-pattern)
-  - [Applying Quantifiers](#applying-quantifiers)
-    - [Optional Elements](#optional-elements)
-    - [Specifying a Range](#specifying-a-range)
-    - [One or More](#one-or-more)
-    - [Zero or More](#zero-or-more)
-    - [Exact Number](#exact-number)
-    - [Custom Character Sets and Groups](#to-custom-character-sets-and-groups)
-    - [Quantifier Values](#quantifier-values)
-- [Advanced usage](#advanced-usage)
-  - [Options](#options)
-    - [Options as extra assertions](#options-as-extra-assertions)
-    - [Options as filters](#options-as-filters)
-    - [Options list](#options-list)
-    - [Options in custom patterns](#options-in-custom-patterns)
-  - [Regex Flags](#regex-flags)
-    - [Case-Insensitive Matching](#case-Insensitive-matching)
-    - [Multiline Matching](#multiline-matching)
-    - [Single-Line Mode](#single-line-mode)
-    - [Unicode Character Matching](#unicode-character-matching)
-- [Advanced builderPattern methods](#advanced-builderpattern-methods)
-  - [Character Sets](#character-sets)
-  - [Groups](#groups)
-    - [Capturing Groups](#capturing-groups)
-    - [Non-Capturing Groups](#non-capturing-groups)
-    - [Groups with quantifier](#groups-with-quantifier)
-  - [Conditional matching](#conditional-matching)
+- **[Overview](#overview)**
+  - 🔑[Key Features](#key-features)
+  - 🧭[Getting Started](#getting-started)
+- **[Basic Usage](#basic-usage)**
+  - 📑[Ready-to-Use Patterns](#ready-to-use-patterns)
+  - 🛠️[Custom Patterns](#custom-patterns)
+    - 💠 [Creating a Custom Pattern](#creating-a-custom-pattern)
+  - #️⃣[Applying Quantifiers](#applying-quantifiers)
+    - 💠 [Optional Elements](#optional-elements)
+    - 💠 [Specifying a Range](#specifying-a-range)
+    - 💠 [One or More](#one-or-more)
+    - 💠 [Zero or More](#zero-or-more)
+    - 💠 [Exact Number](#exact-number)
+    - 💠 [Custom Character Sets and Groups](#to-custom-character-sets-and-groups)
+    - 💠 [Quantifier Values](#quantifier-values)
+- **[Advanced usage](#advanced-usage)**
+  - ⚙️[Options](#options)
+    - 💠 [Options as extra assertions](#options-as-extra-assertions)
+    - 💠 [Options as filters](#options-as-filters)
+    - 💠 [Options list](#options-list)
+    - 💠 [Options in custom patterns](#options-in-custom-patterns)
+  - 🚩[Regex Flags](#regex-flags)
+    - 💠 [Case-Insensitive Matching](#case-insensitive-matching)
+    - 💠 [Multiline Matching](#multiline-matching)
+    - 💠 [Single-Line Mode](#single-line-mode)
+    - 💠 [Unicode Character Matching](#unicode-character-matching)
+- **[Advanced builderPattern methods](#advanced-builderpattern-methods)**
+  - 🗃️[Character Sets](#character-sets)
+  - 📦[Groups](#groups)
+    - 💠 [Capturing Groups](#capturing-groups)
+    - 💠 [Non-Capturing Groups](#non-capturing-groups)
+    - 💠 [Groups with quantifier](#groups-with-quantifier)
+  - ❓[Conditional matching](#conditional-matching)
 
 # Overview
 
@@ -49,7 +55,16 @@ Enter **EloquentRegex**. Our goal is to make working with regex in Laravel not j
 EloquentRegex is a PHP/Laravel package that offers a fluent, intuitive interface for constructing and executing regular expressions. Whether you need to validate user input, parse text, or extract specific information from strings, EloquentRegex makes it simple and straightforward. For example:
 
 ```php
-$isValid = EloquentRegex::source('test@example.com')->email()->check();
+$link = 'https://www.example.com/home';
+$isValidUrl = EloquentRegex::source($link)->url()->check();
+```
+
+**Or**
+
+```php
+$isStrong = EloquentRegex::source("StrongP@ssw0rd")->password(function($string) {
+    return $string->minLength(8)->minUppercase(1)->minNumbers(1)->minSpecialChars(1);
+})->check();
 ```
 
 ## Key Features
@@ -803,7 +818,7 @@ Assertion groups allow for conditional matching based on the presence (positive)
 
 #### Positive Lookahead and Lookbehind Assertions
 
-**Example: Using lookAhead Assertions**
+_Example: Using lookAhead Assertions_
 
 Matches digits only if they are followed by a 'D'
 
@@ -816,7 +831,7 @@ EloquentRegex::start('3D')
 // While using "get()" method, 'D' doesn't appear in matches
 ```
 
-**Example: Using lookBehind Assertions**
+_Example: Using lookBehind Assertions_
 
 Matches digits only if they are preceded by a 'P'
 
@@ -845,7 +860,7 @@ EloquentRegex::start($string)
 // While using "get()" method, '-' doesn't appear in matches
 ```
 
-**Example: Using negativeLookBehind Assertions**
+_Example: Using negativeLookBehind Assertions_
 
 Matches digits only if they aren't preceded by a '-'
 
