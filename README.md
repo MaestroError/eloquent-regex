@@ -33,6 +33,7 @@ EloquentRegex brings the simplicity and elegance to regular expressions. Designe
   - [Groups](#groups)
     - [Capturing Groups](#capturing-groups)
     - [Non-Capturing Groups](#non-capturing-groups)
+    - [Groups with quantifier](#groups-with-quantifier)
 
 # Overview
 
