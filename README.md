@@ -30,6 +30,7 @@ EloquentRegex brings the simplicity and elegance to regular expressions. Designe
     - [Multiline Matching](#multiline-matching)
     - [Single-Line Mode](#single-line-mode)
     - [Unicode Character Matching](#unicode-character-matching)
+- [Advanced builderPattern methods](#advanced-builderpattern-methods)
   - [Character Sets](#character-sets)
   - [Groups](#groups)
     - [Capturing Groups](#capturing-groups)
@@ -678,9 +679,13 @@ expect($matches)->toContain('და'); // Matches Unicode characters with the Un
 
 ```
 
+# Advanced builderPattern methods
+
+In addition to character classes and special character methods, builderPattern has more advanced methods for increasing flexibility and usage scope. Below are described the methods for the builderPattern's advanced usage.
+
 ## Character Sets
 
-In regular expressions, character sets are a fundamental concept that allows you to define a set of characters to match within a single position in the input string. EloquentRegex provides an intuitive way to work with both positive and negative character sets, enhancing the versatility of your patterns. In character sets the order of characters isn't allow
+In regular expressions, character sets are a fundamental concept that allows you to define a set of characters to match within a single position in the input string. EloquentRegex provides an intuitive way to work with both positive and negative character sets, enhancing the versatility of your patterns.
 
 <!-- No quantifiers allowed inside set, cause it is parsed as symbols, so 0 (int) should be used where quantifier is enabled -->
 
@@ -692,7 +697,7 @@ A positive character set matches any one of the characters included within the s
 
 ```php
 // Matches exactly 3 occurrences of periods or colons
-EloquentRegex::source(".:.")
+EloquentRegex::start(".:.")
 ->charSet(function ($pattern) {
     $pattern->period()->colon();
 }, '3')->check();
@@ -734,7 +739,7 @@ EloquentRegex simplifies the process of creating both capturing and non-capturin
 Capturing groups are used to group part of a pattern together and capture the matching text for later use. Note that it returs array/collection with different structure while using with get:
 
 ```php
-// Matching a date format across multiple lines without capturing the groups
+// Matching a date format with capturing the parts as separated groups
 $result = EloquentRegex::start("2024-01-30, 2023-02-20")
 ->group(function($pattern) {
     $pattern->digits(4); // Year
@@ -766,7 +771,7 @@ $result = EloquentRegex::start("2024-01-30, 2023-02-20")
 
 ### Non-Capturing Groups
 
-Non-capturing groups organize patterns logically without capturing the matched text.
+Non-capturing groups organize patterns logically without capturing separately the matched text.
 
 ```php
 // Reproduces an 'alt' html property pattern fron HSA
@@ -881,6 +886,7 @@ EloquentRegex::start($string)
     - Options list ✔️
     - Ensure digits / digit behavior. ✔️
     - Regex Flags: Guide on applying regex flags to patterns for specialized matching behavior. ✔️
+  - Add advanced BuilderPattern methods:
     - Grouping and Capturing: How to use groups (capturing and non-capturing) and apply quantifiers to them. ✔️
     - Sets ✔️
     - Lookaheads ✔️
