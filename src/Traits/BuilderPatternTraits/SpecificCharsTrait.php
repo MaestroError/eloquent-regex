@@ -9,7 +9,7 @@ trait SpecificCharsTrait {
     private function handleExact(string|array $string, $caseSensitive = true, $quantifier = null) {
         if (is_array($string)) {
             $string = $this->escapeArray($string);
-            $escapedString = "(" . implode("|", $string) . ")";
+            $escapedString = "(?:" . implode("|", $string) . ")";
         } else {
             $escapedString = preg_quote($string, '/');
         }

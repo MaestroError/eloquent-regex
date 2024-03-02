@@ -30,6 +30,9 @@ EloquentRegex brings the simplicity and elegance to regular expressions. Designe
     - [Multiline Matching](#multiline-matching)
     - [Single-Line Mode](#single-line-mode)
     - [Unicode Character Matching](#unicode-character-matching)
+  - [Groups](#groups)
+    - [Capturing Groups](#capturing-groups)
+    - [Non-Capturing Groups](#non-capturing-groups)
 
 # Overview
 
@@ -672,16 +675,83 @@ expect($matches)->toContain('და'); // Matches Unicode characters with the Un
 
 ```
 
+## Groups
+
+EloquentRegex simplifies the process of creating both capturing and non-capturing groups, allowing you to organize your regex patterns into logical sections and apply quantifiers or assertions to these groups as a whole.
+
+### Capturing Groups
+
+Capturing groups are used to group part of a pattern together and capture the matching text for later use. Note that it returs array/collection with different structure while using with get:
+
+```php
+// Matching a date format across multiple lines without capturing the groups
+$result = EloquentRegex::start("2024-01-30, 2023-02-20")
+->group(function($pattern) {
+    $pattern->digits(4); // Year
+})->dash()
+->group(function($pattern) {
+    $pattern->digits(2); // Month
+})->dash()
+->group(function($pattern) {
+    $pattern->digits(2); // Day
+})->end(["excludeChars" => ["4"]])
+->get();
+
+/**
+ * After excluding "4" character, it filters out
+ * the "2024-01-30" match and returns only "2023-02-20"
+ * with it's capture groups, so that you get this array:
+ * [
+ *      "result" => "2023-02-20",
+ *      "groups" => [
+ *          "2023",
+ *          "02",
+ *          "20"
+ *      ],
+ * ]
+ */
+```
+
+### Non-Capturing Groups
+
+Non-capturing groups organize patterns logically without capturing the matched text.
+
+```php
+// Reproduces an 'alt' html property pattern fron HSA
+$regex = EloquentRegex::source('alt="something"')
+    ->exact("alt=")
+    ->nonCapturingGroup(function ($pattern) {
+        $pattern->doubleQuote()->orPattern(function ($pattern) {
+            $pattern->singleQuote();
+        });
+    })->check(); // True; Regex: alt\=(?:\"|')
+```
+
+### Groups with quantifier
+
+Both group methods are supporting quantifier as second argument. Quantifiers can be applied with exact same logic as on special character methods.
+
+```php
+EloquentRegex::start("345-45, 125-787, 344643")
+  ->nonCapturingGroup(function ($pattern) {
+    $pattern->digits()->dash()->digits();
+  }, '+') // Using "+" to match One Or More of this group
+  ->get();
+// It returns array: ["345-45", "125-787"]
+```
+
 ---
 
 ##### To Do
 
+- Return captured groups while using `group()` method with `get()`.✔️
 - Add options for new patterns:
   - Add `contains` and `notContains` options
   - usernameLength: Set minimum and maximum length for the username part of the email.
   - dateFormat, timeFormat: Specify the format of date and time (e.g., MM-DD-YYYY, HH:MM).
 - Consider to register Patterns like options using key (name) => value (class) pairs (check performance) ✔️ (_No significant change before 50+ patterns_)
 - Return collection on get method if laravel is available.
+- Implement usage of named groups: `/(?P<year>\d{4})-(?P<month>\d{2})-(?P<day>\d{2})/`
 
 - Write documentation (add credit for https://regexr.com/ and ChatGPT)
   - Create quick start guide and add in Docs.
@@ -691,7 +761,11 @@ expect($matches)->toContain('და'); // Matches Unicode characters with the Un
     - Options list ✔️
     - Ensure digits / digit behavior. ✔️
     - Regex Flags: Guide on applying regex flags to patterns for specialized matching behavior. ✔️
-    - Grouping and Capturing: How to use groups (capturing and non-capturing) and apply quantifiers to them.
+    - Grouping and Capturing: How to use groups (capturing and non-capturing) and apply quantifiers to them. ✔️
+    - Sets
+    - orPattern
+    - Lookaheads
+    - Raw methods
   - Add section in docs for "lazy" method
   - Add sections:
     - Testing and Debugging

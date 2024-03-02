@@ -95,27 +95,27 @@ class BuilderPattern extends BasePattern {
         }
         
         if ($q == 'zeroOrMore' || $q == '0>' || $q == '0+' || $q == '*') {
-            $p = "(" . $pattern . ')*';
+            $p = "(?:" . $pattern . ')*';
             return $this->lazy ? $this->addLazy($p) : $p;
         } elseif ($q == 'oneOrMore' || $q == '1>' || $q == '1+' || $q == '+') {
-            $p = "(" . $pattern . ')+';
+            $p = "(?:" . $pattern . ')+';
             return $this->lazy ? $this->addLazy($p) : $p;
         } elseif ($q == 'optional' || $q == '?' || $q == '|') {
-            $p = "(" . $pattern . ')?';
+            $p = "(?:" . $pattern . ')?';
             return $this->lazy ? $this->addLazy($p) : $p;
         }
 
         if (is_int($q)) {
-            $p = "(" . $pattern . "){".$q."}";
+            $p = "(?:" . $pattern . "){".$q."}";
             return $this->lazy ? $this->addLazy($p) : $p;
         } elseif (preg_match("/^\d{1,10}$/", $q)) {
-            $p = "(" . $pattern . '){'.$q.'}';
+            $p = "(?:" . $pattern . '){'.$q.'}';
             return $this->lazy ? $this->addLazy($p) : $p;
         } elseif (preg_match("/^\d{1,10},\d{1,10}$/", $q)) {
             $range = explode(",", $q);
             $f = $range[0];
             $s = $range[1];
-            $p = "(" . $pattern . ")" . "{" . $f . "," . $s ."}";
+            $p = "(?:" . $pattern . ")" . "{" . $f . "," . $s ."}";
             return $this->lazy ? $this->addLazy($p) : $p;
         }
 

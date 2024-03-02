@@ -224,7 +224,7 @@ test('Escaped characters with quantifiers generate correct regex and match appro
     $builder->doubleQuote()->exact('quoted', true, '*')->doubleQuote();
 
     // $expectedPattern = '/"quoted*"/';
-    $expectedPattern = '/"(quoted)*"/'; // @todo Should return this
+    $expectedPattern = '/"(?:quoted)*"/'; // @todo Should return this
     $regex = $builder->getMatchesValidationPattern();
 
     expect($regex)->toBe($expectedPattern);

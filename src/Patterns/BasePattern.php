@@ -122,15 +122,28 @@ class BasePattern implements PatternContract {
      * @param string $input The input string to search for matches.
      * @return array An array of matches.
      */
-    public function getMatches(string $input): ?array {
+    public function getMatches(string $input, bool $returnGroups = false): ?array {
         $mainPattern = $this->getMatchesValidationPattern();
         preg_match_all($mainPattern, $input, $matches);
 
         if (!$matches[0]) {
             return null;
         }
-        // Filter matches based on each option
-        return $this->filterByOptions($matches[0]);
+
+        if ($returnGroups) {
+            // Filter matches but keep indexes same
+            $results = $this->filterByOptions($matches[0], false);
+            // Unset matches and keep only groups
+            unset($matches[0]);
+            $groups = $matches;
+            return [
+                "results" => $results,
+                "groups" => $groups
+            ];
+        } else {
+            // Filter matches based on each option
+            return $this->filterByOptions($matches[0]);
+        }
     }
 
     /**
@@ -139,11 +152,17 @@ class BasePattern implements PatternContract {
      * @param array $allMatches Array of matches to be filtered.
      * @return array Filtered array of matches.
      */
-    protected function filterByOptions(array $allMatches): array {
+    protected function filterByOptions(array $allMatches, $fixArrayIndexes = true): array {
         // Use array_filter to keep only those matches that pass all options' validation
-        return array_values(array_filter($allMatches, function($match) {
+        $filtered = array_filter($allMatches, function($match) {
             return $this->validateOptions($match);
-        }));
+        });
+
+        if ($fixArrayIndexes) {
+            return array_values($filtered);
+        } else {
+            return $filtered;
+        }
     }
     
     /**
