@@ -64,8 +64,8 @@ $isValidUrl = EloquentRegex::source($link)->url()->check(); // true
 **Another:**
 
 ```php
-$isStrong = EloquentRegex::source("StrongP@ssw0rd")->password(function($string) {
-    return $string->minLength(8)->minUppercase(1)->minNumbers(1)->minSpecialChars(1);
+$isStrong = EloquentRegex::source("StrongP@ssw0rd")->password(function($options) {
+    $options->minLength(8)->minUppercase(1)->minNumbers(1)->minSpecialChars(1);
 })->check(); // true
 ```
 
@@ -87,13 +87,11 @@ _For more details about package and it's inner workings check out [STRUCTURE.md]
 
 ## Getting Started
 
-Simply install the package via Composer, and you're ready to take the pain out of regex in your PHP/Laravel applications. Follow our quick start guide below to dive in.
+Simply install the package via Composer, and you're ready to take the pain out of regex in your PHP/Laravel applications. Run for installation:
 
 ```bash
 composer require maestroerror/eloquent-regex
 ```
-
-Later, here will be added our quick start guide.
 
 Remember, regex doesn't have to be a source of frustration. With EloquentRegex, you're on your way to becoming a regex master, all while writing cleaner, more maintainable Laravel code.
 
@@ -127,7 +125,7 @@ Let's break it down:
 EloquentRegex::source($yourString);
 ```
 
-- **_Pattern_** Could be method for one of the ready-to-use patterns or your custom pattern (we will talk about custom pattern later). Let's keep the example simple and add url pattern:
+- **_Pattern_** Could be method for one of the ready-to-use patterns or your custom pattern (we will talk about custom patterns later). Let's keep the example simple and add url pattern:
 
 ```php
 EloquentRegex::source($yourString)->url();
@@ -916,13 +914,12 @@ EloquentRegex::start($string)
     - Lookaheads ✔️
     - orPattern
     - Raw methods
-  - Add section in docs for "lazy" method
+    - Add section in docs for "lazy" method
   - Add sections:
     - Testing and Debugging
     - Credits
     - Contributing (+STRUCTURE.md)
     - FAQs
-    - Creating new patterns
 
 ##### Coming next
 
