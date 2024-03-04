@@ -1182,7 +1182,7 @@ To stay updated, follow the GitHub repository for the latest changes, releases, 
   - usernameLength: Set minimum and maximum length for the username part of the email.
   - dateFormat, timeFormat: Specify the format of date and time (e.g., MM-DD-YYYY, HH:MM).
 - Consider to register Patterns like options using key (name) => value (class) pairs (check performance) ✔️ (_No significant change before 50+ patterns_)
-- Return collection on get method if laravel is available.
+- Return collection on get method if laravel is available.✔️
 - Add builderPattern methods list MD file and link from the Docs.
 - Implement usage of named groups: `/(?P<year>\d{4})-(?P<month>\d{2})-(?P<day>\d{2})/`
 - Add some tool for debuging options
