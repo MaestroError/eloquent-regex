@@ -46,6 +46,9 @@ Like what we're doing? Show your support with a quick star, please! ⭐
   - ⚖️[Pattern alternation (orPattern)](#pattern-alternation-orpattern)
   - 🧩[Raw Methods](#raw-methods)
   - 🐌[The Lazy Quantifier Method](#the-lazy-quantifier-method)
+- **[Testing and Debugging Your Regex Patterns](#testing-and-debugging-your-regex-patterns)**
+- **[Contributing to EloquentRegex](#contributing-to-eloquenttegex)**
+- **[Support](#support)**
 
 # Overview
 
@@ -1020,6 +1023,74 @@ _Note: For debuging `get` method, open "Flags" dropdown and mark "global"_
 
 Testing and debugging are critical steps in ensuring your regex patterns do exactly what you intend. By leveraging the `toRegex()` method and tools like Regexr, you can make this process more manageable and efficient, leading to more accurate and reliable regex implementations in your Laravel applications.
 
+# Contributing to EloquentRegex
+
+We welcome contributions from the community! Whether you're fixing bugs, adding new features, or improving documentation, your help makes EloquentRegex even better for everyone. We follow the classic GitHub contribution flow. Here's how you can get involved:
+
+### Getting Started
+
+1. **Fork the Repository:** Start by forking the EloquentRegex repository to your own GitHub account. This creates a personal copy for you to experiment with.
+
+2. **Clone Your Fork:** Clone your forked repository to your local machine to start making changes. Use the following command, replacing YOUR_USERNAME with your GitHub username:
+
+```bash
+git clone https://github.com/YOUR_USERNAME/eloquent-regex.git
+```
+
+3. **Set Up Your Environment:** Make sure you have a working Laravel environment to test your changes against. Follow the setup instructions in the project README to get started.
+
+### Making Changes
+
+1. **Create a New Branch:** For each set of changes or new feature, create a new branch in your local repository. This keeps your work organized and separate from the main codebase.
+
+```bash
+git checkout -b feature/my-new-feature
+```
+
+2. **Make Your Changes:** Implement your fixes, features, or documentation updates. Keep your changes focused and contained to the issue at hand for easier review.
+
+3. **Commit Your Changes:** Once you're satisfied with your work, commit the changes to your branch. Write clear, concise commit messages that explain the changes made.
+
+```bash
+git commit -am "Add a brief description of your changes"
+```
+
+4. **Push to Your Fork:** Push your branch and changes to your fork on GitHub.
+
+```bash
+git push origin feature/my-new-feature
+```
+
+### Submitting a Pull Request
+
+**Pull Request (PR):** Navigate to the original EloquentRegex repository on GitHub. You'll see an option to "Compare & pull request" for your branch. Click it to begin the process of submitting a PR.
+
+**Describe Your Changes:** Provide a detailed description of the changes in the PR. Include any relevant issue numbers. Explaining the reasoning behind the changes and how they improve EloquentRegex will help reviewers understand your contribution.
+
+**Submit for Review:** Once your PR is ready and all checks pass, submit it for review. At least one review from the project maintainers is required for merging. Be open to feedback and ready to make further tweaks based on suggestions.
+
+### Review and Merge
+
+- **Collaboration:** The project maintainers will review your PR. This process may involve some back-and-forth discussions, additional commits, and updates to your PR based on feedback.
+
+- **Merge:** Once your PR is approved, a project maintainer will merge it into the main codebase. Congratulations, you've contributed to EloquentRegex!
+
+### Check Out STRUCTURE.md
+
+For more detailed information on the project structure and guidelines for contributing, please refer to the [STRUCTURE.md](https://github.com/MaestroError/eloquent-regex/blob/update-documentation-and-add-advanced-usage-section/STRUCTURE.md) file in the repository. It outlines the architecture of EloquentRegex and provides insights into naming conventions, file organization, and other best practices.
+
+Thank you for considering contributing to EloquentRegex! Your efforts help improve the tool for developers everywhere ❤️.
+
+# Support
+
+Support Our Work? 🌟 You can help us keep the code flowing by making a small donation. Every bit of support goes a long way in maintaining and improving our open-source contributions. Click the button below to contribute. Thank you for your generosity!
+
+[<img src="https://github.com/MaestroError/resources/blob/maestro/buymeamilk/green-2.png" width="300px">](https://www.buymeacoffee.com/maestroerror)
+
+Or use QR code:
+
+[<img src="https://github.com/MaestroError/resources/blob/maestro/buymeamilk/qr-code.png" width="135px">](https://www.buymeacoffee.com/maestroerror)
+
 ##### To Do
 
 - Return captured groups while using `group()` method with `get()`.✔️
@@ -1053,8 +1124,9 @@ Testing and debugging are critical steps in ensuring your regex patterns do exac
     - Add section in docs for "lazy" method ✔️
   - Add sections:
     - Testing and Debugging ✔️
+    - Support ✔️
+    - Contributing (+STRUCTURE.md) ✔️
     - Credits
-    - Contributing (+STRUCTURE.md)
     - FAQs
 
 ##### Coming next
