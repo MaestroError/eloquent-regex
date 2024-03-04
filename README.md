@@ -976,6 +976,50 @@ The `lazy()` method is invaluable when dealing with patterns that include variab
 
 By making quantifiers lazy, EloquentRegex empowers you to write more precise and effective patterns, ensuring that your matches are exactly as intended, no more and no less.
 
+# Testing and Debugging Your Regex Patterns
+
+Crafting the perfect regex pattern is an art that often requires iteration, testing, and debugging. EloquentRegex provides tools that make this process easier and more intuitive, allowing you to refine your patterns until they match precisely what you need. One of the most useful methods for this purpose is `toRegex()`, which outputs the raw regex pattern. Combined with online tools like [Regexr](https://regexr.com/), you can visualize and debug your patterns in a user-friendly environment.
+
+#### Using the "toRegex" Method
+
+The `toRegex()` method converts your EloquentRegex pattern into a standard regex pattern string. This is particularly useful for debugging purposes or when you need to share your pattern with others who might not be using EloquentRegex.
+
+**Example: Converting an EloquentRegex Custom Pattern to Raw Regex**
+
+```php
+$pattern = EloquentRegex::source('your test string here')
+    ->start()
+    ->wordChars()->whitespace()->digits()
+    ->end()
+    ->toRegex();
+
+// Now, $pattern contains the raw regex string that you can test or debug further.
+```
+
+_Note: `toRegex` doesn't return regex patterns used by the Options_
+
+#### Debugging with Regexr
+
+[Regexr](https://regexr.com/) is a free online tool that allows you to test and debug regex patterns in real-time. It provides a detailed explanation of each part of your regex, matches highlighted in the text, and even a reference guide for regex syntax.
+
+##### How to Use Regexr for Debugging:
+
+1. **Convert Your Pattern:** Use the toRegex() method to convert your EloquentRegex pattern into a raw regex string.
+2. **Open Regexr:** Go to https://regexr.com/ in your web browser.
+3. **Paste Your Pattern:** Paste the raw regex string into the "Expression" field on Regexr.
+4. **Test Your Pattern:** Enter test strings in the "Test String" area to see how your pattern matches. Regexr will highlight matches and provide useful insights and errors if the pattern doesn't work as expected.
+
+_Note: For debuging `get` method, open "Flags" dropdown and mark "global"_
+
+#### Tips for Effective Debugging
+
+- **Start Simple:** Begin with a simplified version of your pattern and gradually add complexity. This helps isolate issues.
+- **Use Descriptive Test Strings:** Include a variety of test strings that cover all the scenarios you expect your pattern to handle, as well as edge cases.
+- **Pay Attention to Details:** Regex patterns are sensitive to every character. Double-check your symbols, especially those that have special meanings in regex, like `.`, `*`, `?`, etc.
+- **Iterate and Refine:** Don't expect to get everything right on the first try. Use the feedback from testing to refine your pattern iteratively.
+
+Testing and debugging are critical steps in ensuring your regex patterns do exactly what you intend. By leveraging the `toRegex()` method and tools like Regexr, you can make this process more manageable and efficient, leading to more accurate and reliable regex implementations in your Laravel applications.
+
 ##### To Do
 
 - Return captured groups while using `group()` method with `get()`.✔️
@@ -990,6 +1034,7 @@ By making quantifiers lazy, EloquentRegex empowers you to write more precise and
 - Return collection on get method if laravel is available.
 - Add builderPattern methods list MD file and link from the Docs.
 - Implement usage of named groups: `/(?P<year>\d{4})-(?P<month>\d{2})-(?P<day>\d{2})/`
+- Add some tool for debuging options
 
 - Write documentation (add credit for https://regexr.com/ and ChatGPT)
   - Create quick start guide and add in Docs.
@@ -1007,7 +1052,7 @@ By making quantifiers lazy, EloquentRegex empowers you to write more precise and
     - Raw methods ✔️
     - Add section in docs for "lazy" method ✔️
   - Add sections:
-    - Testing and Debugging
+    - Testing and Debugging ✔️
     - Credits
     - Contributing (+STRUCTURE.md)
     - FAQs
