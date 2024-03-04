@@ -43,6 +43,7 @@ Like what we're doing? Show your support with a quick star, please! ⭐
     - 💠 [Non-Capturing Groups](#non-capturing-groups)
     - 💠 [Groups with quantifier](#groups-with-quantifier)
   - ❓[Conditional matching](#conditional-matching)
+  - [Pattern alternation (orPattern)](#pattern-alternation-orpattern)
 
 # Overview
 
@@ -882,6 +883,27 @@ EloquentRegex::start($string)
 })->digits()->check();
 // While using "get()" method, '-' doesn't appear in matches
 ```
+
+## Pattern alternation (orPattern)⚖️
+
+Sometimes, you might encounter situations where either one pattern or another is acceptable. For instance, when developing EloquentRegex, a key objective was to enable the reproduction of patterns commonly used in [HSA](https://github.com/MaestroError/html-strings-affixer). Consider the `alt` attribute within an HTML tag, which can be followed by either a double " or a single ' quote. This requirement translates into a regex pattern like `alt\=(\"|')`, indicating an exact match for "alt=" followed by either type of quotation mark.
+
+To achieve this with EloquentRegex, you can utilize the `orPattern` method:
+
+```php
+EloquentRegex::builder()->start()
+    ->exact("alt=")
+    ->group(function ($pattern) {
+        $pattern->doubleQuote()
+        ->orPattern(function ($pattern) {
+            $pattern->singleQuote();
+        });
+    })->toRegex(); // alt\=(\"|')
+```
+
+In this example, we precisely match "alt=" using the `exact` method. We then create a group with the `group` method and include `doubleQuote` in group and then `singleQuote` within the orPattern method's callback. This approach ensures the pattern matches either " or '.
+
+The `orPattern` method also accepts a quantifier as its **second argument** (after callback), applying the same [quantifier logic](#quantifier-values) as elsewhere in EloquentRegex. This feature adds another layer of flexibility, allowing you to specify how many times either pattern should be present.
 
 ---
 
