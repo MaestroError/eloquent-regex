@@ -46,6 +46,11 @@ Like what we're doing? Show your support with a quick star, please! ⭐
   - ⚖️[Pattern alternation (orPattern)](#pattern-alternation-orpattern)
   - 🧩[Raw Methods](#raw-methods)
   - 🐌[The Lazy Quantifier Method](#the-lazy-quantifier-method)
+- **[Testing and Debugging Your Regex Patterns](#testing-and-debugging-your-regex-patterns)**
+- **[Contributing to EloquentRegex](#contributing-to-eloquenttegex)**
+- **[Support](#support)**
+- **[Credits](#credits)**
+- **[Frequently Asked Questions (FAQ)](#frequently-asked-questions-faq)**
 
 # Overview
 
@@ -976,6 +981,196 @@ The `lazy()` method is invaluable when dealing with patterns that include variab
 
 By making quantifiers lazy, EloquentRegex empowers you to write more precise and effective patterns, ensuring that your matches are exactly as intended, no more and no less.
 
+# Testing and Debugging Your Regex Patterns
+
+Crafting the perfect regex pattern is an art that often requires iteration, testing, and debugging. EloquentRegex provides tools that make this process easier and more intuitive, allowing you to refine your patterns until they match precisely what you need. One of the most useful methods for this purpose is `toRegex()`, which outputs the raw regex pattern. Combined with online tools like [Regexr](https://regexr.com/), you can visualize and debug your patterns in a user-friendly environment.
+
+#### Using the "toRegex" Method
+
+The `toRegex()` method converts your EloquentRegex pattern into a standard regex pattern string. This is particularly useful for debugging purposes or when you need to share your pattern with others who might not be using EloquentRegex.
+
+**Example: Converting an EloquentRegex Custom Pattern to Raw Regex**
+
+```php
+$pattern = EloquentRegex::source('your test string here')
+    ->start()
+    ->wordChars()->whitespace()->digits()
+    ->end()
+    ->toRegex();
+
+// Now, $pattern contains the raw regex string that you can test or debug further.
+```
+
+_Note: `toRegex` doesn't return regex patterns used by the Options_
+
+#### Debugging with Regexr
+
+[Regexr](https://regexr.com/) is a free online tool that allows you to test and debug regex patterns in real-time. It provides a detailed explanation of each part of your regex, matches highlighted in the text, and even a reference guide for regex syntax.
+
+##### How to Use Regexr for Debugging:
+
+1. **Convert Your Pattern:** Use the toRegex() method to convert your EloquentRegex pattern into a raw regex string.
+2. **Open Regexr:** Go to https://regexr.com/ in your web browser.
+3. **Paste Your Pattern:** Paste the raw regex string into the "Expression" field on Regexr.
+4. **Test Your Pattern:** Enter test strings in the "Test String" area to see how your pattern matches. Regexr will highlight matches and provide useful insights and errors if the pattern doesn't work as expected.
+
+_Note: For debuging `get` method, open "Flags" dropdown and mark "global"_
+
+#### Tips for Effective Debugging
+
+- **Start Simple:** Begin with a simplified version of your pattern and gradually add complexity. This helps isolate issues.
+- **Use Descriptive Test Strings:** Include a variety of test strings that cover all the scenarios you expect your pattern to handle, as well as edge cases.
+- **Pay Attention to Details:** Regex patterns are sensitive to every character. Double-check your symbols, especially those that have special meanings in regex, like `.`, `*`, `?`, etc.
+- **Iterate and Refine:** Don't expect to get everything right on the first try. Use the feedback from testing to refine your pattern iteratively.
+
+Testing and debugging are critical steps in ensuring your regex patterns do exactly what you intend. By leveraging the `toRegex()` method and tools like Regexr, you can make this process more manageable and efficient, leading to more accurate and reliable regex implementations in your Laravel applications.
+
+# Contributing to EloquentRegex
+
+We welcome contributions from the community! Whether you're fixing bugs, adding new features, or improving documentation, your help makes EloquentRegex even better for everyone. We follow the classic GitHub contribution flow. Below is how you can get involved.
+
+_Note: Checking [STRUCTURE.md](https://github.com/MaestroError/eloquent-regex/blob/update-documentation-and-add-advanced-usage-section/STRUCTURE.md) out may help you understand the package better 👍_
+
+### Getting Started
+
+1. **Fork the Repository:** Start by forking the EloquentRegex repository to your own GitHub account. This creates a personal copy for you to experiment with.
+
+2. **Clone Your Fork:** Clone your forked repository to your local machine to start making changes. Use the following command, replacing YOUR_USERNAME with your GitHub username:
+
+```bash
+git clone https://github.com/YOUR_USERNAME/eloquent-regex.git
+```
+
+3. **Set Up Your Environment:** Make sure you have a working Laravel environment to test your changes against. Follow the setup instructions in the project README to get started.
+
+### Making Changes
+
+1. **Create a New Branch:** For each set of changes or new feature, create a new branch in your local repository. This keeps your work organized and separate from the main codebase.
+
+```bash
+git checkout -b feature/my-new-feature
+```
+
+2. **Make Your Changes:** Implement your fixes, features, or documentation updates. Keep your changes focused and contained to the issue at hand for easier review.
+
+3. **Commit Your Changes:** Once you're satisfied with your work, commit the changes to your branch. Write clear, concise commit messages that explain the changes made.
+
+```bash
+git commit -am "Add a brief description of your changes"
+```
+
+4. **Push to Your Fork:** Push your branch and changes to your fork on GitHub.
+
+```bash
+git push origin feature/my-new-feature
+```
+
+### Submitting a Pull Request
+
+1. **Pull Request (PR):** Navigate to the original EloquentRegex repository on GitHub. You'll see an option to "Compare & pull request" for your branch. Click it to begin the process of submitting a PR.
+
+2. **Describe Your Changes:** Provide a detailed description of the changes in the PR. Include any relevant issue numbers. Explaining the reasoning behind the changes and how they improve EloquentRegex will help reviewers understand your contribution.
+
+3. **Submit for Review:** Once your PR is ready and all checks pass, submit it for review. At least one review from the project maintainers is required for merging. Be open to feedback and ready to make further tweaks based on suggestions.
+
+### Review and Merge
+
+- **Collaboration:** The project maintainers will review your PR. This process may involve some back-and-forth discussions, additional commits, and updates to your PR based on feedback.
+
+- **Merge:** Once your PR is approved, a project maintainer will merge it into the main codebase. Congratulations, you've contributed to EloquentRegex!
+
+### Check Out STRUCTURE.md
+
+For more detailed information on the project structure and guidelines for contributing, please refer to the [STRUCTURE.md](https://github.com/MaestroError/eloquent-regex/blob/update-documentation-and-add-advanced-usage-section/STRUCTURE.md) file in the repository. It outlines the architecture of EloquentRegex and provides insights into naming conventions, file organization, and other best practices.
+
+Thank you for considering contributing to EloquentRegex! Your efforts help improve the tool for developers everywhere ❤️.
+
+# Support
+
+Support Our Work? 🌟 You can help us keep the code flowing by making a small donation. Every bit of support goes a long way in maintaining and improving our open-source contributions. Click the button below to contribute. Thank you for your generosity!
+
+[<img src="https://github.com/MaestroError/resources/blob/maestro/buymeamilk/green-2.png" width="300px">](https://www.buymeacoffee.com/maestroerror)
+
+Or use QR code:
+
+[<img src="https://github.com/MaestroError/resources/blob/maestro/buymeamilk/qr-code.png" width="135px">](https://www.buymeacoffee.com/maestroerror)
+
+# Credits
+
+A project like EloquentRegex doesn't come to life in isolation. It's the result of inspiration, assistance, and support from various tools and communities. We would like to extend our heartfelt thanks to the following:
+
+- **[Regexr:](https://regexr.com/)** For being an invaluable tool in the creation and debugging of regex patterns. Its intuitive interface and detailed explanations have made it possible to refine and perfect our regex expressions.
+
+- **[ChatGPT:](https://chat.openai.com/)** For its assistance in covering the full codebase with PEST tests. [ChatGPT's](https://openai.com/) guidance and suggestions have also been important in creation of this documentation.
+
+- **[PEST Framework:](https://pestphp.com/)** For being an incredibly user-friendly and expressive testing framework. Its elegant syntax and powerful features have made writing tests a joy, contributing significantly to the quality of EloquentRegex.
+
+A special thank you goes out to everyone who has contributed to these tools and resources. Your work has not only aided in the development of EloquentRegex but has also contributed to the broader developer community by providing tools and knowledge that empower us all.
+
+# Frequently Asked Questions (FAQ)
+
+### What is EloquentRegex?
+
+EloquentRegex is a PHP/Laravel package designed to simplify the creation and execution of regular expressions. It offers a fluent, intuitive interface for both building custom regex patterns and utilizing ready-to-use patterns for common tasks like email and URL validation.
+
+### How do I install EloquentRegex?
+
+EloquentRegex can be installed via Composer. Run the following command in your Laravel project directory:
+
+```bash
+composer require maestroerror/eloquent-regex
+```
+
+### Can I use EloquentRegex without Laravel?
+
+While EloquentRegex is specifically designed with Laravel in mind, the core functionality can be used in any PHP project via `Maestroerror\EloquentRegex\EloquentRegex` object with **the same syntax**.
+
+```php
+use Maestroerror\EloquentRegex\EloquentRegex;
+```
+
+### How do I use ready-to-use patterns?
+
+Ready-to-use patterns can be invoked by calling the corresponding method on the EloquentRegex class. For example, to validate an email address:
+
+```php
+$isValid = EloquentRegex::source('test@example.com')->email()->check();
+```
+
+### How do I create custom patterns?
+
+Custom patterns can be created using the `start` or `customPattern` method. From there, you can chain methods to build your pattern:
+
+```php
+$result = EloquentRegex::start('user_123')
+->alphanumeric()
+->underscore()
+->digits()
+->get();
+```
+
+### Can I apply options to any pattern?
+
+Yes, any options can be applied to any pattern using either a callback function or an associative array. This allows for flexible configuration of your regex patterns. Also, direct arguments to the pattern methods are used as extra, easy-to-use way for applying options.
+
+### How do I debug my regex patterns?
+
+You can use the `toRegex()` method to get the raw regex pattern string. This can then be tested and debugged using online tools like [Regexr](https://regexr.com/), which provides real-time matching and detailed explanations. Check the [Testing and Debugging](##testing-and-debugging-your-regex-patterns) section for more information.
+
+### How can I contribute to EloquentRegex?
+
+Contributions are welcome! You can contribute by forking the GitHub repository, making your changes, and submitting a pull request. Please ensure your contributions adhere to the project's coding standards and guidelines.
+
+### Where can I report issues or request features?
+
+Issues and feature requests can be submitted on the GitHub repository's Issues page. Please provide as much detail as possible to help us understand and address your request efficiently.
+
+### How do I stay updated on EloquentRegex developments?
+
+To stay updated, follow the GitHub repository for the latest changes, releases, and discussions. You can also watch the repository to receive notifications for all project activities or follow the [author's page](https://www.linkedin.com/in/maestroerror/).
+
+---
+
 ##### To Do
 
 - Return captured groups while using `group()` method with `get()`.✔️
@@ -990,8 +1185,9 @@ By making quantifiers lazy, EloquentRegex empowers you to write more precise and
 - Return collection on get method if laravel is available.
 - Add builderPattern methods list MD file and link from the Docs.
 - Implement usage of named groups: `/(?P<year>\d{4})-(?P<month>\d{2})-(?P<day>\d{2})/`
+- Add some tool for debuging options
 
-- Write documentation (add credit for https://regexr.com/ and ChatGPT)
+- Write documentation
   - Create quick start guide and add in Docs.
   - Add advanced usage section in Docs:
     - Options and Assertions: Detailed explanation of options, how to apply them, and their effects on patterns. ✔️
@@ -1007,10 +1203,11 @@ By making quantifiers lazy, EloquentRegex empowers you to write more precise and
     - Raw methods ✔️
     - Add section in docs for "lazy" method ✔️
   - Add sections:
-    - Testing and Debugging
-    - Credits
-    - Contributing (+STRUCTURE.md)
-    - FAQs
+    - Testing and Debugging ✔️
+    - Support ✔️
+    - Contributing (+STRUCTURE.md) ✔️
+    - Credits (add credit for https://regexr.com/ and ChatGPT) ✔️
+    - FAQs ✔️
 
 ##### Coming next
 
