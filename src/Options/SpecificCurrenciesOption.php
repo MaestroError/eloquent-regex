@@ -40,29 +40,29 @@ class SpecificCurrenciesOption implements OptionContract {
         return $this;
     }
 
-    public function onlyUSD($cur = true) {
-        if ($cur) {
+    public function onlyUSD($only = true) {
+        if ($only) {
             $this->specificCurrencies = ["$"];
         }
         return $this;
     }
 
-    public function onlyEUR($cur = true) {
-        if ($cur) {
+    public function onlyEUR($only = true) {
+        if ($only) {
             $this->specificCurrencies = ["€"];
         }
         return $this;
     }
 
-    public function onlyGBP($cur = true) {
-        if ($cur) {
+    public function onlyGBP($only = true) {
+        if ($only) {
             $this->specificCurrencies = ["£"];
         }
         return $this;
     }
 
-    public function onlyGEL($cur = true) {
-        if ($cur) {
+    public function onlyGEL($only = true) {
+        if ($only) {
             $this->specificCurrencies = ["₾"];
         }
         return $this;

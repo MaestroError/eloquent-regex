@@ -28,6 +28,7 @@ trait GroupsTrait {
      */
     public function negativeCharSet(callable $callback, ?string $q = null): self {
         $subPattern = new self();
+        $subPattern->inCharSet();
         $callback($subPattern);
         $p = '[^' . $subPattern->getPattern() . ']';
         $this->pattern .= $q ? $this->applyQuantifier($p, $q) : $p;
@@ -42,6 +43,7 @@ trait GroupsTrait {
      * @return self
      */
     public function group(callable $callback, ?string $q = null): self {
+        $this->builder->setReturnGroups(true);
         $subPattern = new self();
         $callback($subPattern);
         $p = $subPattern->getPattern();
@@ -148,8 +150,9 @@ trait GroupsTrait {
      * @param string $regex The regex string to wrap and add.
      * @return self
      */
-    public function addRawNonCapturingGroup(string $regex): self {
-        $this->pattern .= '(?:' . $regex . ')';
+    public function addRawNonCapturingGroup(string $regex, ?string $q = null): self {
+        $p = '(?:' . $regex . ')';
+        $this->pattern .= $q ? $this->applyQuantifier($p, $q) : $p;
         return $this;
     }
 

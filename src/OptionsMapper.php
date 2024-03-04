@@ -35,44 +35,59 @@ class OptionsMapper {
         "minLength" => [LengthOption::class, "minLength"],
         "maxLength" => [LengthOption::class, "maxLength"],
         "length" => [LengthOption::class, "exactLength"],
+
         "minNumbers" => [NumberOption::class, "setMinValue"],
         "maxNumbers" => [NumberOption::class, "setMaxValue"],
         "minDigits" => [NumberOption::class, "setMinValue"],
         "maxDigits" => [NumberOption::class, "setMaxValue"],
         "numberAmount" => [NumberOption::class, "setExactValue"],
-        "allowChars" => [CharacterOption::class, "allow"],
+
+        "onlyChars" => [CharacterOption::class, "allow"],
         "excludeChars" => [CharacterOption::class, "exclude"],
         "minUppercase" => [CharacterOption::class, "minUppercase"],
         "minLowercase" => [CharacterOption::class, "minLowercase"],
-        "validIPv6" => [IPv6Option::class, "validIPv6"],
+        
         "minSpecialChars" => [CharOption::class, "minSpecialCharacters"],
         "maxSpecialChars" => [CharOption::class, "maxSpecialCharacters"],
         "onlyLowercase" => [CharOption::class, "onlyLowercase"],
         "onlyUppercase" => [CharOption::class, "onlyUppercase"],
+        "noSpecialChars" => [CharOption::class, "noSpecialCharacters"],
+        
+        "validIPv6" => [IPv6Option::class, "validIPv6"],
+
         "isFile" => [FileOption::class, "isFile"],
         "isDirectory" => [FileOption::class, "isDirectory"],
+        
         "fileExists" => [FileExistsOption::class, "fileExists"],
+
         "specificCurrencies" => [SpecificCurrenciesOption::class, "setSpecificCurrencies"],
         "onlyUSD" => [SpecificCurrenciesOption::class, "onlyUSD"],
         "onlyEUR" => [SpecificCurrenciesOption::class, "onlyEUR"],
         "onlyGBP" => [SpecificCurrenciesOption::class, "onlyGBP"],
         "onlyGEL" => [SpecificCurrenciesOption::class, "onlyGEL"],
+
         "pathType" => [PathTypeOption::class, "setPathType"],
+
         "countryCode" => [CountryCodeOption::class, "setCountryCode"],
-        "noSpecialChars" => [CharOption::class, "noSpecialCharacters"],
+
         "noSpaces" => [ContainSpacesOption::class, "noSpaces"],
         "noDoubleSpaces" => [ContainSpacesOption::class, "noDoubleSpaces"],
         "maxSpaces" => [ContainSpacesOption::class, "maxSpaces"],
+
         "onlyDomains" => [DomainSpecificOption::class, "setAllowedDomains"],
         "onlyExtensions" => [DomainSpecificOption::class, "setAllowedExtensions"],
+
         "onlyProtocol" => [ProtocolOption::class, "onlyProtocol"],
         "onlyHttp" => [ProtocolOption::class, "onlyHttp"],
         "onlyHttps" => [ProtocolOption::class, "onlyHttps"],
+
         "onlyVisa" => [CardTypeOption::class, "onlyVisa"],
         "onlyMasterCard" => [CardTypeOption::class, "onlyMasterCard"],
         "onlyAmex" => [CardTypeOption::class, "onlyAmex"],
         "cardTypes" => [CardTypeOption::class, "allowCardTypes"],
+
         "onlyAlphanumeric" => [OnlyAlphanumericOption::class, "onlyAlphanumeric"],
+
         "onlyTags" => [HtmlTagsOption::class, "allowTags"],
         "restrictTags" => [HtmlTagsOption::class, "restrictTags"],
     ];

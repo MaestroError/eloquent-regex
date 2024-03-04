@@ -85,6 +85,20 @@ interface BuilderContract {
     public function getPatterns(): array;
 
     /**
+     * Sets returnGroups property
+     *
+     * @return self Returns the Builder instance.
+     */
+    public function setReturnGroups(bool $enable): self;
+
+    /**
+     * Gets returnGroups property
+     *
+     * @return self Returns the Builder instance.
+     */
+    public function getReturnGroups(): bool;
+
+    /**
      * Magic method to handle dynamic method calls.
      *
      * This method is triggered when invoking inaccessible or non-existing methods.

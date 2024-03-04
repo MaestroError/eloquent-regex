@@ -224,7 +224,7 @@ test('Escaped characters with quantifiers generate correct regex and match appro
     $builder->doubleQuote()->exact('quoted', true, '*')->doubleQuote();
 
     // $expectedPattern = '/"quoted*"/';
-    $expectedPattern = '/"(quoted)*"/'; // @todo Should return this
+    $expectedPattern = '/"(?:quoted)*"/'; // @todo Should return this
     $regex = $builder->getMatchesValidationPattern();
 
     expect($regex)->toBe($expectedPattern);
@@ -305,7 +305,7 @@ test('nonWhitespace method matches non-whitespace characters', function () {
 
 test('wordChar method matches word characters', function () {
     $builder = new BuilderPattern();
-    $builder->wordChar(2); // Matches exactly 2 word characters
+    $builder->wordChars(2); // Matches exactly 2 word characters
     $regex = $builder->getInputValidationPattern();
     expect(preg_match($regex, 'Ab'))->toBe(1);
     expect(preg_match($regex, 'A1'))->toBe(1);
@@ -315,7 +315,7 @@ test('wordChar method matches word characters', function () {
 
 test('nonWordChar method matches non-word characters', function () {
     $builder = new BuilderPattern();
-    $builder->nonWordChar(2); // Matches exactly 2 non-word characters
+    $builder->nonWordChars(2); // Matches exactly 2 non-word characters
     $regex = $builder->getInputValidationPattern();
     expect(preg_match($regex, '--'))->toBe(1);
     expect(preg_match($regex, '!@'))->toBe(1);
