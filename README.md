@@ -43,7 +43,7 @@ Like what we're doing? Show your support with a quick star, please! ⭐
     - 💠 [Non-Capturing Groups](#non-capturing-groups)
     - 💠 [Groups with quantifier](#groups-with-quantifier)
   - ❓[Conditional matching](#conditional-matching)
-  - [Pattern alternation (orPattern)](#pattern-alternation-orpattern)
+  - ⚖️[Pattern alternation (orPattern)](#pattern-alternation-orpattern)
 
 # Overview
 
@@ -77,7 +77,7 @@ EloquentRegex::start("#hello #world This is a #test")->hash()->text()->get();
 // ['#hello', '#world', '#test']
 ```
 
-## Key Features
+## Key Features🔑
 
 - **Ready-to-Use Patterns**: Common patterns like emails, URLs, and IP addresses are pre-defined and ready to go. Just a few keystrokes and you're validating.
 - **Custom Patterns Made Easy**: Build your own regex patterns with an easy-to-use, fluent interface. Say hello to readable regex!
@@ -86,7 +86,7 @@ EloquentRegex::start("#hello #world This is a #test")->hash()->text()->get();
 
 _For more details about package and it's inner workings check out [STRUCTURE.md](https://github.com/MaestroError/eloquent-regex/blob/update-documentation-and-add-advanced-usage-section/STRUCTURE.md) file._
 
-## Getting Started
+## Getting Started🧭
 
 Simply install the package via Composer, and you're ready to take the pain out of regex in your PHP/Laravel applications. Run for installation:
 
@@ -155,7 +155,7 @@ EloquentRegex::source($yourString)->url()->count();
 EloquentRegex::source($yourString)->url()->toRegex();
 ```
 
-## Ready-to-Use Patterns
+## Ready-to-Use Patterns📑
 
 EloquentRegex comes with a set of predefined patterns for common validation/extraction tasks. These patterns are designed to be straightforward and easy to use, requiring minimal effort to implement.
 
@@ -272,7 +272,7 @@ public function filePathWin(
 
 Didn't it cover all your needs? Let's take a look to the custom patterns section.
 
-## Custom Patterns
+## Custom Patterns🛠️
 
 For scenarios where predefined patterns do not suffice, EloquentRegex allows you to define custom patterns using the start or customPattern methods as initiator:
 
@@ -311,7 +311,7 @@ Custom pattern builder supports a wide range of character classes and all specia
 - [Groups](https://github.com/MaestroError/eloquent-regex/blob/documentation-and-examples/src/Traits/BuilderPatternTraits/GroupsTrait.php)
 - [Anchors](https://github.com/MaestroError/eloquent-regex/blob/documentation-and-examples/src/Traits/BuilderPatternTraits/AnchorsTrait.php)
 
-## Applying Quantifiers
+## Applying Quantifiers#️⃣
 
 Quantifiers in regular expressions are symbols or sets of symbols that specify how many instances of a character, group, or character class must be present in the input for a match to be found. EloquentRegex enhances the way quantifiers are used, making it simpler and more intuitive to define the frequency of pattern occurrences.
 
@@ -416,7 +416,7 @@ As you become more comfortable with the basics of EloquentRegex, you might find 
 
 Whether you're dealing with intricate string formats, dynamic pattern requirements, or simply looking to optimize your regex operations for performance and clarity, this section will guide you through the advanced features of EloquentRegex. You'll learn how to leverage the full power of this package to make your Laravel application's text processing as efficient and effective as possible.
 
-## Options
+## Options⚙️
 
 EloquentRegex provides a flexible system for applying options to your patterns. These options can serve as extra assertions to refine pattern matching or act as filters to select only specific matches. There are three main ways to apply options: directly as arguments, through a callback, and via an associative array.
 
@@ -631,7 +631,7 @@ public function onlyTags(array|string $tags);
 public function restrictTags(array|string $tags);
 ```
 
-## Regex Flags
+## Regex Flags🚩
 
 Regex flags are special tokens that modify the behavior of regular expressions, allowing for more flexible and powerful pattern matching. In EloquentRegex, applying regex flags to your patterns enables specialized matching behaviors such as case-insensitive searches, multiline matching, single-line mode, and support for Unicode characters. Let's explore how to apply these flags using examples.
 
@@ -706,7 +706,7 @@ expect($matches)->toContain('და'); // Matches Unicode characters with the Un
 
 In addition to character classes and special character methods, builderPattern has more advanced methods for increasing flexibility and usage scope. Below are described the methods for the builderPattern's advanced usage.
 
-## Character Sets
+## Character Sets🗃️
 
 In regular expressions, character sets are a fundamental concept that allows you to define a set of characters to match within a single position in the input string. EloquentRegex provides an intuitive way to work with both positive and negative character sets, enhancing the versatility of your patterns.
 
@@ -753,7 +753,7 @@ When working with character sets in EloquentRegex, it's important to remember th
 
 _Update: From now, **0 as argument is optional**, because character classes willn't add default "+" quantifier inside the set_
 
-## Groups
+## Groups📦
 
 EloquentRegex simplifies the process of creating both capturing and non-capturing groups, allowing you to organize your regex patterns into logical sections and apply quantifiers or assertions to these groups as a whole.
 
@@ -820,7 +820,7 @@ EloquentRegex::start("345-45, 125-787, 344643")
 // It returns array: ["345-45", "125-787"]
 ```
 
-## Conditional matching
+## Conditional matching❓
 
 Assertion groups allow for conditional matching based on the presence (positive) or absence (negative) of patterns ahead or behind the current match point, without consuming characters from the string, so that anything inside assertion group willn't be added in matches. See examples below:
 
@@ -934,7 +934,7 @@ The `orPattern` method also accepts a quantifier as its **second argument** (aft
     - Grouping and Capturing: How to use groups (capturing and non-capturing) and apply quantifiers to them. ✔️
     - Sets ✔️
     - Lookaheads ✔️
-    - orPattern
+    - orPattern ✔️
     - Raw methods
     - Add section in docs for "lazy" method
   - Add sections:
