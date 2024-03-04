@@ -67,6 +67,8 @@ class Builder implements BuilderContract {
         FilePathWinPattern::class,
     ];
 
+    protected bool $returnGroups = false;
+
     /**
      * Constructs a new Builder instance.
      *
@@ -131,7 +133,48 @@ class Builder implements BuilderContract {
      * @return array|null An array of matches or null if no matches are found.
      */
     protected function getAllMatches(): ?array {
-        return $this->pattern->getMatches($this->str);
+        if ($this->getReturnGroups()) {
+            // Get unfiltered matches and groups
+            $resultsArray = $this->pattern->getMatches($this->str, true);
+            if ($resultsArray["results"]) {
+                // Get array of associative arrays with "result" and "groups" keys
+                $groupedResults = $this->buildResultByGroup($resultsArray["results"], $resultsArray["groups"]);
+                return $groupedResults;
+            } else {
+                return null;
+            }
+        } else {
+            return $this->pattern->getMatches($this->str);
+        }
+    }
+
+    /**
+     * Build results array from filtered matches and groups.
+     *
+     * @param $matches filtered array from "preg_match_all", but with original indexes.
+     * @param $groups array of captured groups from "preg_match_all".
+     * @return array An array of matches and their captured groups.
+     */
+    protected function buildResultByGroup(array $matches, array $groups): array {
+        // Empty array for grouped result
+        $groupedResults = [];
+        // Loop over only matches
+        foreach ($matches as $index => $value) {
+            // Add match as result
+            $matchArray = [
+                "result" => $value,
+            ];
+            // Use match index to get it's groups
+            $capturedGroupsForThisMatch = [];
+            foreach ($groups as $groupArray) {
+                $capturedGroupsForThisMatch[] = $groupArray[$index];
+            }
+            // Add captured groups under "groups" key
+            $matchArray["groups"] = $capturedGroupsForThisMatch;
+            // Add array to result
+            $groupedResults[] = $matchArray;
+        }
+        return $groupedResults;
     }
 
     /**
@@ -266,6 +309,15 @@ class Builder implements BuilderContract {
     public function asSticky(): self {
         $this->pattern->addExpressionFlag("y");
         return $this;
+    }
+
+    public function setReturnGroups(bool $enable): self {
+        $this->returnGroups = $enable;
+        return $this;
+    }
+
+    public function getReturnGroups(): bool {
+        return $this->returnGroups;
     }
 
     /**

@@ -43,13 +43,13 @@ it('matches dates across multiple lines', function () {
 it('matches a text in multiline as a single line string', function () {
     $string = "Check out\n this site:";
     $builder = new Builder($string);
-    $check = $builder->start()->anyChar()->character(":")->end()->asSingleline()->check();
+    $check = $builder->start()->anyChars()->character(":")->end()->asSingleline()->check();
     expect($check)->toBeTrue(); // It don't match without Singleline flag
 });
 
 it('matches text with Unicode characters', function () {
     $string = "მზადაა #1 ✔️ და #2 ✔️";
     $builder = new Builder($string);
-    $matches = $builder->start()->wordCharRange(0, 2)->end()->asUnicode()->get();
+    $matches = $builder->start()->wordCharsRange(0, 2)->end()->asUnicode()->get();
     expect($matches)->toContain('და'); // It don't match without unicode char
 });

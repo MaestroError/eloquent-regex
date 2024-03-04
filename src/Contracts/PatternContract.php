@@ -54,9 +54,10 @@ interface PatternContract {
      * Returns all matches found by this pattern.
      *
      * @param string $input The input string to validate.
+     * @param bool $returnGroups if true returns whole array of matches (including groups).
      * @return array all matches found in input.
      */
-    public function getMatches(string $input): ?array;
+    public function getMatches(string $input, bool $returnGroups = false): ?array;
 
     /**
      * Generates the regex pattern for input validation.

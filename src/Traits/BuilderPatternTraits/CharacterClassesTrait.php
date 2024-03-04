@@ -27,7 +27,7 @@ trait CharacterClassesTrait {
     }
 
     private function handleTextLowercase($length = null, $minLength = 0, $maxLength = 0): void {
-        $this->pattern .= "[a-z]";
+        $this->pattern .= $this->inCharSet ? "a-z" : "[a-z]";
         $this->pattern .= $this->getLengthOption($length, $minLength, $maxLength);
     }
 
@@ -52,7 +52,7 @@ trait CharacterClassesTrait {
     }
     
     private function handleTextUppercase($length = null, $minLength = 0, $maxLength = 0) {
-        $this->pattern .= "[A-Z]";
+        $this->pattern .= $this->inCharSet ? "A-Z" : "[A-Z]";
         $this->pattern .= $this->getLengthOption($length, $minLength, $maxLength);
     }
 
@@ -67,7 +67,7 @@ trait CharacterClassesTrait {
     }
     
     private function handleText($length = null, $minLength = 0, $maxLength = 0) {
-        $this->pattern .= "[a-zA-Z]";  // Matches both uppercase and lowercase letters
+        $this->pattern .= $this->inCharSet ? "a-zA-Z" : "[a-zA-Z]";  // Matches both uppercase and lowercase letters
         $this->pattern .= $this->getLengthOption($length, $minLength, $maxLength);
     }
 
@@ -100,6 +100,10 @@ trait CharacterClassesTrait {
         return $this->digits(1);  // Reuse the existing digits method
     }
     
+    public function number(): self {
+        return $this->digits(1);  // Reuse the existing digits method
+    }
+    
     private function handleDigits($length = null, $minLength = 0, $maxLength = 0) {
         $this->pattern .= "\\d";  // Matches digits
         $this->pattern .= $this->getLengthOption($length, $minLength, $maxLength);
@@ -108,6 +112,10 @@ trait CharacterClassesTrait {
     public function nonDigits($length = null): self {
         $this->handleNonDigits($length);
         return $this;
+    }
+
+    public function nonDigit(): self {
+        return $this->nonDigits(1);
     }
 
     public function nonDigitsRange($minLength = 0, $maxLength = 0): self {
@@ -142,7 +150,7 @@ trait CharacterClassesTrait {
     }
     
     private function handleAlphanumeric($length = null, $minLength = 0, $maxLength = 0) {
-        $this->pattern .= "[a-zA-Z0-9]";  // Matches alphanumeric characters
+        $this->pattern .= $this->inCharSet ? "a-zA-Z0-9" : "[a-zA-Z0-9]";  // Matches alphanumeric characters
         $this->pattern .= $this->getLengthOption($length, $minLength, $maxLength);
     }
     
@@ -176,12 +184,21 @@ trait CharacterClassesTrait {
         $this->pattern .= $this->getLengthOption($length, $minLength, $maxLength);
     }
 
-    public function wordChar($length = null): self {
+    public function wordChar(): self {
+        return $this->wordChars(1);
+    }
+
+    public function wordChars($length = null): self {
         $this->handleWordChar($length);
         return $this;
     }
 
     public function wordCharRange($minLength = 0, $maxLength = 0): self {
+        $this->handleWordChar(null, $minLength, $maxLength);
+        return $this;
+    }
+
+    public function wordCharsRange($minLength = 0, $maxLength = 0): self {
         $this->handleWordChar(null, $minLength, $maxLength);
         return $this;
     }
@@ -191,7 +208,12 @@ trait CharacterClassesTrait {
         $this->pattern .= $this->getLengthOption($length, $minLength, $maxLength);
     }
 
-    public function nonWordChar($length = null): self {
+    public function nonWordChar(): self {
+        $this->nonWordChars(1);
+        return $this;
+    }
+
+    public function nonWordChars($length = null): self {
         $this->handleNonWordChar($length);
         return $this;
     }
@@ -206,7 +228,11 @@ trait CharacterClassesTrait {
         $this->pattern .= $this->getLengthOption($length, $minLength, $maxLength);
     }
 
-    public function anyChar($length = null): self {
+    public function anyChar(): self {
+        return $this->anyChars(1);
+    }
+
+    public function anyChars($length = null): self {
         $this->handleAnyChar($length);
         return $this;
     }
@@ -214,6 +240,10 @@ trait CharacterClassesTrait {
     public function anyCharRange($minLength = 0, $maxLength = 0): self {
         $this->handleAnyChar(null, $minLength, $maxLength);
         return $this;
+    }
+    
+    public function anyCharsRange($minLength = 0, $maxLength = 0): self {
+        return $this->anyCharRange($minLength, $maxLength);
     }
     
     private function handleAnyChar($length = null, $minLength = 0, $maxLength = 0) {

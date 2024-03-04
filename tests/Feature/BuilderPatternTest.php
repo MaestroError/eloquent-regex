@@ -63,7 +63,7 @@ it('constructs regex for URL validation', function () {
             ->text()
             ->toRegex();
 
-    expect($regex)->toBe('(http|https)\:\/\/[a-zA-Z]+\.[a-zA-Z]+');
+    expect($regex)->toBe('(?:http|https)\:\/\/[a-zA-Z]+\.[a-zA-Z]+');
 });
 
 it('constructs regex for specific phone number format', function () {
@@ -128,7 +128,7 @@ it('extracts secret coded messages from text', function () {
         ->lookBehind(function ($pattern) {
             $pattern->openCurlyBrace()->exact('secret: ');
         })
-        ->lazy()->anyChar()
+        ->lazy()->anyChars()
         ->lookAhead(function ($pattern) {
             $pattern->closeCurlyBrace();
         })
