@@ -192,11 +192,21 @@ class Builder implements BuilderContract {
         $this->str = $str;
     }
 
-    public function get(): ?array {
+    public function get(): mixed {
         if (!$this->patternIsSet()) {
             throw new \LogicException("Pattern must be set before getting matches.");
         }
-        return $this->getAllMatches();
+    
+        $matches = $this->getAllMatches();
+    
+        // Check if Laravel Collection class exists and the collect helper function is available
+        if (class_exists(\Illuminate\Support\Collection::class) && function_exists('collect')) {
+            // Return matches as a Laravel Collection
+            return collect($matches);
+        }
+    
+        // Return matches as an array if Collection or collect() is not available
+        return $matches;
     }
     
     public function check(): bool {
