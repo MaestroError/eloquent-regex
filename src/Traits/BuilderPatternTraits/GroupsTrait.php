@@ -150,8 +150,9 @@ trait GroupsTrait {
      * @param string $regex The regex string to wrap and add.
      * @return self
      */
-    public function addRawNonCapturingGroup(string $regex): self {
-        $this->pattern .= '(?:' . $regex . ')';
+    public function addRawNonCapturingGroup(string $regex, ?string $q = null): self {
+        $p = '(?:' . $regex . ')';
+        $this->pattern .= $q ? $this->applyQuantifier($p, $q) : $p;
         return $this;
     }
 
