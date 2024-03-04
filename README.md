@@ -1177,12 +1177,13 @@ To stay updated, follow the GitHub repository for the latest changes, releases, 
   - Add `contains` and `notContains` options
   - usernameLength: Set minimum and maximum length for the username part of the email.
   - dateFormat, timeFormat: Specify the format of date and time (e.g., MM-DD-YYYY, HH:MM).
-- Add builderPattern methods list MD file and link from the Docs.
 - Implement usage of named groups: `/(?P<year>\d{4})-(?P<month>\d{2})-(?P<day>\d{2})/`
 - Create some tool for debuging options
 
 - Write documentation:
   - Create quick start guide and add in Docs.
+  - Add builderPattern methods list MD file and link from the Docs.
+  - Add options debuging section in docs
 
 ##### Coming next
 
