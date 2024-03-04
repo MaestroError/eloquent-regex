@@ -21,9 +21,9 @@ interface BuilderContract {
     /**
      * Retrieves all matches of the set pattern within the target string.
      *
-     * @return array An array of all matches found.
+     * @return mixed An array of all matches found, a Laravel's collection or NULL.
      */
-    public function get(): ?array;
+    public function get(): mixed;
 
     /**
      * Checks if the entire target string exactly matches the set pattern.
