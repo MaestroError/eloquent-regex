@@ -1173,41 +1173,16 @@ To stay updated, follow the GitHub repository for the latest changes, releases, 
 
 ##### To Do
 
-- Return captured groups while using `group()` method with `get()`.✔️
-- Remove default quantifier inside charSet.✔️
-- Remove extra "[]" inside charSet.✔️
-- Rename "allowChars" option to "onlyChars".✔️
 - Add options for new patterns:
   - Add `contains` and `notContains` options
   - usernameLength: Set minimum and maximum length for the username part of the email.
   - dateFormat, timeFormat: Specify the format of date and time (e.g., MM-DD-YYYY, HH:MM).
-- Consider to register Patterns like options using key (name) => value (class) pairs (check performance) ✔️ (_No significant change before 50+ patterns_)
-- Return collection on get method if laravel is available.✔️
 - Add builderPattern methods list MD file and link from the Docs.
 - Implement usage of named groups: `/(?P<year>\d{4})-(?P<month>\d{2})-(?P<day>\d{2})/`
-- Add some tool for debuging options
+- Create some tool for debuging options
 
-- Write documentation
+- Write documentation:
   - Create quick start guide and add in Docs.
-  - Add advanced usage section in Docs:
-    - Options and Assertions: Detailed explanation of options, how to apply them, and their effects on patterns. ✔️
-    - Filters in Extraction: Using options as filters during extraction and the types of filters available. ✔️
-    - Options list ✔️
-    - Ensure digits / digit behavior. ✔️
-    - Regex Flags: Guide on applying regex flags to patterns for specialized matching behavior. ✔️
-  - Add advanced BuilderPattern methods:
-    - Grouping and Capturing: How to use groups (capturing and non-capturing) and apply quantifiers to them. ✔️
-    - Sets ✔️
-    - Lookaheads ✔️
-    - orPattern ✔️
-    - Raw methods ✔️
-    - Add section in docs for "lazy" method ✔️
-  - Add sections:
-    - Testing and Debugging ✔️
-    - Support ✔️
-    - Contributing (+STRUCTURE.md) ✔️
-    - Credits (add credit for https://regexr.com/ and ChatGPT) ✔️
-    - FAQs ✔️
 
 ##### Coming next
 
