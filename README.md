@@ -44,6 +44,8 @@ Like what we're doing? Show your support with a quick star, please! ⭐
     - 💠 [Groups with quantifier](#groups-with-quantifier)
   - ❓[Conditional matching](#conditional-matching)
   - ⚖️[Pattern alternation (orPattern)](#pattern-alternation-orpattern)
+  - 🧩[Raw Methods](#raw-methods)
+  - 🐌[The Lazy Quantifier Method](#the-lazy-quantifier-method)
 
 # Overview
 
@@ -905,7 +907,74 @@ In this example, we precisely match "alt=" using the `exact` method. We then cre
 
 The `orPattern` method also accepts a quantifier as its **second argument** (after callback), applying the same [quantifier logic](#quantifier-values) as elsewhere in EloquentRegex. This feature adds another layer of flexibility, allowing you to specify how many times either pattern should be present.
 
----
+## Raw Methods 🧩
+
+When working with regular expressions, there are times you'll need to insert a segment of raw regex directly into your pattern. This might be due to the complexity of the pattern or simply because you're integrating an existing regex snippet. EloquentRegex accommodates this need with specific methods designed to seamlessly integrate raw regex patterns into your larger expressions.
+
+#### Adding Raw Regex Patterns
+
+The `addRawRegex` method allows you to insert any raw regex directly into your pattern. This is particularly useful for incorporating standard regex snippets without modification.
+
+**Example: Matching a Social Security Number (SSN)**
+
+```php
+// Directly adds a raw regex pattern for an SSN
+EloquentRegex::start('123-45-6789')
+    ->addRawRegex('\d{3}-\d{2}-\d{4}')
+    ->check();
+// Expected to match an SSN format '123-45-6789', but not '123456789'
+```
+
+This method is straightforward and ensures that your EloquentRegex pattern can accommodate complex requirements with ease.
+
+#### Wrapping Raw Regex in a Non-Capturing Group
+
+Sometimes, you may want to include a raw regex snippet as part of a larger pattern without capturing its match. The `addRawNonCapturingGroup` method wraps the provided raw regex in a non-capturing group, allowing it to participate in the match without affecting the captured groups.
+
+**Example: Adding Digits Followed by a Specific Letter**
+
+```php
+// Wraps digits in a non-capturing group and expects an 'A' immediately after
+EloquentRegex::source('123A')
+    ->addRawNonCapturingGroup('\d', "oneOrMore")->exact('A')
+    ->check();
+// Expected to match '123A' but not 'A123'
+```
+
+## The Lazy Quantifier Method🐌
+
+In the world of regular expressions, greediness refers to the tendency of quantifiers to match as much of the input as possible. However, there are scenarios where you want your pattern to match the smallest possible part of the input that satisfies the pattern, a behavior known as "laziness" or "non-greediness". EloquentRegex introduces a straightforward way to apply this concept through the `lazy()` method.
+
+#### How the Lazy Method Works
+
+The `lazy()` method modifies the behavior of quantifiers that follow it in the pattern, making them match as few characters as possible. This is particularly useful when you want to extract specific segments from a larger block of text without capturing unnecessary parts.
+
+**Example: Extracting "Secret Coded" Messages from Text**
+Consider a situation where you need to extract coded messages enclosed in curly braces and preceded by a specific keyword within a larger text. Using the greedy approach might lead to capturing more text than intended, including text between messages. The `lazy()` method ensures that only the content directly within the braces, following the keyword, is matched.
+
+```php
+$text = "Normal text {secret: message one} more text {secret: another hidden text} end";
+$matches = EloquentRegex::source($text)
+    ->lookBehind(function ($pattern) {
+        $pattern->openCurlyBrace()->exact('secret: ');
+    })
+    ->lazy()->anyChars()
+    ->lookAhead(function ($pattern) {
+        $pattern->closeCurlyBrace();
+    })
+    ->get();
+
+// Expected to extract ['message one', 'another hidden text'] as separate matches
+
+```
+
+In this example, without the `lazy()` method, the pattern might greedily match from the first `{secret: ` to the last `}`, including everything in between as a single match (`message one} more text {secret: another hidden text`). By applying `lazy()`, the pattern instead matches the smallest possible string that satisfies the pattern within each set of curly braces, effectively separating the messages.
+
+#### When to Use the Lazy Method
+
+The `lazy()` method is invaluable when dealing with patterns that include variable-length content, such as strings or blocks of text, where you aim to extract specific, bounded segments. It's especially useful in parsing structured formats embedded within free text, extracting data from templated content, or any scenario where precision is key to separating multiple matches in a larger string.
+
+By making quantifiers lazy, EloquentRegex empowers you to write more precise and effective patterns, ensuring that your matches are exactly as intended, no more and no less.
 
 ##### To Do
 
@@ -935,8 +1004,8 @@ The `orPattern` method also accepts a quantifier as its **second argument** (aft
     - Sets ✔️
     - Lookaheads ✔️
     - orPattern ✔️
-    - Raw methods
-    - Add section in docs for "lazy" method
+    - Raw methods ✔️
+    - Add section in docs for "lazy" method ✔️
   - Add sections:
     - Testing and Debugging
     - Credits
