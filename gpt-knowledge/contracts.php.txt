@@ -1,0 +1,249 @@
+<?php
+
+namespace Maestroerror\EloquentRegex\Contracts;
+
+/**
+ * Interface BuilderContract
+ * 
+ * Defines the public API for the Builder class in the EloquentRegex system.
+ * This interface ensures a consistent structure for regex building operations.
+ */
+interface BuilderContract {
+
+    /**
+     * Sets the target string for regex operations.
+     *
+     * @param string $str The string to be analyzed or manipulated.
+     * @return void
+     */
+    public function setString(string $str): void;
+
+    /**
+     * Retrieves all matches of the set pattern within the target string.
+     *
+     * @return mixed An array of all matches found, a Laravel's collection or NULL.
+     */
+    public function get(): mixed;
+
+    /**
+     * Checks if the entire target string exactly matches the set pattern.
+     *
+     * @return bool True if the target string matches the pattern, false otherwise.
+     */
+    public function check(): bool;
+
+    /**
+     * Checks if the target string contains any matches for the set pattern.
+     *
+     * @return bool True if the target string contains matches, false otherwise.
+     */
+    public function checkString(): bool;
+
+    /**
+     * Counts the number of matches of the set pattern within the target string.
+     *
+     * @return int The number of matches found.
+     */
+    public function count(): int;
+
+    /**
+     * Converts the set pattern to its regex string representation.
+     *
+     * @return string The regex pattern as a string.
+     */
+    public function toRegex(): string;
+
+    /**
+     * Sets options for the pattern based on an array or a callback function.
+     *
+     * @param array|callable $config An array of options (optionName => value (arg)) or a callback function to configure options.
+     * @return void
+     */
+    public function setOptions(array|callable $config): self;
+
+    /**
+     * Registers a single pattern in the Builder.
+     *
+     * @param PatternContract $pattern The pattern instance to be registered.
+     * @return self Returns the Builder instance for fluent interface.
+     */
+    public function registerPattern(PatternContract $pattern): self;
+
+    /**
+     * Registers multiple patterns in the Builder.
+     *
+     * @param array $patterns An array of pattern instances to be registered.
+     * @return self Returns the Builder instance for fluent interface.
+     */
+    public function registerPatterns(array $patterns): self;
+
+    /**
+     * Retrieves all registered patterns in the Builder.
+     *
+     * @return array An array of registered pattern instances.
+     */
+    public function getPatterns(): array;
+
+    /**
+     * Sets returnGroups property
+     *
+     * @return self Returns the Builder instance.
+     */
+    public function setReturnGroups(bool $enable): self;
+
+    /**
+     * Gets returnGroups property
+     *
+     * @return self Returns the Builder instance.
+     */
+    public function getReturnGroups(): bool;
+
+    /**
+     * Magic method to handle dynamic method calls.
+     *
+     * This method is triggered when invoking inaccessible or non-existing methods.
+     * It is used to dynamically handle pattern-specific method calls.
+     *
+     * @param string $name The name of the method being called.
+     * @param array $args An array of arguments passed to the method.
+     * @return self Returns the Builder instance for fluent interface.
+     */
+    public function __call($name, $args): self;
+
+}
+
+
+
+
+namespace Maestroerror\EloquentRegex\Contracts;
+
+/**
+ * Interface for defining regex options.
+ *
+ * This interface provides a set of methods for building and managing
+ * regex patterns in a flexible and modular way. Implementing classes
+ * can define specific regex behaviors and characteristics.
+ */
+interface OptionContract {
+    /**
+     * Validates the given input against the option's criteria
+     * Using PHP statements and/or built Regex pattern.
+     *
+     * @param string $input The input string to validate.
+     * @return bool True if the input is valid, false otherwise.
+     */
+    public function validate(string $input): bool;
+
+    /**
+     * Builds and returns the regex pattern for this option.
+     * If option doesn't need regex, can return empty string.
+     *
+     * @return string The constructed regex pattern segment.
+     */
+    public function build(): string;
+}
+
+
+
+
+namespace Maestroerror\EloquentRegex\Contracts;
+
+/**
+ * Interface PatternContract
+ *
+ * Defines the structure for regex pattern classes within the EloquentRegex system.
+ * Each pattern class implementing this interface is responsible for building and managing
+ * a specific segment of a regex pattern.
+ */
+interface PatternContract {
+
+    /**
+     * Builds and returns the regex pattern segment for this pattern. (Without options)
+     *
+     * @return string The constructed regex pattern segment.
+     */
+    public function getPattern(): string;
+
+    /**
+     * Sets the options for this pattern.
+     *
+     * @param OptionContract $option The options to be applied to this pattern.
+     * @return void
+     */
+    public function setOption(OptionContract $option);
+
+    /**
+     * Sets the options for this pattern.
+     *
+     * @param array $options The options [OptionContract] to be applied to this pattern.
+     * @return void
+     */
+    public function setOptions(array $options);
+
+    /**
+     * Validates a given input string against this pattern as exact match.
+     *
+     * @param string $input The input string to validate.
+     * @return bool True if the input is valid according to this pattern, false otherwise.
+     */
+    public function validateInput(string $input): bool;
+
+    /**
+     * Validates a given input string against this pattern as it includes min 1 match.
+     *
+     * @param string $input The input string to validate.
+     * @return bool True if the input is valid according to this pattern, false otherwise.
+     */
+    public function validateMatches(string $input): bool;
+
+    /**
+     * Returns all matches found by this pattern.
+     *
+     * @param string $input The input string to validate.
+     * @param bool $returnGroups if true returns whole array of matches (including groups).
+     * @return array all matches found in input.
+     */
+    public function getMatches(string $input, bool $returnGroups = false): ?array;
+
+    /**
+     * Generates the regex pattern for input validation.
+     *
+     * This pattern is used to check if the entire input string exactly matches the constructed pattern.
+     *
+     * @return string The regex pattern for validating the entire input.
+     */
+    public function getInputValidationPattern(): string;
+
+    /**
+     * Generates the regex pattern for finding matches within the input.
+     *
+     * This pattern is used to search for occurrences of the pattern within the input string.
+     *
+     * @return string The regex pattern for finding matches within the input.
+     */
+    public function getMatchesValidationPattern(): string;
+
+    /**
+     * Adds regex flag to the pattern
+     * 
+     * @param string $flag to add after regex pattern
+     * @return void
+     */
+    public function addExpressionFlag(string $flag): void;
+
+    /**
+     * Executes the pattern with the provided arguments.
+     *
+     * This method is responsible for processing the arguments provided to the pattern
+     * and configuring it accordingly. It can handle an array of options, a set of
+     * individual arguments, or a callback function for more complex configurations.
+     *
+     * @param mixed $firstArgument The first argument which could be an array of options,
+     *                             an integer, a string, or a callback function.
+     * @param mixed ...$args Additional arguments if the first argument is not an array or callback.
+     * @return array Returns an array of configuration options processed by the method.
+     * @throws \InvalidArgumentException If the first argument does not meet the expected types.
+     */
+    public static function execute(mixed $firstArgument = 1, ...$args): array;
+
+}

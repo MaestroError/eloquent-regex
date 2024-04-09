@@ -13,7 +13,7 @@ it('matches different date formats correctly', function () {
 });
 
 it('validates a single date format correctly', function () {
-    $string = "Deadline: 2024-04-20";
+    $string = "2024/04/20";
     $builder = new Builder($string);
 
     $check = $builder->date()->check();
@@ -24,10 +24,21 @@ it('validates a single date format correctly', function () {
 
 
 it('validates a single date format is incorrect', function () {
-    $string = "Deadline: 04-2024-20";
+    $string = "04-2024-20";
     $builder = new Builder($string);
 
     $check = $builder->date()->check();
+
+    // Assert that the single date format is validated correctly
+    expect($check)->toBeFalse();
+});
+
+
+it('validates a date format is in string', function () {
+    $string = "Deadline: 04-2024-20";
+    $builder = new Builder($string);
+
+    $check = $builder->date()->checkString();
 
     // Assert that the single date format is validated correctly
     expect($check)->toBeFalse();

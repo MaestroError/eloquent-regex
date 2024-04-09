@@ -9,9 +9,8 @@ class UrlPattern extends BasePattern {
 
     use Pattern;
 
-    protected string $pattern = "(https?:\/\/[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/[a-zA-Z0-9\/]*)?)";
+    protected string $pattern = "(https?:\/\/[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/[a-zA-Z0-9\/-]*)?)";
 
-    
     public static string $name = "url";
 
     public static array $args = [

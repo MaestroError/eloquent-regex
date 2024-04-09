@@ -1,0 +1,744 @@
+### In this examples $string isn't always defined but you can assume 
+### what it could be and fix any other issues you found according to Docs
+
+it('matches valid credit card numbers correctly', function () {
+    $string = "Visa: 4111 1111 1111 1111, MasterCard: 5500 0000 0000 0004, Amex: 3400 000000 00009
+
+        Visa: 4111-1111-1111-1111, MasterCard: 5500-0000-0000-0004, Amex: 3400-000000-00009
+        
+        Visa: 4111111111111111, MasterCard: 5500000000000004, Amex: 340000000000009";
+    $builder = EloquentRegex::source($string);
+    $matches = $builder->creditCardNumber()->get();
+
+    expect($matches)->toEqual([
+        '4111 1111 1111 1111',
+        '5500 0000 0000 0004',
+        '3400 000000 00009',
+        '4111-1111-1111-1111',
+        '5500-0000-0000-0004',
+        '3400-000000-00009',
+        '4111111111111111',
+        '5500000000000004',
+        '340000000000009',
+    ]);
+});
+
+it('does not match invalid credit card numbers', function () {
+    $string = "Invalid: 1234 5678 9012 3456, Another: 0000 0000 0000 0000, Another 2400 000000 00009";
+    $builder = EloquentRegex::source($string);
+    $matches = $builder->creditCardNumber()->get();
+
+    expect($matches)->toBeEmpty();
+});
+
+
+it('checks valid credit card number', function () {
+    $string = "4111 1111 1111 1111";
+    $builder = EloquentRegex::source($string);
+    $check = $builder->creditCardNumber()->check();
+
+    expect($check)->toBeTrue();
+});
+
+
+it('checks invalid credit card number correctly', function () {
+    $string = "1111 1111 1111 1111";
+    $builder = EloquentRegex::source($string);
+    $check = $builder->creditCardNumber()->check();
+
+    expect($check)->toBeFalse();
+});
+
+
+it('gets only needed card types', function () {
+    $string = "Visa: 4111 1111 1111 1111, MasterCard: 5500 0000 0000 0004, Amex: 3400 000000 00009";
+    $builder = EloquentRegex::source($string);
+    $check = $builder->creditCardNumber("visa, amex")->get();
+
+    expect($check)->toEqual([
+        "4111 1111 1111 1111",
+        "3400 000000 00009"
+    ]);
+});
+
+it('matches different date formats correctly', function () {
+    $string = "Important dates are 2024-01-30, 2024/01/30, 30.01.2024, and 30.01.24.";
+    $builder = EloquentRegex::source($string);
+
+    $matches = $builder->date()->get();
+
+    // Assert that the returned matches are as expected
+    expect($matches)->toEqual(['2024-01-30', '2024/01/30', '30.01.2024', '30.01.24']);
+});
+
+it('validates a single date format correctly', function () {
+    $string = "2024-04-20";
+    $builder = EloquentRegex::source($string);
+
+    $check = $builder->date()->check();
+
+    // Assert that the single date format is validated correctly
+    expect($check)->toBeTrue();
+});
+
+
+it('validates a single date format is incorrect', function () {
+    $string = "04-2024-20";
+    $builder = EloquentRegex::source($string);
+
+    $check = $builder->date()->check();
+
+    // Assert that the single date format is validated correctly
+    expect($check)->toBeFalse();
+});
+
+
+it('validates a date format is in string', function () {
+    $string = "Deadline: 04-2024-20";
+    $builder = EloquentRegex::source($string);
+
+    $check = $builder->date()->checkString();
+
+    // Assert that the single date format is validated correctly
+    expect($check)->toBeFalse();
+});
+
+it('matches various currency formats correctly', function () {
+    $builder = EloquentRegex::source($string);
+
+    $matches = $builder->currency()->get();
+
+    // Assert that the returned matches are as expected
+    expect($matches)->toEqual(['$1,000.00', '€200', '£30.5', '￥1,250']);
+});
+
+it('does not match invalid currency formats', function () {
+    $builder = EloquentRegex::source($string);
+
+    $check = $builder->currency()->checkString();
+
+    // Assert that invalid currency formats are not matched
+    expect($check)->toBeFalse();
+});
+
+it('matches currencies with a minimum number of digits', function () {
+    $builder = EloquentRegex::source($string);
+
+    $matches = $builder->currency(2)->get(); // minDigits
+
+    // Assert that only currency amounts with at least 2 digits are matched
+    expect($matches)->toEqual(['$100', '€20']);
+});
+
+it('matches currencies with a maximum number of digits', function () {
+    $builder = EloquentRegex::source($string);
+
+    $matches = $builder->currency(0, 3)->get(); // maxDigits
+
+    // Assert that only currency amounts with no more than 3 digits are matched
+    expect($matches)->toEqual(['€200', '£30']);
+});
+
+it('matches specific currency symbols', function () {
+   $builder = EloquentRegex::source($string);
+
+    $matches = $builder->currency(0, 0, "$,€")->get();
+
+    // Assert that only specified currency symbols are matched
+    expect($matches)->toEqual(['$1000', '€200']);
+});
+
+it('does not match currencies outside specific symbols', function () {
+    $builder = EloquentRegex::source($string);
+
+    $check = $builder->currency(function($query) {
+        $query->specificCurrencies(['￥']); // You can use options without return
+        // return $query->specificCurrencies(['￥']); // Or with return, both has the same effect
+    })->checkString();
+
+    // Assert that currencies not in the specific symbols are not matched
+    expect($check)->toBeFalse();
+});
+
+
+it('matches valid domain names correctly', function () {
+    $string = "Visit our site at example.com or connect to sub.domain.org for more info.";
+    $builder = EloquentRegex::source($string);
+
+    $matches = $builder->domainName()->get();
+
+    // Assert that the returned matches are as expected
+    expect($matches)->toEqual(['example.com', 'sub.domain.org']);
+});
+
+it('validates a single domain name correctly', function () {
+    $string = "Check our portal: portal.example.net";
+    $builder = EloquentRegex::source($string);
+
+    $check = $builder->domainName()->checkString(); // Check if the string contains at least one domain name
+
+    // Assert that the string contains a valid domain name
+    expect($check)->toBeTrue();
+});
+
+it('counts domain names correctly', function () {
+    $string = "Multiple domains: first.com, second.org, third.co.uk";
+    $builder = EloquentRegex::source($string);
+
+    $count = $builder->domainName()->count(); // Count the number of domain names
+
+    // Assert that the count matches the expected number of domain names
+    expect($count)->toEqual(3);
+});
+
+it('matches domain names with specific extensions', function () {
+    $string = "example.com, example.org, example.net";
+    $builder = EloquentRegex::source($string);
+
+    $matches = $builder->domainName(0, "", 'com,org')->get();
+
+    // Assert that only domains with specified extensions are matched
+    expect($matches)->toEqual(['example.com', 'example.org']);
+});
+
+it('matches domain names from specific domains', function () {
+    $string = "visit example.com, contact us at info@example.org";
+    $builder = EloquentRegex::source($string);
+
+    $matches = $builder->domainName(['onlyDomains' => ['example.com']])->get();
+
+    // Assert that only domains from the specified list are matched
+    expect($matches)->toEqual(['example.com']);
+});
+
+
+it('correctly finds a valid email with EmailPattern', function () {
+    $text = "Please contact us at support@example.com for general inquiries. \n
+        For technical support, reach out to tech.help@exampletech.com. Additionally, \n
+        you can send your feedback directly to feedback@example.net. We look forward to hearing from you!";
+    $builder = EloquentRegex::source($text);
+    $get = $builder->email()->get();
+    expect(count($get))->toBe(3);
+});
+
+it('correctly invalidates an incorrect email with EmailPattern and MaxLength option', function () {
+    $builder = EloquentRegex::source($string);
+    $check = $builder->email(10)->check();
+    expect($check)->toBeFalse();
+});
+
+it('validates email addresses with specific domain extensions', function () {
+    $builder = EloquentRegex::source($string);
+
+    $check = $builder->email(['onlyExtensions' => ['com', 'org']])->check();
+
+    // Assert that the email with the specified extension is validated correctly
+    expect($check)->toBeTrue();
+});
+
+it('does not validate email addresses with unlisted domain extensions', function () {
+    $builder = EloquentRegex::source($string);
+
+    $check = $builder->email(function($query) {
+        $query->onlyExtensions(['com', 'org']);
+    })->check();
+
+    // Assert that the email with an unlisted extension is not validated
+    expect($check)->toBeFalse();
+});
+
+
+it('matches valid Linux file paths correctly', function () {
+    $string = "/home/user/document.pdf, /var/log/syslog, /etc/nginx/nginx.conf";
+    $builder = EloquentRegex::source($string);
+
+    $matches = $builder->filePath()->get();
+
+    expect($matches)->toEqual(['/home/user/document.pdf', '/var/log/syslog', '/etc/nginx/nginx.conf']);
+});
+
+it('validates a single Linux file path correctly', function () {
+    $string = "/usr/local/bin/script.sh";
+    $builder = EloquentRegex::source($string);
+
+    $check = $builder->filePath()->check();
+
+    expect($check)->toBeTrue();
+});
+
+it('does not match invalid Linux file paths', function () {
+    $string = "This is not a file path: /invalid//path";
+    $builder = EloquentRegex::source($string);
+
+    $matches = $builder->filePath()->get();
+
+    expect($matches)->toBeEmpty();
+});
+
+it('does not validate a Linux file path in a string without a valid path', function () {
+    $string = "This string does not contain a valid file path.";
+    $builder = EloquentRegex::source($string);
+
+    $check = $builder->filePath()->checkString();
+
+    expect($check)->toBeFalse();
+});
+
+it('get path using isFile option', function () {
+    $string = "/usr/local/bin/script.sh /home/user/document.pdf";
+    $builder = EloquentRegex::source($string);
+
+    $check = $builder->filePath(0, "sh")->get();
+
+    expect($check)->toEqual(["/usr/local/bin/script.sh"]);
+});
+
+it('checks path using isFile option', function () {
+    $string = "/usr/local/bin/script.sh";
+    $builder = EloquentRegex::source($string);
+
+    $check = $builder->filePath(0, null)->check();
+
+    expect($check)->toBeTrue();
+});
+
+
+it('checks path using pathType option', function () {
+    $string = "/usr/local/bin/script.sh";
+    $builder = EloquentRegex::source($string);
+
+    // With int
+    $check = $builder->filePath(0, null, false, 1)->check(); // 1 for absolute path
+    expect($check)->toBeTrue();
+    // With string
+    $check = $builder->filePath(0, null, false, "absolute")->check();
+    expect($check)->toBeTrue();
+    // With array
+    $check = $builder->filePath(["pathType" => "absolute"])->get();
+    expect($check)->toEqual(["/usr/local/bin/script.sh"]);
+});
+
+
+it('matches Windows file paths correctly', function () {
+    $string = "C:\\Users\\Example\\file.txt, D:\\Documents\\report.docx, E:\\Photos\\image.jpg";
+    $builder = EloquentRegex::source($string);
+
+    $matches = $builder->filePathWin()->get();
+
+    // Assert that the returned matches are as expected
+    expect($matches)->toEqual([
+        'C:\\Users\\Example\\file.txt',
+        'D:\\Documents\\report.docx',
+        'E:\\Photos\\image.jpg'
+    ]);
+});
+
+it('validates a single Windows file path correctly', function () {
+    $string = "C:\\Program Files\\app\\config.ini";
+    $builder = EloquentRegex::source($string);
+
+    $check = $builder->filePathWin()->check();
+
+    // Assert that the single file path is validated correctly
+    expect($check)->toBeTrue();
+});
+
+it('validates a single Windows file path correctly in string', function () {
+    $string = "Please refer to C:\\Program Files\\app\\config.ini for configuration settings.";
+    $builder = EloquentRegex::source($string);
+
+    $check = $builder->filePathWin()->checkString();
+
+    // Assert that the single file path is validated correctly in the string
+    expect($check)->toBeTrue();
+});
+
+it('does not match invalid Windows file paths', function () {
+    $string = "InvalidPath//file.txt, Another/Invalid/Path";
+    $builder = EloquentRegex::source($string);
+
+    $matches = $builder->filePathWin()->get();
+
+    // Assert that no invalid file paths are matched
+    expect($matches)->toBeEmpty();
+});
+
+it('checks file exists using fileExists option', function () {
+    $string = __DIR__.'\..\..\TestFiles\document.txt';
+    $builder = EloquentRegex::source($string);
+
+    $check = $builder->filePathWin(0, null, true)->check();
+
+    expect($check)->toBeTrue();
+})->onlyOnWindows();
+
+it('checks file using array options', function () {
+    $string = __DIR__.'\..\..\TestFiles\document.txt';
+    $builder = EloquentRegex::source($string);
+
+    $check = $builder->filePathWin([
+        "isDirectory" => 0,
+        "isFile" => "txt",
+        "fileExists" => true,
+    ])->check();
+
+    expect($check)->toBeTrue();
+})->onlyOnWindows();
+
+
+it('matches HTML tags correctly', function () {
+    $builder = EloquentRegex::source("<p>Paragr<small>aph</small></p> <div>Div content</div>");
+
+    $matches = $builder->htmlTag()->get();
+
+    // Assert that the returned matches are as expected
+    expect($matches)->toEqual(['<p>Paragr<small>aph</small></p>', '<div>Div content</div>']);
+});
+
+it('does not match invalid HTML tags', function () {
+    $builder = EloquentRegex::source("This is <not> a valid </tag>");
+
+    $check = $builder->htmlTag()->checkString();
+
+    // Assert that invalid HTML tags are not matched
+    expect($check)->toBeFalse();
+});
+
+it('matches only allowed HTML tags correctly', function () {
+    $builder = EloquentRegex::source("<p>Paragr<small>aph</small></p> <div>Div content</div>");
+
+    $matches = $builder->htmlTag("", "p, small")->get();
+
+    // Assert that the returned matches are as expected
+    expect($matches)->toEqual(['<p>Paragr<small>aph</small></p>']);
+});
+
+it('matches valid IPv4 addresses correctly', function () {
+    $string = "192.168.1.1, 10.0.0.1, 255.255.255.255";
+    $builder = EloquentRegex::source($string);
+    $matches = $builder->ipAddress()->get();
+    expect($matches)->toEqual(['192.168.1.1', '10.0.0.1', '255.255.255.255']);
+});
+
+it('does not match invalid IPv4 addresses', function () {
+    $string = "192.168.1.256, 10.0.0.999, 300.255.255.255";
+    $builder = EloquentRegex::source($string);
+    $matches = $builder->ipAddress()->get();
+    expect($matches)->toBeEmpty();
+});
+
+
+
+it('matches valid IPv6 addresses correctly', function () {
+    $string = "2001:0db8:85a3:0000:0000:8a2e:0370:7334, ::1";
+    $builder = EloquentRegex::source($string);
+    $matches = $builder->ipv6Address()->get();
+
+    expect($matches)->toEqual(['2001:0db8:85a3:0000:0000:8a2e:0370:7334']);
+});
+
+it('does not match invalid IPv6 addresses', function () {
+    $string = "2001:0db8:85a3:0000:0000:8a2e:0370:7334Z, 2001::85a3::7334";
+    $builder = EloquentRegex::source($string);
+    $matches = $builder->ipv6Address()->get();
+
+    expect($matches)->toBeEmpty();
+});
+
+it('validates IPv6 addresses using filter_var', function () {
+    $validIPv6 = "2001:0db8:85a3:0000:0000:8a2e:0370:7334";
+    $invalidIPv6 = "2001:0db8:85a3:0000:0000:8a2e:0370:7334Z";
+
+    $builder = EloquentRegex::source($validIPv6);
+    expect($builder->ipv6Address()->check())->toBeTrue();
+
+    $builder->setString($invalidIPv6);
+    expect($builder->ipv6Address()->check())->toBeFalse();
+});
+
+it('validates strong passwords correctly', function () {
+    $builder = EloquentRegex::source("StrongP@ssw0rd");
+
+    $check = $builder->password(8, 1, 1, 1)->check();
+
+    // Assert that the password is strong
+    expect($check)->toBeTrue();
+});
+
+it('validates strong passwords correctly using callback', function () {
+    $builder = EloquentRegex::source("StrongP@ssw0rd");
+
+    $check = $builder->password(function($string) {
+        return $string->minLength(8)->minUppercase(1)->minNumbers(1)->minSpecialChars(1);
+    })->check();
+
+    // Assert that the password is strong
+    expect($check)->toBeTrue();
+});
+
+it('rejects weak passwords correctly', function () {
+    $builder = EloquentRegex::source("weak");
+
+    $check = $builder->password(8, 1, 1, 1)->check();
+
+    // Assert that the password is weak
+    expect($check)->toBeFalse();
+});
+
+it('matches different phone number formats correctly', function () {
+    $string = "Contact us at +1 (555) 123-4567, 1234567890, or 0044 20 7946 0958.";
+    $builder = EloquentRegex::source($string);
+
+    $matches = $builder->phone()->get();
+
+    // Assert that the returned matches are as expected
+    expect($matches)->toEqual(['+1 (555) 123-4567', '1234567890', '0044 20 7946 0958']);
+});
+
+it('validates a single phone number format correctly', function () {
+    $string = "+1-800-123-4567";
+    $builder = EloquentRegex::source($string);
+
+    $check = $builder->phone()->check();
+
+    // Assert that the single phone number format is validated correctly
+    expect($check)->toBeTrue();
+});
+
+it('validates a phone number format correctly within a string', function () {
+    $string = "Call us now at 800-123-4567 for more information.";
+    $builder = EloquentRegex::source($string);
+
+    $check = $builder->phone()->checkString();
+
+    // Assert that the phone number format within a string is validated correctly
+    expect($check)->toBeTrue();
+});
+
+it('does not match invalid phone numbers', function () {
+    $string = "Invalid numbers: 123, +1 24, 567_890";
+    $builder = EloquentRegex::source($string);
+
+    $matches = $builder->phone()->get();
+
+    // Assert that no valid phone numbers are matched
+    expect($matches)->toBeEmpty();
+});
+
+
+
+it('validates a single phone number using country code correctly', function () {
+    $string = "+1-800-123-4567";
+    $builder = EloquentRegex::source($string);
+
+    $check = $builder->phone("1")->check();
+
+    // Assert that the single phone number format is validated correctly
+    expect($check)->toBeTrue();
+});
+
+it('validates emails case insensitively', function () {
+    $builder = EloquentRegex::source("Example@Email.COM");
+    $checkWithoutFlag = $builder->start()
+        ->lowercaseText()
+        ->character("@")
+        ->lowercaseText()
+        ->dot()
+        ->uppercaseText()
+        ->end()
+        ->check();
+
+    expect($checkWithoutFlag)->toBeFalse();
+
+    $builder = EloquentRegex::source("Example@Email.COM");
+    $checkWithFlag = $builder->start()
+        ->lowercaseText()
+        ->character("@")
+        ->lowercaseText()
+        ->dot()
+        ->uppercaseText()
+        ->end()
+        ->asCaseInsensitive()->check();
+
+    expect($checkWithFlag)->toBeTrue();
+});
+
+it('matches dates across multiple lines', function () {
+    $string = "2024-01-30\n 2024-02-15\n 2024-11-30";
+    $builder = EloquentRegex::source($string);
+    $matches = $builder->start()
+        ->digits(4)->dash()
+        ->digits(2)->dash()
+        ->digits(2)
+        ->end()
+        ->asMultiline()->check();
+    expect($matches)->toBeTrue();
+});
+
+it('matches a text in multiline as a single line string', function () {
+    $string = "Check out\n this site:";
+    $builder = EloquentRegex::source($string);
+    $check = $builder->start()->anyChars()->character(":")->end()->asSingleline()->check();
+    expect($check)->toBeTrue(); // It don't match without Singleline flag
+});
+
+it('matches text with Unicode characters', function () {
+    $string = "მზადაა #1 ✔️ და #2 ✔️";
+    $builder = EloquentRegex::source($string);
+    $matches = $builder->start()->wordCharsRange(0, 2)->end()->asUnicode()->get();
+    expect($matches)->toContain('და'); // It don't match without unicode char
+});
+
+
+it('matches exact string with TextOrNumbersPattern', function () {
+    $input = "Passs1234";
+    $builder = EloquentRegex::source($input);
+    $check = $builder->textOrNumbers(8, 0, 1)->check();
+    expect($check)->toBeTrue();
+});
+
+it('finds pattern within string using TextOrNumbersPattern', function () {
+    $string = "asd Passs1234 wawd";
+    $builder = EloquentRegex::source($string);
+    $check = $builder->textOrNumbers([
+        "minLength" => 8,
+        "minUppercase" => 1
+    ])->checkString();
+    expect($check)->toBeTrue();
+});
+
+it('counts matches correctly with TextOrNumbersPattern', function () {
+    $string = "asd Passs1234 Wawoline343 text here";
+    $builder = EloquentRegex::source($string);
+    $count = $builder->textOrNumbers(function($query) {
+        return $query->minLength(8)->minUppercase(1);
+    })->count();
+    expect($count)->toEqual(2);
+});
+
+
+it('matches different time formats correctly', function () {
+    $string = "Meeting times are 08:30, 14:45:15, and 12:00 PM.";
+    $builder = EloquentRegex::source($string);
+
+    $matches = $builder->time()->get();
+
+    // Assert that the returned matches are as expected
+    expect($matches)->toEqual(['08:30', '14:45:15', '12:00 PM']);
+});
+
+it('validates a single time format correctly', function () {
+    $string = "07:15 AM";
+    $builder = EloquentRegex::source($string);
+
+    $check = $builder->time()->check();
+
+    // Assert that the single time format is validated correctly
+    expect($check)->toBeTrue();
+});
+
+it('matches valid URLs correctly', function () {
+    $string = "Visit our site at https://www.example.com or follow us on http://social.example.org";
+    $builder = EloquentRegex::source($string);
+
+    $matches = $builder->url()->get();
+
+    // Assert that the returned matches are as expected
+    expect($matches)->toEqual(['https://www.example.com', 'http://social.example.org']);
+});
+
+it('validates a single URL correctly', function () {
+    $string = "https://www.example.com";
+    $builder = EloquentRegex::source($string);
+
+    $check = $builder->url()->check();
+
+    // Assert that the URL validation passes
+    expect($check)->toBeTrue();
+});
+
+it('matches valid URLs with URI correctly', function () {
+    $string = "Visit our site at https://www.example.com/home or follow us on http://social.example.org/profile/name";
+    $builder = EloquentRegex::source($string);
+
+    $matches = $builder->url()->get();
+
+    expect($matches)->toEqual(['https://www.example.com/home', 'http://social.example.org/profile/name']);
+});
+
+it('validates URLs with specific protocols', function () {
+    $builder = EloquentRegex::source("http://example.com");
+
+    $check = $builder->url('http')->check();
+
+    // Assert that the URL with the specified protocol is validated correctly
+    expect($check)->toBeTrue();
+});
+
+it('does not validate URLs with unlisted protocols', function () {
+    $builder = EloquentRegex::source("ftp://example.com");
+
+    $check = $builder->url('https')->check();
+
+    // Assert that the URL with an unlisted protocol is not validated
+    expect($check)->toBeFalse();
+});
+
+it('validates URLs with only HTTP protocol', function () {
+    $builder = EloquentRegex::source("http://example.com");
+
+    $check = $builder->url(['onlyHttp' => true])->check();
+
+    // Assert that the URL with only HTTP protocol is validated correctly
+    expect($check)->toBeTrue();
+});
+
+it('validates URLs with only HTTPS protocol', function () {
+    $builder = EloquentRegex::source("https://example.com");
+
+    $check = $builder->url(['onlyHttps' => true])->check();
+
+    // Assert that the URL with only HTTPS protocol is validated correctly
+    expect($check)->toBeTrue();
+});
+
+
+it('matches valid usernames correctly', function () {
+    $string = "user1, _user_name, user-name123";
+    $builder = EloquentRegex::source($string);
+
+    $matches = $builder->username()->get();
+
+    // Assert that the returned matches are as expected
+    expect($matches)->toEqual(['user1', '_user_name', 'user-name123']);
+});
+
+it('validates a single username format correctly', function () {
+    $string = "user2023";
+    $builder = EloquentRegex::source($string);
+
+    $check = $builder->username()->check();
+
+    // Assert that the single username format is validated correctly
+    expect($check)->toBeTrue();
+});
+
+it('validates a username format correctly within a string', function () {
+    $string = "My username is user_2023.";
+    $builder = EloquentRegex::source($string);
+
+    $check = $builder->username()->checkString();
+
+    // Assert that the username format within a string is validated correctly
+    expect($check)->toBeTrue();
+});
+
+it('does not match invalid usernames', function () {
+    $string = "us, user@name.com, verylongusernamebeyondlimit";
+    $builder = EloquentRegex::source($string);
+
+    $matches = $builder->username()->get();
+
+    // Assert that no valid usernames are matched
+    expect($matches)->toBeEmpty();
+});
