@@ -8,7 +8,7 @@ EloquentRegex::source('test@example.com')->email()->check();
 
 Like what we're doing? Show your support with a quick star, please! ⭐
 
-Want the same power directly in the browser? Check the JS version: [SimplifiedRegex](https://github.com/MaestroError/simplified-regex) 🚀
+Want the same power directly in the browser? Check out the JS version: [SimplifiedRegex](https://github.com/MaestroError/simplified-regex) 🚀
 
 Feeling overwhelmed by the documentation? With a ChatGPT Plus subscription, you can streamline your experience by utilizing the [EloquentRegex Assistant](https://chat.openai.com/g/g-CtG1m2bI7-eloquentregex-assistant) GPT 🤖
 
