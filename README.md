@@ -107,7 +107,7 @@ composer require maestroerror/eloquent-regex
 
 Remember, regex doesn't have to be a source of frustration. With EloquentRegex, you're on your way to becoming a regex master, all while writing cleaner, more maintainable Laravel code.
 
-Need to get started with custom patterns quickly? Checkout out this [guide](https://medium.com/@revaz.gh/get-started-with-eloquentregex-2341fef3d0ab)!
+Need to get started quickly? Read the [quick start guide](https://medium.com/@revaz.gh/get-started-with-eloquentregex-2341fef3d0ab)! 🚀
 
 # Basic Usage
 
