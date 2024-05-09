@@ -107,6 +107,8 @@ composer require maestroerror/eloquent-regex
 
 Remember, regex doesn't have to be a source of frustration. With EloquentRegex, you're on your way to becoming a regex master, all while writing cleaner, more maintainable Laravel code.
 
+Need to get started with custom patterns quickly? Checkout out this [guide](https://medium.com/@revaz.gh/get-started-with-eloquentregex-2341fef3d0ab)!
+
 # Basic Usage
 
 EloquentRegex simplifies regular expressions in Laravel, making it easy to validate data, search text, and extract information. This section introduces the basic usage of EloquentRegex, including leveraging ready-to-use patterns and creating custom patterns.
@@ -1186,7 +1188,7 @@ To stay updated, follow the GitHub repository for the latest changes, releases, 
 - Create some tool for debuging the Options
 
 - Write documentation:
-  - Create quick start guide and add in Docs.
+  - Create quick start guide and add in Docs. +
   - Add builderPattern methods list MD file and link from the Docs.
   - Add options debuging section in docs
 
