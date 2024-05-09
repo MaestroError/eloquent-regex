@@ -56,7 +56,7 @@ class BuilderPattern extends BasePattern {
         return $this->builder->setOptions($config); // Return the Builder object
     }
 
-    public function get(): ?array {
+    public function get(): mixed {
         return $this->builder->get();
     }
     
