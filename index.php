@@ -4,7 +4,7 @@ require __DIR__ . "/vendor/autoload.php";
 
 use Maestroerror\EloquentRegex\Builder;
 
-$input = "Revaz1621";
+$input = "Passs1234";
 $builder = new Builder($input);
 // Min 8 chars, min 1 uppercase
 $check = $builder->textOrNumbers(8, 0, 1)->check(); // Exact same (entire input from start ^ to end $)
@@ -12,7 +12,7 @@ print_r($check);
 
 echo "\n";
 
-$string = "asd Revaz1621 wawd";
+$string = "asd Passs1234 wawd";
 $builder = new Builder($string);
 // Min 8 chars, min 1 uppercase
 $check = $builder->textOrNumbers([
@@ -23,7 +23,7 @@ print_r($check);
 
 echo "\n";
 
-$string = "asd Revaz1621 Wawoline343 text here";
+$string = "asd Passs1234 Wawoline343 text here";
 $builder = new Builder($string);
 $count = $builder->textOrNumbers(function($query) {
     return $query->minLength(8)->minUppercase(1);
@@ -33,7 +33,7 @@ print_r("Count: " . $count);
 echo "\n";
 
 
-$string = "Revaz1621 an 1sada a 5464565";
+$string = "Passs1234 an 1sada a 5464565";
 $builder = (new Builder($string))->textOrNumbers(4);
 $get = $builder->get();
 print_r($get);
@@ -44,7 +44,7 @@ $regex = $builder->toRegex();
 print_r($regex);
 echo "\n";
 
-// $string = "Revaz1621 an 1sada a 5464565";
+// $string = "Passs1234 an 1sada a 5464565";
 // $builder = (new Builder($string))->textOrNumbers("string")->check();
 
 $SR = new Builder("RI-214");

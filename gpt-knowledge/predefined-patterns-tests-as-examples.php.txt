@@ -591,14 +591,14 @@ it('matches text with Unicode characters', function () {
 
 
 it('matches exact string with TextOrNumbersPattern', function () {
-    $input = "Revaz1621";
+    $input = "Passs1234";
     $builder = EloquentRegex::source($input);
     $check = $builder->textOrNumbers(8, 0, 1)->check();
     expect($check)->toBeTrue();
 });
 
 it('finds pattern within string using TextOrNumbersPattern', function () {
-    $string = "asd Revaz1621 wawd";
+    $string = "asd Passs1234 wawd";
     $builder = EloquentRegex::source($string);
     $check = $builder->textOrNumbers([
         "minLength" => 8,
@@ -608,7 +608,7 @@ it('finds pattern within string using TextOrNumbersPattern', function () {
 });
 
 it('counts matches correctly with TextOrNumbersPattern', function () {
-    $string = "asd Revaz1621 Wawoline343 text here";
+    $string = "asd Passs1234 Wawoline343 text here";
     $builder = EloquentRegex::source($string);
     $count = $builder->textOrNumbers(function($query) {
         return $query->minLength(8)->minUppercase(1);
