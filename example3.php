@@ -36,4 +36,4 @@ $pattern = $simpleRegex->textAndNumbers(function($options) {
 })->get();
 echo $pattern;
 echo "\n";
-echo preg_match($pattern, "Passs1234");
+echo preg_match($pattern, "Pass1234");
