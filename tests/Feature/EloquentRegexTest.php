@@ -327,7 +327,7 @@ it('applies quantifier to capturing groups correctly', function () {
             $pattern->text();
         }, '+')->toRegex();
 
-    expect($regex)->toBe('(?:[a-zA-Z]+)+');
+    expect($regex)->toBe('(?:([a-zA-Z]+))+');
 });
 
 it('applies quantifier to non-capturing groups correctly', function () {
@@ -401,3 +401,266 @@ it('uses asCaseInsensitive method to match pattern correctly', function () {
     expect($checkWithFlag)->toBeTrue();
 });
 
+
+// Replace feature tests:
+
+
+it('replaces all texts using replace method', function () {
+    $replaced = EloquentRegex::source("Send to example@email.com or replay to EXAMPLE2@Email.com")
+        ->email()
+        ->replace(function($foundString) {
+            return "Email: " . $foundString;
+        });
+
+    expect($replaced)->toBe("Send to Email: example@email.com or replay to Email: EXAMPLE2@Email.com");
+});
+
+
+it('replaces the same texts using replace method', function () {
+    $replaced = EloquentRegex::source("Send to example@email.com or replay to example@email.com")
+        ->email()
+        ->replace(function($foundString) {
+            return "Email: " . $foundString;
+        });
+
+    expect($replaced)->toBe("Send to Email: example@email.com or replay to Email: example@email.com");
+});
+
+
+it('accepts PHP functions in replace method', function () {
+    $replaced = EloquentRegex::source("Send to example-1@email.com or replay to example-2@email.com")
+        ->email()
+        ->replace(function($foundString) {
+            return strToUpper($foundString);
+        });
+
+    expect($replaced)->toBe("Send to EXAMPLE-1@EMAIL.COM or replay to EXAMPLE-2@EMAIL.COM");
+});
+
+// Search feature tests:
+
+it('searches multiline string using keyword', function () {
+    $found = EloquentRegex::source(
+        "
+        Whose woods these are I think I know.\n
+        His house is in the village though;\n
+        He will not see me stopping here\n
+        To watch his woods fill up with snow.\n
+        \n
+        The woods are lovely, dark and deep,\n
+        But I have promises to keep,\n
+        And miles to go before I sleep,\n
+        And miles to go before I sleep.\n
+        "
+        )
+        ->search("woods");
+
+    expect($found)->toBe([
+        "Whose woods these are I think I know.",
+        "To watch his woods fill up with snow.",
+        "The woods are lovely, dark and deep,",
+    ]);
+});
+
+it('searches multiline string using subpattern with ready-to-use patterns', function () {
+    $found = EloquentRegex::source(
+        "
+        Please contact us via email at info@example.com for more details.
+        For support inquiries, you can also email us at support@example.com.
+        Our marketing team is reachable at marketing@example.com for collaborations.
+        For urgent matters, you can reach out through the phone number provided.
+        Subscribe to our newsletter to stay updated with the latest news.
+        Feel free to send feedback directly to our office address.
+        Any emails sent after 5 PM may be responded to the next business day.
+        Check the FAQ section for answers to common questions.
+        Social media channels are also available for quick updates.
+        We value your input and encourage you to share your thoughts.
+        "
+        )
+        ->search(function ($pattern) {
+            $pattern->email();
+        });
+
+    expect($found)->toBe([
+        'Please contact us via email at info@example.com for more details.',
+        'For support inquiries, you can also email us at support@example.com.',
+        'Our marketing team is reachable at marketing@example.com for collaborations.'
+    ]);
+});
+
+it('searches multiline string using subpattern with builder pattern methods', function () {
+    $found = EloquentRegex::source(
+        "
+        Discover the latest tips and tricks to boost your productivity.
+        Join the conversation with #LaravelTips and #WebDevelopment.
+        Stay updated with our blog for more insightful content.
+        Follow us on social media and use #CodingMadeEasy to share your journey.
+        Let’s build something amazing together!
+        "
+        )
+        ->search(function ($pattern) {
+            $pattern->start()->hashtag()->alphanumeric();
+        });
+
+    expect($found)->toBe([
+        'Join the conversation with #LaravelTips and #WebDevelopment.',
+        'Follow us on social media and use #CodingMadeEasy to share your journey.',
+    ]);
+});
+
+
+
+// SearchReverse feature tests:
+
+it('Excepts lines from multiline string using keyword', function () {
+    // Find all logs except INFO type
+    $found = EloquentRegex::source(
+        "
+        [2024-12-23 10:00:00] INFO: User logged in.\n
+        [2024-12-25 10:05:00] ERROR: Unable to connect to database.\n
+        [2024-12-25 10:10:00] INFO: User updated profile.\n
+        [2024-12-15 10:15:00] WARNING: Disk space running low.\n
+        [2024-12-34 10:20:00] ERROR: Timeout while fetching data.\n
+        "
+        )
+        ->searchReverse("INFO");
+
+    expect($found)->toBe([
+        '[2024-12-25 10:05:00] ERROR: Unable to connect to database.',
+        '[2024-12-15 10:15:00] WARNING: Disk space running low.',
+        '[2024-12-34 10:20:00] ERROR: Timeout while fetching data.',
+    ]);
+});
+
+
+
+it('Excepts lines from multiline string using subpattern', function () {
+    // Find all logs that don't happened in 25 december
+    $found = EloquentRegex::source(
+        "
+        [2024-12-23 10:00:00] INFO: User logged in.\n
+        [2024-12-25 10:05:00] ERROR: Unable to connect to database.\n
+        [2024-12-25 10:10:00] INFO: User updated profile.\n
+        [2024-12-15 10:15:00] WARNING: Disk space running low.\n
+        [2024-12-34 10:20:00] ERROR: Timeout while fetching data.\n
+        "
+        )
+        ->searchReverse(function ($pattern) {
+            $pattern->start()->numbers()->dash()->numbers()->dash()->exact("25");
+        });
+
+    expect($found)->toBe([
+        '[2024-12-23 10:00:00] INFO: User logged in.',
+        '[2024-12-15 10:15:00] WARNING: Disk space running low.',
+        '[2024-12-34 10:20:00] ERROR: Timeout while fetching data.',
+    ]);
+});
+
+
+// Groups tests:
+it('returns group data correctly (JIRA issue IDs)', function () {
+    $found = EloquentRegex::start("RI-2142, PO-2555")
+        ->group(function ($pattern) {
+            return $pattern->textUppercase(2);
+        }, 1)
+        ->dash()
+        ->group(function ($pattern) {
+            return $pattern->digitsRange(2, 4);
+        }, 1)->get();
+
+    expect($found)->toBe([
+        [
+            "result" => "RI-2142",
+            "groups" => [
+                "RI",
+                "2142"
+            ]
+        ],
+        [
+            "result" => "PO-2555",
+            "groups" => [
+                "PO",
+                "2555"
+            ]
+        ]
+    ]);
+});
+
+
+// Named groups tests:
+it('returns named groups data correctly (JIRA issue IDs)', function () {
+    // Parse JIRA issue IDs
+    $found = EloquentRegex::start("RI-2142, PO-2555")
+        ->namedGroup(function ($pattern) {
+            return $pattern->textUppercase(2);
+        }, "project", 1)
+        ->dash()
+        ->namedGroup(function ($pattern) {
+            return $pattern->digitsRange(2, 4);
+        }, "issue", 1)->get();
+
+    expect($found)->toBe([
+        [
+            "result" => "RI-2142",
+            "groups" => [
+                "project" => "RI",
+                "issue" => "2142",
+            ]
+        ],
+        [
+            "result" => "PO-2555",
+            "groups" => [
+                "project" => "PO",
+                "issue" => "2555",
+            ]
+        ]
+    ]);
+});
+
+// Swap tests:
+it('can swap text using callback', function () {
+    $builder = EloquentRegex::start("RI-2142, RI-1234, PO-2555");
+    $result = $builder
+        ->namedGroup(function ($pattern) {
+            return $pattern->textUppercase(2);
+        }, "project", 1)
+        ->dash()
+        ->namedGroup(function ($pattern) {
+            return $pattern->digitsRange(2, 4);
+        }, "issue", 1)
+        ->end();
+
+    $results = $result->swap(function ($data) {
+        return "The issue #" . $data["issue"] . " of project " . $data["project"] ." is in progress";
+    });
+
+    expect($results)->toBe([
+        'The issue #2142 of project RI is in progress',
+        'The issue #1234 of project RI is in progress',
+        'The issue #2555 of project PO is in progress'
+    ]);
+});
+
+it('can swap text using pattern string', function () {
+    $builder = EloquentRegex::start("/container-tbilisi-1585, /container-berlin-1234, /container-tbilisi-2555");
+    $result = $builder
+        ->slash()
+        ->exact("container")
+        ->dash()
+        ->namedGroup(function ($pattern) {
+            return $pattern->text();
+        }, "City")
+        ->dash()
+        ->namedGroup(function ($pattern) {
+            return $pattern->digitsRange(2, 5);
+        }, "id")
+        ->end();
+
+    $results = $result->swap("/container/[ID]?city=[CITY]");
+
+    expect($results)->toBe([
+        '/container/1585?city=tbilisi',
+        '/container/1234?city=berlin',
+        '/container/2555?city=tbilisi'
+    ]);
+});

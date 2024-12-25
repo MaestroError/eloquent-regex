@@ -10,7 +10,7 @@ Like what we're doing? Show your support with a quick star, please! ⭐
 
 Want the same power directly in the browser? Check out the JS version: [SimplifiedRegex](https://github.com/MaestroError/simplified-regex) 🚀
 
-Feeling overwhelmed by the documentation? With a ChatGPT Plus subscription, you can streamline your experience by utilizing the [EloquentRegex Assistant](https://chat.openai.com/g/g-CtG1m2bI7-eloquentregex-assistant) GPT 🤖
+Feeling overwhelmed by the documentation? You can streamline your experience by utilizing the [EloquentRegex Assistant](https://chat.openai.com/g/g-CtG1m2bI7-eloquentregex-assistant) GPT 🤖
 
 ### Table of Contents
 
@@ -47,11 +47,11 @@ Feeling overwhelmed by the documentation? With a ChatGPT Plus subscription, you 
     - 💠 [Non-Capturing Groups](#non-capturing-groups)
     - 💠 [Groups with quantifier](#groups-with-quantifier)
   - ❓[Conditional matching](#conditional-matching)
-  - ⚖️[Pattern alternation (orPattern)](#pattern-alternation-orpattern)
+  - ⚖️[Pattern alternation (orPattern)](#pattern-alternation-orpattern%EF%B8%8F)
   - 🧩[Raw Methods](#raw-methods)
   - 🐌[The Lazy Quantifier Method](#the-lazy-quantifier-method)
 - **[Testing and Debugging Your Regex Patterns](#testing-and-debugging-your-regex-patterns)**
-- **[Contributing to EloquentRegex](#contributing-to-eloquenttegex)**
+- **[Contributing to EloquentRegex](#contributing-to-eloquentregex)**
 - **[Support](#support)**
 - **[Credits](#credits)**
 - **[Frequently Asked Questions (FAQ)](#frequently-asked-questions-faq)**
@@ -320,10 +320,10 @@ _Note: You can use `EloquentRegex::builder()->pattern()` if you need just build 
 
 Custom pattern builder supports a wide range of character classes and all special chars. Also, `literal` or `exact` method could be used to match exact string you need, or `char` method could be used to match exact character. The full list of pattern builder methods is comming soon. Before that, you can check this files out:
 
-- [Character Classes](https://github.com/MaestroError/eloquent-regex/blob/documentation-and-examples/src/Traits/BuilderPatternTraits/CharacterClassesTrait.php)
-- [Special characters](https://github.com/MaestroError/eloquent-regex/blob/documentation-and-examples/src/Traits/BuilderPatternTraits/SpecificCharsTrait.php)
-- [Groups](https://github.com/MaestroError/eloquent-regex/blob/documentation-and-examples/src/Traits/BuilderPatternTraits/GroupsTrait.php)
-- [Anchors](https://github.com/MaestroError/eloquent-regex/blob/documentation-and-examples/src/Traits/BuilderPatternTraits/AnchorsTrait.php)
+- [Character Classes](https://github.com/MaestroError/eloquent-regex/blob/maestro/src/Traits/BuilderPatternTraits/CharacterClassesTrait.php)
+- [Special characters](https://github.com/MaestroError/eloquent-regex/blob/maestro/src/Traits/BuilderPatternTraits/SpecificCharsTrait.php)
+- [Groups](https://github.com/MaestroError/eloquent-regex/blob/maestro/src/Traits/BuilderPatternTraits/GroupsTrait.php)
+- [Anchors](https://github.com/MaestroError/eloquent-regex/blob/maestro/src/Traits/BuilderPatternTraits/AnchorsTrait.php)
 
 ## Applying Quantifiers#️⃣
 
@@ -860,7 +860,7 @@ Matches digits only if they are preceded by a 'P'
 ```php
 // Expected to be true as '3' is preceded by 'P'
 EloquentRegex::start('P3')
-->negativeLookBehind(function($pattern) {
+->lookBehind(function($pattern) {
     $pattern->character('P');
 })->digits()->check();
 // While using "get()" method, 'P' doesn't appear in matches
@@ -1180,15 +1180,32 @@ To stay updated, follow the GitHub repository for the latest changes, releases, 
 
 ##### To Do
 
+- Fix traits URLs in docs ✅
+- Add replace method ✅
+- Add reverse method (to get everything except matched pattern) - try negative lookBehind or Lookahead with big texts ✅
+  - Search and SearchReverse with keyword or pattern, check the searchTest\search.php file
+- Implement usage of named groups: `/(?P<year>\d{4})-(?P<month>\d{2})-(?P<day>\d{2})/`
+  - Make available to do thing like this: “/container-[MATERIAL_NAME]-[NUMBER]” → “/konfigurator/materialien?material=[MATERIAL_NAME]”
 - Add options for new patterns:
   - Add `contains` and `notContains` options
   - usernameLength: Set minimum and maximum length for the username part of the email.
   - dateFormat, timeFormat: Specify the format of date and time (e.g., MM-DD-YYYY, HH:MM).
-- Implement usage of named groups: `/(?P<year>\d{4})-(?P<month>\d{2})-(?P<day>\d{2})/`
 - Create some tool for debuging the Options
 
 - Write documentation:
-  - Create quick start guide and add in Docs. +
+
+  - Create quick start guide and add in Docs. ✅
+  - Add in Basic Usage topic the "Features" docs with both pattern examples
+
+    - get
+    - check
+    - checkString
+    - count
+    - toRegex
+    - replace
+    - search
+    - searchReverse
+
   - Add builderPattern methods list MD file and link from the Docs.
   - Add options debuging section in docs
 
@@ -1201,3 +1218,4 @@ To stay updated, follow the GitHub repository for the latest changes, releases, 
 - Implement first() method using preg_match instead of preg_match_all
 - I should be able to make new pattern using BuilderPattern
 - I should be able to add custom pattern to the existing one using BuilderPattern
+- I should be able to add custom option using BuilderPattern, raw regex or regular PHP functions

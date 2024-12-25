@@ -46,8 +46,27 @@ trait GroupsTrait {
         $this->builder->setReturnGroups(true);
         $subPattern = new self();
         $callback($subPattern);
+        $p =  '(' . $subPattern->getPattern() . ')';
+        $this->pattern .= $q ? $this->applyQuantifier($p, $q) : $p;
+        return $this;
+    }
+
+    /**
+     * Adds a new grouped subpattern.
+     *
+     * @param callable $callback A callback that receives a BuilderPattern instance to define the subpattern.
+     * @param string $name of a group
+     * @param ?string $q a Quantifier
+     * @return self
+     */
+    public function namedGroup(callable $callback, string $name, ?string $q = null): self {
+        $this->builder->setReturnGroups(true);
+        $this->builder->setNamedGroups(true);
+        $subPattern = new self();
+        $callback($subPattern);
         $p = $subPattern->getPattern();
-        $this->pattern .= $q ? $this->applyQuantifier($p, $q) : '(' . $p . ')';
+        $p = "(?P<$name>" . $p . ')';
+        $this->pattern .= $q ? $this->applyQuantifier($p, $q) : $p;
         return $this;
     }
 
