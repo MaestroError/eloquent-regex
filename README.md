@@ -24,14 +24,15 @@ Feeling overwhelmed by the documentation? You can streamline your experience by 
     - [CheckString](#checkstring)
     - [Count](#count)
     - [Replace](#replace)
-    - [ToRegex](#get-regex)
+    - [ToRegex](#toregex)
     - [Search](#search)
+      - [Search benchmark](#search-benchmark)
     - [SearchReverse](#searchreverse)
-    - [Swap](#Swap)
+    - [Swap](#swap)
   - 📑[Ready-to-Use Patterns](#ready-to-use-patterns)
-  - 🛠️[Custom Patterns](#custom-patterns)
+  - 🛠️[Custom Patterns](#custom-patterns%EF%B8%8F)
     - 💠 [Creating a Custom Pattern](#creating-a-custom-pattern)
-  - #️⃣[Applying Quantifiers](#applying-quantifiers)
+  - #️⃣[Applying Quantifiers](#applying-quantifiers%EF%B8%8F⃣)
     - 💠 [Optional Elements](#optional-elements)
     - 💠 [Specifying a Range](#specifying-a-range)
     - 💠 [One or More](#one-or-more)
@@ -51,7 +52,7 @@ Feeling overwhelmed by the documentation? You can streamline your experience by 
     - 💠 [Single-Line Mode](#single-line-mode)
     - 💠 [Unicode Character Matching](#unicode-character-matching)
 - **[Advanced builderPattern methods](#advanced-builderpattern-methods)**
-  - 🗃️[Character Sets](#character-sets)
+  - 🗃️[Character Sets](#character-sets%EF%B8%8F)
   - 📦[Groups](#groups)
     - 💠 [Capturing Groups](#capturing-groups)
     - 💠 [Non-Capturing Groups](#non-capturing-groups)
@@ -103,7 +104,7 @@ EloquentRegex::start("#hello #world This is a #test")->hash()->text()->get();
 - **Ready-to-Use Patterns**: Common patterns like emails, URLs, IP addresses and etc. are pre-defined and ready to go. Just a few keystrokes and you're validating.
 - **Custom Patterns Made Easy**: Build your own regex patterns with an easy-to-use, fluent interface. Say hello to readable regex!
 - **Useful actions**: You can perform various actions with your pattern, from simply validating and getting the matches to complex actions like `search` or `replace`.
-- **Options and Filters**: Tailor your regex operations with options and filters for precision matching.
+- **Options and Filters**: Tailor your regex operations with options and filters like `onlyMasterCard`, `maxSpaces`, `validIPv6` and etc. for more precision.
 - **Laravel Integration**: Seamlessly integrates with your Laravel projects, leveraging Laravel's elegant syntax and features like collection.
 
 _For more details about package and it's inner workings check out [STRUCTURE.md](https://github.com/MaestroError/eloquent-regex/blob/update-documentation-and-add-advanced-usage-section/STRUCTURE.md) file._
@@ -122,7 +123,7 @@ Need to get started quickly? Read the [quick start guide](https://medium.com/@re
 
 # Basic Usage
 
-EloquentRegex simplifies regular expressions in Laravel, making it easy to validate data, search text, and extract information. This section introduces the basic usage of EloquentRegex, including leveraging **ready-to-use patterns** and creating **custom patterns**.
+EloquentRegex simplifies regular expressions in Laravel, making it easy to validate data, search text, and extract information. This section introduces the basic usage of EloquentRegex, including leveraging [ready-to-use](#ready-to-use-patterns) patterns and creating [custom](#custom-patterns%EF%B8%8F) patterns.
 
 First of all, you need to include EloquentRegex class.
 
@@ -138,11 +139,11 @@ use Maestroerror\EloquentRegex\Facades\EloquentRegex;
 
 ## Actions
 
-Actions are end methods created to finilize your pattern and take some action with it. So they are the main features of the package as well. Let's discuss them one by one and check the examples for [custom](#custom-patterns%EF%B8%8F) and [ready-to-use](#ready-to-use-patterns) patterns.
+Actions are end methods created to finilize your pattern and take some action with it. So they are the main features of the package as well. Let's discuss them one by one and check the examples.
 
 ### Get
 
-Returns all matches as array/collection.
+Returns all matches as array/collection. Returns `null` if no matches found.
 
 _Example with ready-to-use pattern_
 
@@ -227,7 +228,7 @@ EloquentRegex::start("#hello #world This is a #test")
 
 ### Replace
 
-Counts amount of matches and returns as int. Returns `0` if no matches found.
+Replaces found matches in given source string using provided **callback**.
 
 _Example with ready-to-use pattern_
 
@@ -270,7 +271,7 @@ EloquentRegex::builder()->start()
 
 ### Search
 
-Search method searches for **keyword** or **pattern** in multiline text and returns lines where subject is found. It is especially useful with processing of large files like logs or JSON.
+Search method searches for **keyword** or **pattern** (including ready-to-use patterns too) in multiline text and returns lines where subject is found. It is especially useful with processing of large files like logs or JSON.
 
 _Example with keyword search_
 
@@ -326,9 +327,30 @@ EloquentRegex::source(
 */
 ```
 
+#### Search benchmark
+
+_Interesting fact: As shorter keyword is, the faster the search methods work_
+
+Check benchmark of `search` for keyword "green" in large JSON file, where each line was JSON object from DB:
+
+```php
+/*
+===========================================================
+| ROWS | Find time (count)  | File size | Find + decoded |
+===========================================================
+| 1000 | 7.6 ms (890)      | 5 Mb       | 11.5 ms        |
+| 2500 | 17.25ms (2186)    | 14 Mb      | 30 ms          |
+| 5000 | 34.4 ms (4347)    | 29 Mb      | 62 ms          |
+| 10K  | 67.4 ms (8669)    | 58 Mb      | 112 ms         |
+| 20K  | 131 ms (17313)    | 116 Mb     | 251 ms         |
+===========================================================
+===Keyword:="green"========================================
+*/
+```
+
 ### SearchReverse
 
-SearchReverse method searches for **keyword** or **pattern** in multiline text and returns every line which doesn't contains subject. It is especially useful while processing of large files like logs or JSON.
+SearchReverse method searches for **keyword** or **pattern** in multiline text and returns every line which **doesn't contain** subject. It is especially useful while processing large text files like logs or JSON.
 
 _Example with keyword search_
 
@@ -1093,6 +1115,40 @@ $result = EloquentRegex::start("2024-01-30, 2023-02-20")
  *          ],
  *     ]
  * ]
+ */
+```
+
+### Named Capturing Groups
+
+It is same as capturing group but named and is used to group part of a pattern together and capture the matching text for later use with it's name. Note that it returs array/collection with different structure while using with get:
+
+```php
+// Matching a date format with capturing the parts as separated groups
+EloquentRegex::start("RI-2142, PO-2555")
+    ->namedGroup(function ($pattern) {
+        return $pattern->textUppercase(2);
+    }, "project", 1)
+    ->dash()
+    ->namedGroup(function ($pattern) {
+        return $pattern->digitsRange(2, 4);
+    }, "issue", 1)
+    ->get();
+
+/* Returns:
+[
+    "result" => "RI-2142",
+    "groups" => [
+        "project" => "RI",
+        "issue" => "2142",
+    ]
+],
+[
+    "result" => "PO-2555",
+    "groups" => [
+        "project" => "PO",
+        "issue" => "2555",
+    ]
+]
  */
 ```
 
