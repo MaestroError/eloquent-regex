@@ -329,14 +329,14 @@ EloquentRegex::source(
 
 #### Search benchmark
 
-_Interesting fact: As shorter keyword is, the faster the search methods work_
+_Interesting fact: The shorter keyword is, the faster the search methods work_
 
 Check benchmark of `search` for keyword "green" in large JSON file, where each line was JSON object from DB:
 
 ```php
 /*
 ===========================================================
-| ROWS | Find time (count)  | File size | Find + decoded |
+| ROWS | Find (row count)  | File size  | Find + decoded |
 ===========================================================
 | 1000 | 7.6 ms (890)      | 5 Mb       | 11.5 ms        |
 | 2500 | 17.25ms (2186)    | 14 Mb      | 30 ms          |
