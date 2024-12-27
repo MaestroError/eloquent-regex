@@ -68,6 +68,7 @@ class Builder implements BuilderContract {
     ];
 
     protected bool $returnGroups = false;
+    protected bool $namedGroups = false;
 
     /**
      * Constructs a new Builder instance.
@@ -166,8 +167,14 @@ class Builder implements BuilderContract {
             ];
             // Use match index to get it's groups
             $capturedGroupsForThisMatch = [];
-            foreach ($groups as $groupArray) {
-                $capturedGroupsForThisMatch[] = $groupArray[$index];
+            foreach ($groups as $key => $groupArray) {
+                if ($this->getNamedGroups()) {
+                    if (is_string($key)) {
+                        $capturedGroupsForThisMatch[$key] = $groupArray[$index];
+                    }
+                } else {
+                    $capturedGroupsForThisMatch[] = $groupArray[$index];
+                }
             }
             // Add captured groups under "groups" key
             $matchArray["groups"] = $capturedGroupsForThisMatch;
@@ -185,20 +192,120 @@ class Builder implements BuilderContract {
     protected function patternIsSet(): bool {
         return isset($this->pattern) && !empty($this->pattern);
     }
-    
-    /* Public methods (API) */
 
-    public function setString(string $str): void {
-        $this->str = $str;
+    /**
+     * Removes duplicate values from an array of matches.
+     *
+     * @return array without duplicate values.
+     */
+    protected function removeDuplicates(): array {
+        return array_unique($this->getAllMatches());
     }
 
-    public function get(): mixed {
-        if (!$this->patternIsSet()) {
-            throw new \LogicException("Pattern must be set before getting matches.");
+    /**
+     * Searches for a keyword in the multiline string.
+     * 
+     * @param string $keyword The keyword to search for.
+     * @return array An array of matches or null if no matches are found.
+     */
+    protected function searchByKeyword(string $keyword): ?array {
+        $builder = new Self($this->str);
+        $builder->start()
+            ->anyChars()
+            ->lookAhead(function ($pattern) use ($keyword) {
+                $pattern->exact($keyword);
+            })->anyChars()->end(); // .+(?=$keyword).+
+
+        return $builder->get();
+    }
+
+    /**
+     * Searches for a pattern in the multiline string.
+     * 
+     * @param callable $callback The pattern to search for.
+     * @return array An array of matches or null if no matches are found.
+     */
+    protected function searchBySubpattern(callable $callback): ?array {
+        // Get pattern from callback
+        $subPattern = new self($this->str);
+        $callback($subPattern);
+
+        $builder = new Self($this->str);
+        $builder->start()
+            ->anyChars()
+            ->lookAhead(function ($pattern) use ($subPattern) {
+                $pattern->addRawRegex($subPattern->toRegex());
+            })->anyChars()->end();
+
+        return $builder->get();
+    }
+
+    
+    /**
+     * Filters the current multiline string by the given keyword
+     * And return every line except that includes keyword
+     *
+     * @param string $keyword The keyword to filter the string by.
+     * @return array|null The filtered result as an array, or null if no match is found.
+     */
+    protected function exceptByKeyword(string $keyword): ?array {
+        $builder = new Self($this->str);
+        $builder->start()
+            ->useStringBeginning()
+            ->negativeLookAhead(function ($pattern) use ($keyword) {
+                $pattern->anyChars()->exact($keyword);
+            })->anyChars()->useStringEnd()->end()->asMultiline();
+
+        return $builder->get();
+    }
+    
+    /**
+     * Filters the current multiline string by the given subpattern
+     * And return every line except that includes subpattern
+     *
+     * @param callable $callback A callback function that defines the subpattern.
+     * @return array|null The resulting pattern as an array, or null if no match is found.
+     */
+    protected function exceptBySubpattern(callable $callback): ?array {
+        // Get pattern from callback
+        $subPattern = new self($this->str);
+        $callback($subPattern);
+
+        $builder = new Self($this->str);
+        $builder->start()
+            ->useStringBeginning()
+            ->negativeLookAhead(function ($pattern) use ($subPattern) {
+                $pattern->anyChars()->addRawRegex($subPattern->toRegex());
+            })->anyChars()->useStringEnd()->end()->asMultiline();
+
+        return $builder->get();
+    }
+
+    protected function swapByCallback(callable $callback, array $results): array {
+        $swapped = [];
+        foreach ($results as $match) {
+            $data = $match['groups'];
+            $replaced = $callback($data);
+            $swapped[] = $replaced;
         }
-    
-        $matches = $this->getAllMatches();
-    
+        return $swapped;
+    }
+
+    protected function swapByString(string $objectString, array $results): array {
+        $swapped = [];
+        foreach ($results as $match) {
+            $data = $match['groups'];
+            $swappedString = $objectString;
+            foreach ($data as $key => $value) {
+                $pattern = "/\[\s*" . preg_quote($key, '/') . "\s*\]/i";
+                $swappedString = preg_replace($pattern, $value, $swappedString);
+            }
+            $swapped[] = $swappedString;
+        }
+        return $swapped;
+    }
+
+    protected function returnArrayOrCollection(?array $matches): mixed {
         // Check if Laravel Collection class exists and the collect helper function is available
         if (class_exists(\Illuminate\Support\Collection::class) && function_exists('collect')) {
             // Return matches as a Laravel Collection
@@ -207,6 +314,24 @@ class Builder implements BuilderContract {
     
         // Return matches as an array if Collection or collect() is not available
         return $matches;
+    }
+    
+    /* Public methods (API) */
+
+    public function setString(string $str): void {
+        $this->str = $str;
+    }
+
+    // Actions start
+
+    public function get(): mixed {
+        if (!$this->patternIsSet()) {
+            throw new \LogicException("Pattern must be set before getting matches.");
+        }
+    
+        $matches = $this->getAllMatches();
+    
+        return $this->returnArrayOrCollection($matches);
     }
     
     public function check(): bool {
@@ -237,6 +362,85 @@ class Builder implements BuilderContract {
         }
         return $this->pattern->getPattern();
     }
+    
+    public function replace(callable $replaceFunction): string {
+        if (!$this->patternIsSet()) {
+            throw new \LogicException("Pattern must be set before running replace.");
+        }
+        $matches = $this->getAllMatches();
+        
+        if ($matches) {
+            $matches = $this->removeDuplicates($matches);
+            $replaced = $this->str;
+            foreach ($matches as $match) {
+                $replaced = str_replace($match, $replaceFunction($match), $replaced);
+            }
+            return $replaced;
+        }
+    }
+    
+    public function search(string|callable $keywordOrPattern): mixed {
+
+        if (is_callable($keywordOrPattern)) {
+            $matches = $this->searchBySubpattern($keywordOrPattern);
+        } 
+
+        if (is_string($keywordOrPattern)) {
+            $matches = $this->searchByKeyword($keywordOrPattern);
+        }
+
+        if ($matches) {
+            $matches = array_map('trim', $matches);
+            return $this->returnArrayOrCollection($matches);
+        }
+
+        return null;
+    }
+    
+    public function searchReverse(string|callable $keywordOrPattern): mixed {
+
+        if (is_callable($keywordOrPattern)) {
+            $matches = $this->exceptBySubpattern($keywordOrPattern);
+        } 
+
+        if (is_string($keywordOrPattern)) {
+            $matches = $this->exceptByKeyword($keywordOrPattern);
+        }
+
+        if ($matches) {
+            $filteredMatches = array_filter(array_map('trim', $matches), function($match) {
+                return !empty($match);
+            });
+            $filteredMatches = array_values($filteredMatches);
+            return $this->returnArrayOrCollection($filteredMatches);
+        }
+
+        return null;
+    }
+
+    public function swap(string|callable $stringOrCallback): mixed {
+        // Check if the pattern is set
+        if (!$this->patternIsSet()) {
+            throw new \LogicException("Pattern must be set before setting options.");
+        }
+        // Check if groups are enabled
+        if (!$this->getReturnGroups()) {
+            throw new \LogicException("Swap must be used with groups (group or namedGroup methods).");
+        }
+
+        $results = $this->get();
+        if (is_callable($stringOrCallback)) {
+            $matches = $this->swapByCallback($stringOrCallback, $results);
+        }
+        if (is_string($stringOrCallback)) {
+            $matches = $this->swapByString($stringOrCallback, $results);
+        }
+
+        return $this->returnArrayOrCollection($matches);
+    }
+
+    // Actions END
+
 
     // In cases when pattern doesn't allow setting the options (like BuilderPattern)
     public function setOptions(array|callable $config): self {
@@ -328,6 +532,15 @@ class Builder implements BuilderContract {
 
     public function getReturnGroups(): bool {
         return $this->returnGroups;
+    }
+
+    public function setNamedGroups(bool $enable): self {
+        $this->namedGroups = $enable;
+        return $this;
+    }
+
+    public function getNamedGroups(): bool {
+        return $this->namedGroups;
     }
 
     /**

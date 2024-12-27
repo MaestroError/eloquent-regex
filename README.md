@@ -10,7 +10,7 @@ Like what we're doing? Show your support with a quick star, please! ⭐
 
 Want the same power directly in the browser? Check out the JS version: [SimplifiedRegex](https://github.com/MaestroError/simplified-regex) 🚀
 
-Feeling overwhelmed by the documentation? With a ChatGPT Plus subscription, you can streamline your experience by utilizing the [EloquentRegex Assistant](https://chat.openai.com/g/g-CtG1m2bI7-eloquentregex-assistant) GPT 🤖
+Feeling overwhelmed by the documentation? You can streamline your experience by utilizing the [EloquentRegex Assistant](https://chat.openai.com/g/g-CtG1m2bI7-eloquentregex-assistant) GPT 🤖
 
 ### Table of Contents
 
@@ -18,10 +18,21 @@ Feeling overwhelmed by the documentation? With a ChatGPT Plus subscription, you 
   - 🔑[Key Features](#key-features)
   - 🧭[Getting Started](#getting-started)
 - **[Basic Usage](#basic-usage)**
+  - ⚡[Actions](#actions)
+    - [Get](#get)
+    - [Check](#check)
+    - [CheckString](#checkstring)
+    - [Count](#count)
+    - [Replace](#replace)
+    - [ToRegex](#toregex)
+    - [Search](#search)
+      - [Search benchmark](#search-benchmark)
+    - [SearchReverse](#searchreverse)
+    - [Swap](#swap)
   - 📑[Ready-to-Use Patterns](#ready-to-use-patterns)
-  - 🛠️[Custom Patterns](#custom-patterns)
+  - 🛠️[Custom Patterns](#custom-patterns%EF%B8%8F)
     - 💠 [Creating a Custom Pattern](#creating-a-custom-pattern)
-  - #️⃣[Applying Quantifiers](#applying-quantifiers)
+  - #️⃣[Applying Quantifiers](#applying-quantifiers%EF%B8%8F⃣)
     - 💠 [Optional Elements](#optional-elements)
     - 💠 [Specifying a Range](#specifying-a-range)
     - 💠 [One or More](#one-or-more)
@@ -30,7 +41,7 @@ Feeling overwhelmed by the documentation? With a ChatGPT Plus subscription, you 
     - 💠 [Custom Character Sets and Groups](#to-custom-character-sets-and-groups)
     - 💠 [Quantifier Values](#quantifier-values)
 - **[Advanced usage](#advanced-usage)**
-  - ⚙️[Options](#options)
+  - ⚙️[Options](#options%EF%B8%8F)
     - 💠 [Options as extra assertions](#options-as-extra-assertions)
     - 💠 [Options as filters](#options-as-filters)
     - 💠 [Options list](#options-list)
@@ -41,17 +52,17 @@ Feeling overwhelmed by the documentation? With a ChatGPT Plus subscription, you 
     - 💠 [Single-Line Mode](#single-line-mode)
     - 💠 [Unicode Character Matching](#unicode-character-matching)
 - **[Advanced builderPattern methods](#advanced-builderpattern-methods)**
-  - 🗃️[Character Sets](#character-sets)
+  - 🗃️[Character Sets](#character-sets%EF%B8%8F)
   - 📦[Groups](#groups)
     - 💠 [Capturing Groups](#capturing-groups)
     - 💠 [Non-Capturing Groups](#non-capturing-groups)
     - 💠 [Groups with quantifier](#groups-with-quantifier)
   - ❓[Conditional matching](#conditional-matching)
-  - ⚖️[Pattern alternation (orPattern)](#pattern-alternation-orpattern)
+  - ⚖️[Pattern alternation (orPattern)](#pattern-alternation-orpattern%EF%B8%8F)
   - 🧩[Raw Methods](#raw-methods)
   - 🐌[The Lazy Quantifier Method](#the-lazy-quantifier-method)
 - **[Testing and Debugging Your Regex Patterns](#testing-and-debugging-your-regex-patterns)**
-- **[Contributing to EloquentRegex](#contributing-to-eloquenttegex)**
+- **[Contributing to EloquentRegex](#contributing-to-eloquentregex)**
 - **[Support](#support)**
 - **[Credits](#credits)**
 - **[Frequently Asked Questions (FAQ)](#frequently-asked-questions-faq)**
@@ -90,10 +101,11 @@ EloquentRegex::start("#hello #world This is a #test")->hash()->text()->get();
 
 ## Key Features🔑
 
-- **Ready-to-Use Patterns**: Common patterns like emails, URLs, and IP addresses are pre-defined and ready to go. Just a few keystrokes and you're validating.
+- **Ready-to-Use Patterns**: Common patterns like emails, URLs, IP addresses and etc. are pre-defined and ready to go. Just a few keystrokes and you're validating.
 - **Custom Patterns Made Easy**: Build your own regex patterns with an easy-to-use, fluent interface. Say hello to readable regex!
-- **Options and Filters**: Tailor your regex operations with options and filters for precision matching. It's like having a regex wizard at your fingertips.
-- **Laravel Integration**: Seamlessly integrates with your Laravel projects, leveraging Laravel's elegant syntax and features.
+- **Useful actions**: You can perform various actions with your pattern, from simply validating and getting the matches to complex actions like `search` or `replace`.
+- **Options and Filters**: Tailor your regex operations with options and filters like `onlyMasterCard`, `maxSpaces`, `validIPv6` and etc. for more precision.
+- **Laravel Integration**: Seamlessly integrates with your Laravel projects, leveraging Laravel's elegant syntax and features like collection.
 
 _For more details about package and it's inner workings check out [STRUCTURE.md](https://github.com/MaestroError/eloquent-regex/blob/update-documentation-and-add-advanced-usage-section/STRUCTURE.md) file._
 
@@ -111,7 +123,7 @@ Need to get started quickly? Read the [quick start guide](https://medium.com/@re
 
 # Basic Usage
 
-EloquentRegex simplifies regular expressions in Laravel, making it easy to validate data, search text, and extract information. This section introduces the basic usage of EloquentRegex, including leveraging ready-to-use patterns and creating custom patterns.
+EloquentRegex simplifies regular expressions in Laravel, making it easy to validate data, search text, and extract information. This section introduces the basic usage of EloquentRegex, including leveraging [ready-to-use](#ready-to-use-patterns) patterns and creating [custom](#custom-patterns%EF%B8%8F) patterns.
 
 First of all, you need to include EloquentRegex class.
 
@@ -125,7 +137,307 @@ use Maestroerror\EloquentRegex\EloquentRegex;
 use Maestroerror\EloquentRegex\Facades\EloquentRegex;
 ```
 
-Usage structure is very similar to Laravel's Eloquent ORM, check this out:
+## Actions
+
+Actions are end methods created to finilize your pattern and take some action with it. So they are the main features of the package as well. Let's discuss them one by one and check the examples.
+
+### Get
+
+Returns all matches as array/collection. Returns `null` if no matches found.
+
+_Example with ready-to-use pattern_
+
+```php
+EloquentRegex::source("Support: support@example.com; Info: info@example.com")
+    ->email()
+    ->get();
+// Returns: ["support@example.com", "info@example.com"]
+```
+
+_Example with custom pattern_
+
+```php
+EloquentRegex::start("#hello #world This is a #test")
+    ->hash()->text()
+    ->get();
+// Returns: ['#hello', '#world', '#test']
+```
+
+### Check
+
+Checks if string exactly matches the pattern from start to end (strict match).
+
+_Example with ready-to-use pattern_
+
+```php
+EloquentRegex::source("support@example.com")
+    ->email()->check();
+// Returns: true
+```
+
+_Example with custom pattern_
+
+```php
+EloquentRegex::start("#test")
+    ->hash()->text()
+    ->check();
+// Returns: true
+```
+
+### CheckString
+
+Checks if string contains any matches of pattern. In case of email pattern, it will return `true` if one or more email is present in the given source string.
+
+_Example with ready-to-use pattern_
+
+```php
+EloquentRegex::source("Support: support@example.com; Info: info@example.com")
+    ->email()->checkString();
+// Returns: true
+```
+
+_Example with custom pattern_
+
+```php
+EloquentRegex::start("#hello #world This is a #test")
+    ->hash()->text()
+    ->checkString();
+// Returns: true
+```
+
+### Count
+
+Counts amount of matches and returns as int. Returns `0` if no matches found.
+
+_Example with ready-to-use pattern_
+
+```php
+EloquentRegex::source("Support: support@example.com; Info: info@example.com")
+    ->email()->count();
+// Returns: 2
+```
+
+_Example with custom pattern_
+
+```php
+EloquentRegex::start("#hello #world This is a #test")
+    ->hash()->text()
+    ->count();
+// Returns: 3
+```
+
+### Replace
+
+Replaces found matches in given source string using provided **callback**.
+
+_Example with ready-to-use pattern_
+
+```php
+EloquentRegex::source("Support: support@example.com; Info: info@example.com")
+    ->email()
+    ->replace(function($foundItem) {
+        return "<span>" . $foundItem . "</span>";
+    });
+// Returns: "Support: <span>support@example.com</span>; Info: <span>info@example.com</span>"
+```
+
+_Example with custom pattern_
+
+```php
+EloquentRegex::start("This is a #test")
+    ->hash()->text()
+    ->replace(function($foundItem) {
+        return "<a href='$foundItem'>" . $foundItem . "</a>";
+    });
+// Returns: "This is a <a href='#test'>#test</a>"
+```
+
+### ToRegex
+
+Returns built raw regex as string. If any [options](#options%EF%B8%8F) applied, it will **not be returned** using `toRegex` method.
+
+_Example with custom pattern_
+
+```php
+EloquentRegex::builder()->start()
+    ->textLowercase()
+    ->atSymbol()
+    ->textLowercase()
+    ->dot()
+    ->textLowercaseRange(2, 4)
+    ->toRegex();
+// Returns: "[a-z]+@[a-z]+\.[a-z]{2,4}"
+```
+
+### Search
+
+Search method searches for **keyword** or **pattern** (including ready-to-use patterns too) in multiline text and returns lines where subject is found. It is especially useful with processing of large files like logs or JSON.
+
+_Example with keyword search_
+
+```php
+EloquentRegex::source(
+    "
+    Whose woods these are I think I know.\n
+    His house is in the village though;\n
+    He will not see me stopping here\n
+    To watch his woods fill up with snow.\n
+    \n
+    The woods are lovely, dark and deep,\n
+    But I have promises to keep,\n
+    And miles to go before I sleep,\n
+    And miles to go before I sleep.\n
+    "
+    )
+    ->search("woods");
+/* Returns: [
+        "Whose woods these are I think I know.",
+        "To watch his woods fill up with snow.",
+        "The woods are lovely, dark and deep,",
+    ]
+*/
+```
+
+_Example with pattern_
+
+```php
+EloquentRegex::source(
+    "
+    Please contact us via email at info@example.com for more details.
+    For support inquiries, you can also email us at support@example.com.
+    Our marketing team is reachable at marketing@example.com for collaborations.
+    For urgent matters, you can reach out through the phone number provided.
+    Subscribe to our newsletter to stay updated with the latest news.
+    Feel free to send feedback directly to our office address.
+    Any emails sent after 5 PM may be responded to the next business day.
+    Check the FAQ section for answers to common questions.
+    Social media channels are also available for quick updates.
+    We value your input and encourage you to share your thoughts.
+    "
+    )
+    ->search(function ($pattern) {
+        $pattern->email();
+    });
+/* Returns:
+[
+    'Please contact us via email at info@example.com for more details.',
+    'For support inquiries, you can also email us at support@example.com.',
+    'Our marketing team is reachable at marketing@example.com for collaborations.'
+]
+*/
+```
+
+#### Search benchmark
+
+_Interesting fact: The shorter keyword is, the faster the search methods work_
+
+Check benchmark of `search` for keyword "green" in large JSON file, where each line was JSON object from DB:
+
+```php
+/*
+===========================================================
+| ROWS | Find (row count)  | File size  | Find + decoded |
+===========================================================
+| 1000 | 7.6 ms (890)      | 5 Mb       | 11.5 ms        |
+| 2500 | 17.25ms (2186)    | 14 Mb      | 30 ms          |
+| 5000 | 34.4 ms (4347)    | 29 Mb      | 62 ms          |
+| 10K  | 67.4 ms (8669)    | 58 Mb      | 112 ms         |
+| 20K  | 131 ms (17313)    | 116 Mb     | 251 ms         |
+===========================================================
+===Keyword:="green"========================================
+*/
+```
+
+### SearchReverse
+
+SearchReverse method searches for **keyword** or **pattern** in multiline text and returns every line which **doesn't contain** subject. It is especially useful while processing large text files like logs or JSON.
+
+_Example with keyword search_
+
+```php
+// Find all logs types except INFO
+EloquentRegex::source(
+    "
+    [2024-12-23 10:00:00] INFO: User logged in.\n
+    [2024-12-25 10:05:00] ERROR: Unable to connect to database.\n
+    [2024-12-25 10:10:00] INFO: User updated profile.\n
+    [2024-12-15 10:15:00] WARNING: Disk space running low.\n
+    [2024-12-34 10:20:00] ERROR: Timeout while fetching data.\n
+    "
+    )
+    ->searchReverse("INFO");
+/* Returns: [
+        '[2024-12-25 10:05:00] ERROR: Unable to connect to database.',
+        '[2024-12-15 10:15:00] WARNING: Disk space running low.',
+        '[2024-12-34 10:20:00] ERROR: Timeout while fetching data.',
+    ]
+*/
+```
+
+### Swap
+
+Swap method allows you to swap any kind of data logically, for example, build new URLs from old ones. It utilizes "named groups" regex feature and can be used with **callback** or **pattern string** (Check the example)
+
+_Example with pattern string_
+
+```php
+$builder= EloquentRegex::start("URIs: /container-tbilisi-1585, /container-berlin-1234, /container-tbilisi-2555")
+    ->slash() // "/"
+    ->exact("container") // "container" (static part of URI)
+    ->dash() // "-"
+    ->namedGroup(function ($pattern) {
+        return $pattern->text();
+    }, "City") // Text between dashes, Grouped & named as "city"
+    ->dash() // "-"
+    ->namedGroup(function ($pattern) {
+        return $pattern->digitsRange(2, 5);
+    }, "id") // Numbers at end, Grouped & named as "id"
+    ->end(); // Ends custom pattern to make "swap" method available
+
+// Using swap with pattern string
+// which will swap placeholders like "[ID]" with
+// Extracted data for each found match
+$builder->swap("/container/[ID]?city=[CITY]");
+
+/* Returns:
+[
+    '/container/1585?city=tbilisi',
+    '/container/1234?city=berlin',
+    '/container/2555?city=tbilisi'
+]
+*/
+```
+
+_Example with callback_
+
+```php
+$builder = EloquentRegex::start("Issues in progress: RI-2142, RI-1234, PO-2555");
+$builder
+    ->namedGroup(function ($pattern) {
+        return $pattern->textUppercase(2);
+    }, "project", 1) // 2 uppercase char named as "project"
+    ->dash() // "-"
+    ->namedGroup(function ($pattern) {
+        return $pattern->digitsRange(2, 4);
+    }, "issue", 1) // from 2 to 4 digits named as issue
+    ->end();
+
+    $results = $result->swap(function ($data) {
+        return "The issue #" . $data["issue"] . " of project " . $data["project"] ." is in progress";
+    });
+
+/* Returns:
+[
+    'The issue #2142 of project RI is in progress',
+    'The issue #1234 of project RI is in progress',
+    'The issue #2555 of project PO is in progress'
+]
+*/
+```
+
+## Usage structure
+
+As you may already found out, the usage structure is similar to Laravel's Eloquent ORM, check this out:
 
 ```
 [Initiator][Pattern][?Optional][Action]
@@ -139,7 +451,7 @@ Let's break it down:
 EloquentRegex::source($yourString);
 ```
 
-- **_Pattern_** Could be method for one of the ready-to-use patterns or your custom pattern (we will talk about custom patterns later). Let's keep the example simple and add url pattern:
+- **_Pattern_** Could be method for one of the ready-to-use patterns or your custom pattern (we will talk about custom patterns later). Let's keep the example simple and add `url` pattern:
 
 ```php
 EloquentRegex::source($yourString)->url();
@@ -147,7 +459,7 @@ EloquentRegex::source($yourString)->url();
 
 _Note: **?Optional** methods mostly are the expression flags, we will talk about them in next sections_
 
-- **_Action_** is the execution method, check the example:
+- **_Action_** is the execution methods like `get`, `check` and etc. Check the examples:
 
 ```php
 // get() will return array/collection of URLs if any found in $yourString
@@ -288,7 +600,7 @@ Didn't it cover all your needs? Let's take a look to the custom patterns section
 
 ## Custom Patterns🛠️
 
-For scenarios where predefined patterns do not suffice, EloquentRegex allows you to define custom patterns using the start or customPattern methods as initiator:
+For scenarios where predefined patterns do not suffice, EloquentRegex allows you to define custom patterns using the `start` or `customPattern` methods as initiator:
 
 ```php
 EloquentRegex::start($yourString);
@@ -320,10 +632,10 @@ _Note: You can use `EloquentRegex::builder()->pattern()` if you need just build 
 
 Custom pattern builder supports a wide range of character classes and all special chars. Also, `literal` or `exact` method could be used to match exact string you need, or `char` method could be used to match exact character. The full list of pattern builder methods is comming soon. Before that, you can check this files out:
 
-- [Character Classes](https://github.com/MaestroError/eloquent-regex/blob/documentation-and-examples/src/Traits/BuilderPatternTraits/CharacterClassesTrait.php)
-- [Special characters](https://github.com/MaestroError/eloquent-regex/blob/documentation-and-examples/src/Traits/BuilderPatternTraits/SpecificCharsTrait.php)
-- [Groups](https://github.com/MaestroError/eloquent-regex/blob/documentation-and-examples/src/Traits/BuilderPatternTraits/GroupsTrait.php)
-- [Anchors](https://github.com/MaestroError/eloquent-regex/blob/documentation-and-examples/src/Traits/BuilderPatternTraits/AnchorsTrait.php)
+- [Character Classes](https://github.com/MaestroError/eloquent-regex/blob/maestro/src/Traits/BuilderPatternTraits/CharacterClassesTrait.php)
+- [Special characters](https://github.com/MaestroError/eloquent-regex/blob/maestro/src/Traits/BuilderPatternTraits/SpecificCharsTrait.php)
+- [Groups](https://github.com/MaestroError/eloquent-regex/blob/maestro/src/Traits/BuilderPatternTraits/GroupsTrait.php)
+- [Anchors](https://github.com/MaestroError/eloquent-regex/blob/maestro/src/Traits/BuilderPatternTraits/AnchorsTrait.php)
 
 ## Applying Quantifiers#️⃣
 
@@ -806,6 +1118,40 @@ $result = EloquentRegex::start("2024-01-30, 2023-02-20")
  */
 ```
 
+### Named Capturing Groups
+
+It is same as capturing group but named and is used to group part of a pattern together and capture the matching text for later use with it's name. Note that it returs array/collection with different structure while using with get:
+
+```php
+// Matching a date format with capturing the parts as separated groups
+EloquentRegex::start("RI-2142, PO-2555")
+    ->namedGroup(function ($pattern) {
+        return $pattern->textUppercase(2);
+    }, "project", 1)
+    ->dash()
+    ->namedGroup(function ($pattern) {
+        return $pattern->digitsRange(2, 4);
+    }, "issue", 1)
+    ->get();
+
+/* Returns:
+[
+    "result" => "RI-2142",
+    "groups" => [
+        "project" => "RI",
+        "issue" => "2142",
+    ]
+],
+[
+    "result" => "PO-2555",
+    "groups" => [
+        "project" => "PO",
+        "issue" => "2555",
+    ]
+]
+ */
+```
+
 ### Non-Capturing Groups
 
 Non-capturing groups organize patterns logically without capturing separately the matched text.
@@ -860,7 +1206,7 @@ Matches digits only if they are preceded by a 'P'
 ```php
 // Expected to be true as '3' is preceded by 'P'
 EloquentRegex::start('P3')
-->negativeLookBehind(function($pattern) {
+->lookBehind(function($pattern) {
     $pattern->character('P');
 })->digits()->check();
 // While using "get()" method, 'P' doesn't appear in matches
@@ -1180,15 +1526,23 @@ To stay updated, follow the GitHub repository for the latest changes, releases, 
 
 ##### To Do
 
+- Fix traits URLs in docs ✅
+- Add replace method ✅
+- Add reverse method (to get everything except matched pattern) - try negative lookBehind or Lookahead with big texts ✅
+  - Search and SearchReverse with keyword or pattern, check the searchTest\search.php file ✅
+- Implement usage of named groups: `/(?P<year>\d{4})-(?P<month>\d{2})-(?P<day>\d{2})/` ✅
+  - Make available to do thing like this: “/container-[MATERIAL_NAME]-[NUMBER]” → “/konfigurator/materialien?material=[MATERIAL_NAME]” ✅
 - Add options for new patterns:
   - Add `contains` and `notContains` options
   - usernameLength: Set minimum and maximum length for the username part of the email.
   - dateFormat, timeFormat: Specify the format of date and time (e.g., MM-DD-YYYY, HH:MM).
-- Implement usage of named groups: `/(?P<year>\d{4})-(?P<month>\d{2})-(?P<day>\d{2})/`
 - Create some tool for debuging the Options
 
 - Write documentation:
-  - Create quick start guide and add in Docs. +
+
+  - Create quick start guide and add in Docs. ✅
+  - Add in Basic Usage topic the "Features" docs with both pattern examples ✅
+
   - Add builderPattern methods list MD file and link from the Docs.
   - Add options debuging section in docs
 
@@ -1201,3 +1555,4 @@ To stay updated, follow the GitHub repository for the latest changes, releases, 
 - Implement first() method using preg_match instead of preg_match_all
 - I should be able to make new pattern using BuilderPattern
 - I should be able to add custom pattern to the existing one using BuilderPattern
+- I should be able to add custom option using BuilderPattern, raw regex or regular PHP functions

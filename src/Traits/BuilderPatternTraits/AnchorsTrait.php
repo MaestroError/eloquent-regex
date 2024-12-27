@@ -38,5 +38,25 @@ trait AnchorsTrait {
         return $this;
     }
 
+    /**
+     * Adds a start of line marker at the start of the pattern.
+     *
+     * @return self The current instance of the BuilderPattern for method chaining.
+     */
+    public function useStringBeginning(): self {
+        $this->pattern = '^' . $this->pattern;
+        return $this;
+    }
+
+    /**
+     * Adds a start of line marker at the start of the pattern.
+     *
+     * @return self The current instance of the BuilderPattern for method chaining.
+     */
+    public function useStringEnd(): self {
+        $this->pattern = $this->pattern . '$';
+        return $this;
+    }
+
     // Anchors END
 }
