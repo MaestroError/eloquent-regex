@@ -437,6 +437,17 @@ it('accepts PHP functions in replace method', function () {
     expect($replaced)->toBe("Send to EXAMPLE-1@EMAIL.COM or replay to EXAMPLE-2@EMAIL.COM");
 });
 
+
+it('Replaces hashtags with anchors', function () {
+    $replaced = EloquentRegex::start("This is a #test to wrap hashtags in #anchor tag")
+    ->hash()->text()
+    ->replace(function($foundItem) {
+        return "<a href='$foundItem'>" . $foundItem . "</a>";
+    });
+
+    expect($replaced)->toBe("This is a <a href='#test'>#test</a> to wrap hashtags in <a href='#anchor'>#anchor</a> tag");
+});
+
 // Search feature tests:
 
 it('searches multiline string using keyword', function () {

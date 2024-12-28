@@ -75,6 +75,22 @@ class BuilderPattern extends BasePattern {
     public function toRegex(): string {
         return $this->builder->toRegex();
     }
+    
+    public function replace(callable $replaceFunction): string {
+        return $this->builder->replace($replaceFunction);
+    }
+    
+    public function search(string|callable $keywordOrPattern): mixed {
+        return $this->builder->search($keywordOrPattern);
+    }
+    
+    public function searchReverse(string|callable $keywordOrPattern): mixed {
+        return $this->builder->searchReverse($keywordOrPattern);
+    }
+    
+    public function swap(string|callable $stringOrCallback): mixed {
+        return $this->builder->swap($stringOrCallback);
+    }
 
     // Builder class implementation methods END
 
